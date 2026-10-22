@@ -12,5 +12,5 @@ Mantenha este arquivo curto: ele aponta para os documentos, não os duplica.
 - Antes de codar, leia o documento de negócio e a arquitetura relevantes.
 - Não invente requisitos; se algo estiver ambíguo, pergunte.
 - Trabalhe uma funcionalidade por vez, a partir de uma spec em `specs/`.
-- Siga a stack e as diretrizes definidas na especificação de arquitetura (seção 8).
+- Siga a stack e as diretrizes definidas na especificação de arquitetura (seção 7).
 - Mudanças de arquitetura devem virar um ADR em `docs/04-decisoes-adr/`.
