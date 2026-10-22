@@ -1,0 +1,14 @@
+{
+  "name": "crud2",
+  "private": true,
+  "workspaces": [
+    "src/apps/web",
+    "tests/web"
+  ],
+  "scripts": {
+    "build": "npm run build -w @crud2/web",
+    "lint": "npm run lint -w @crud2/web",
+    "test": "npm run test -w @crud2/web-tests",
+    "dev": "npm run dev -w @crud2/web"
+  }
+}

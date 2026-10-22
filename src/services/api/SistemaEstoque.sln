@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaEstoque.API", "SistemaEstoque.API\SistemaEstoque.API.csproj", "{B8227443-4EF9-478B-B4DF-57118D58DE74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaEstoque.Application", "SistemaEstoque.Application\SistemaEstoque.Application.csproj", "{FA1D7A5B-1608-4237-8BB4-C50CFEC3AA28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaEstoque.Domain", "SistemaEstoque.Domain\SistemaEstoque.Domain.csproj", "{0C17A766-8283-46AA-86C7-69C4D5B9C62C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaEstoque.Infrastructure", "SistemaEstoque.Infrastructure\SistemaEstoque.Infrastructure.csproj", "{12633F33-B5F5-4C81-ADA2-555E1597EE5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaEstoque.API.Tests", "..\..\..\tests\api\SistemaEstoque.API.Tests\SistemaEstoque.API.Tests.csproj", "{52140481-AE28-40C3-AB20-C31C90676E35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaEstoque.Domain.Tests", "..\..\..\tests\api\SistemaEstoque.Domain.Tests\SistemaEstoque.Domain.Tests.csproj", "{E452455F-CC58-4DD8-9361-44DA98F27F1A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B8227443-4EF9-478B-B4DF-57118D58DE74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8227443-4EF9-478B-B4DF-57118D58DE74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8227443-4EF9-478B-B4DF-57118D58DE74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8227443-4EF9-478B-B4DF-57118D58DE74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA1D7A5B-1608-4237-8BB4-C50CFEC3AA28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA1D7A5B-1608-4237-8BB4-C50CFEC3AA28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA1D7A5B-1608-4237-8BB4-C50CFEC3AA28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA1D7A5B-1608-4237-8BB4-C50CFEC3AA28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C17A766-8283-46AA-86C7-69C4D5B9C62C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C17A766-8283-46AA-86C7-69C4D5B9C62C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C17A766-8283-46AA-86C7-69C4D5B9C62C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C17A766-8283-46AA-86C7-69C4D5B9C62C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12633F33-B5F5-4C81-ADA2-555E1597EE5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12633F33-B5F5-4C81-ADA2-555E1597EE5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12633F33-B5F5-4C81-ADA2-555E1597EE5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12633F33-B5F5-4C81-ADA2-555E1597EE5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52140481-AE28-40C3-AB20-C31C90676E35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52140481-AE28-40C3-AB20-C31C90676E35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52140481-AE28-40C3-AB20-C31C90676E35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52140481-AE28-40C3-AB20-C31C90676E35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E452455F-CC58-4DD8-9361-44DA98F27F1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E452455F-CC58-4DD8-9361-44DA98F27F1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E452455F-CC58-4DD8-9361-44DA98F27F1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E452455F-CC58-4DD8-9361-44DA98F27F1A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -14,8 +14,27 @@ Projeto de aprendizado do fluxo de desenvolvimento assistido por IA.
 | `docs/03-requisitos/` | Requisitos refinados/derivados (ex.: backlog, épicos, user stories) | Vazio |
 | `docs/04-decisoes-adr/` | Registro de decisões (ADR), uma por arquivo | Vazio |
 | `specs/` | Uma spec por funcionalidade (entrada direta para a IA implementar) | Vazio |
-| `src/` | Código (backend/frontend, conforme a arquitetura) | Vazio |
-| `tests/` | Testes | Vazio |
+| `src/apps/web` | Frontend Next.js (App Router, TS strict, Tailwind) | Walking skeleton |
+| `src/services/api` | Backend .NET 8 em camadas (`SistemaEstoque.*`) | Walking skeleton (`GET /health`) |
+| `tests/api`, `tests/web` | Testes xUnit (API) e Vitest (web) | Testes do skeleton |
+
+## Como rodar
+Pré-requisitos: .NET 8 SDK e Node 20.
+
+```
+npm install                                   # na raiz (workspaces)
+dotnet run --project src/services/api/SistemaEstoque.API --urls http://localhost:5013
+cp src/apps/web/.env.example src/apps/web/.env.local   # opcional
+npm run dev                                   # http://localhost:3000
+```
+
+## Build e testes
+```
+dotnet build src/services/api/SistemaEstoque.sln
+dotnet test  src/services/api/SistemaEstoque.sln
+npm run lint; npm test; npm run build
+```
+O CI (`.github/workflows/ci.yml`) executa os mesmos passos.
 
 ## Fluxo sugerido
 1. Negócio + arquitetura (feito) →
