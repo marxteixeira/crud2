@@ -71,9 +71,9 @@ Como pessoa desenvolvedora ou operadora, quero que falhas sejam registradas de f
 - **FR-005**: Os componentes da aplicação MUST receber, por configuração, as dependências de que precisam, respeitando os limites e o sentido de dependência aprovados para cada camada.
 - **FR-006**: O serviço de backend MUST manter a verificação de saúde existente e MUST distinguir indisponibilidade da persistência de uma condição pronta para operações que dependem dela.
 - **FR-007**: A solução MUST prover acesso à persistência definida na arquitetura aprovada, com configuração por ambiente e suporte ao controle versionado das alterações estruturais do banco, sem antecipar cadastros ou fluxos de negócio de funcionalidades futuras.
-- **FR-008**: O serviço de backend MUST registrar eventos operacionais de requisições e falhas de maneira estruturada, útil para diagnóstico e sem incluir segredos.
+- **FR-008**: Cada endpoint do serviço de backend MUST registrar eventos estruturados para requisições e falhas, incluindo método, rota, status HTTP e identificador de correlação quando disponível, sem registrar corpos, credenciais ou outros dados sensíveis.
 - **FR-009**: O serviço de backend MUST tratar erros de forma global e consistente, retornando problemas em formato padronizado, sem expor stack traces, credenciais ou detalhes internos ao cliente.
-- **FR-010**: A solução MUST validar entradas conforme as convenções já aprovadas para os componentes de interface e backend, retornando erros compreensíveis e sem respostas com aparência de sucesso quando a validação falhar.
+- **FR-010**: A fundação MUST registrar e disponibilizar FluentValidation no backend e Zod no frontend para validação de entradas conforme as convenções aprovadas; qualquer entrada implementada nesta etapa MUST ser validada antes de ser processada e rejeitada com erro compreensível. Nenhum fluxo de entrada ou regra de negócio será criado apenas para esta fundação.
 - **FR-011**: A solução MUST incluir testes automatizados para comportamento dos componentes da solução, regras e dependências entre camadas, conforme aplicável à estrutura aprovada.
 - **FR-012**: Os testes MUST poder ser executados em ambiente isolado e MUST verificar, no mínimo, a inicialização/saúde, tratamento de falhas relevante e preservação dos limites entre camadas.
 - **FR-013**: A integração contínua MUST validar o serviço de backend e a aplicação web, impedindo que falhas de compilação ou testes automatizados sejam tratadas como aprovação.
@@ -95,5 +95,6 @@ Como pessoa desenvolvedora ou operadora, quero que falhas sejam registradas de f
 - Esta etapa prepara uma base executável e extensível; não implementa CRUD de produtos, fornecedores, estantes ou prateleiras, autenticação de usuários, importação da planilha ou outras funcionalidades de negócio.
 - A persistência segue o mecanismo e a estrutura definidos nos documentos de arquitetura aprovados; não são criadas tabelas de negócio até que suas funcionalidades sejam especificadas.
 - Desenvolvimento, testes e produção são os ambientes a suportar. Segredos e valores específicos de cada ambiente são fornecidos fora do código versionado.
+- Esta etapa não adiciona fluxos de entrada de dados de negócio; dependências e registro de validadores preparam a base para validação pelas funcionalidades futuras.
 - A verificação de saúde já existente continua sendo o ponto de verificação consumido pela aplicação web, evoluindo apenas para refletir indisponibilidade relevante da persistência.
 - A interface continua usando os padrões visuais e de acessibilidade definidos pela arquitetura; esta fundação não altera o fluxo de usuário do sistema de estoque.
