@@ -1,0 +1,81 @@
+openapi: 3.0.3
+info:
+  title: Sistema de Estoque - Health API
+  version: 1.0.0
+  description: Contratos operacionais da fundação, sem endpoints de negócio.
+paths:
+  /health:
+    get:
+      summary: Verifica que o host da API está vivo
+      description: Mantém o endpoint de saúde consumido pela aplicação web existente.
+      operationId: getHealth
+      responses:
+        "200":
+          description: Host disponível.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+              example:
+                status: Healthy
+                timestamp: "2026-10-23T16:00:00Z"
+  /health/ready:
+    get:
+      summary: Verifica prontidão das dependências obrigatórias
+      description: Retorna pronto somente quando a persistência requerida estiver disponível.
+      operationId: getReadiness
+      responses:
+        "200":
+          description: Serviço pronto para operações que dependem da persistência.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "503":
+          description: Uma dependência obrigatória está indisponível.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+components:
+  responses:
+    GlobalProblem:
+      description: Erro tratado globalmente em RFC 7807, sem stack trace nem detalhes sensíveis.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+      properties:
+        status:
+          type: string
+          description: Estado de saúde agregado, por exemplo Healthy ou Unhealthy.
+        timestamp:
+          type: string
+          format: date-time
+          description: Horário UTC em que o estado foi produzido.
+    ProblemDetails:
+      type: object
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+          description: Mensagem segura para o consumidor, sem stack trace ou detalhe interno.
+        instance:
+          type: string
+          format: uri-reference
