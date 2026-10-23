@@ -54,6 +54,22 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
+  /api/auth/email-change-confirmation:
+    post:
+      operationId: confirmEmailChange
+      summary: Confirmar troca de e-mail
+      description: Atualiza o e-mail ativo somente quando a identidade autenticada corresponde à conta e o provedor já confirmou o novo endereço.
+      responses:
+        "204":
+          description: E-mail confirmado e perfil atualizado.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: Não há troca pendente confirmada correspondente a esta identidade.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
   /api/users:
     get:
       operationId: listUsers
