@@ -1,0 +1,344 @@
+openapi: 3.0.3
+info:
+  title: Sistema de Estoque - API de identidade e usuários
+  version: 1.0.0
+  description: >
+    Endpoints protegidos da aplicação para revogação de sessão e gerenciamento
+    de usuários exclusivo do Administrador. Login por e-mail/senha e aceitação
+    de convite são realizados pelo Supabase Auth; credenciais administrativas
+    do provedor nunca são expostas nesta API.
+servers:
+  - url: http://localhost:5013
+security:
+  - bearerAuth: []
+paths:
+  /api/auth/me:
+    get:
+      operationId: getCurrentUser
+      summary: Consultar a conta autenticada e as permissões atuais
+      description: Retorna o perfil atual consultado pela aplicação, não uma role possivelmente desatualizada do JWT.
+      responses:
+        "200":
+          description: Conta autenticada e ativa.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserAccount"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /api/auth/logout:
+    post:
+      operationId: logout
+      summary: Revogar a sessão atual da aplicação
+      description: Registra a sessão do provedor como revogada para que seus tokens não acessem operações protegidas da API.
+      responses:
+        "204":
+          description: Sessão revogada.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/auth/activation:
+    post:
+      operationId: activateInvitedUser
+      summary: Ativar conta após aceitar convite
+      description: Conclui a ativação somente da conta pendente vinculada à identidade autenticada, com e-mail confirmado pelo provedor; não reativa contas inativadas por um Administrador. A identidade pendente pode usar apenas este endpoint de ativação antes de ficar ativa.
+      responses:
+        "204":
+          description: Conta ativada.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: Conta não está pendente ou não pode ser ativada.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /api/users:
+    get:
+      operationId: listUsers
+      summary: Listar contas de usuários
+      description: Somente Administrador. Retorna perfis de conta sem credenciais ou segredos do provedor.
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ConvitePendente, Ativa, Inativa]
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 25
+      responses:
+        "200":
+          description: Contas correspondentes.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedUsers"
+        "400":
+          $ref: "#/components/responses/ValidationProblem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      operationId: inviteUser
+      summary: Convidar usuário
+      description: Somente Administrador. Cria um convite de identidade no provedor e um perfil da aplicação com um dos dois perfis permitidos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InviteUserRequest"
+      responses:
+        "201":
+          description: Convite e perfil da conta criados.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserAccount"
+        "400":
+          $ref: "#/components/responses/ValidationProblem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          description: E-mail já pertence a uma conta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /api/users/{userId}:
+    get:
+      operationId: getUser
+      summary: Consultar conta de usuário
+      description: Somente Administrador.
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: Perfil da conta.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserAccount"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      operationId: updateUser
+      summary: Atualizar conta de usuário
+      description: Somente Administrador. Alterações de perfil e situação ativa valem nas próximas requisições, inclusive com tokens já emitidos. Uma troca de e-mail fica pendente até a confirmação do titular.
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: Perfil da conta atualizado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserAccount"
+        "400":
+          $ref: "#/components/responses/ValidationProblem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: O e-mail já pertence a outra conta ou a operação removeria o último Administrador ativo.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /api/users/{userId}/activation:
+    put:
+      operationId: setUserActivation
+      summary: Ativar ou inativar conta de usuário
+      description: Somente Administrador. A inativação bloqueia futuras requisições protegidas e não apaga os dados da conta.
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [Ativa, Inativa]
+      responses:
+        "204":
+          description: Situação da conta atualizada.
+        "400":
+          $ref: "#/components/responses/ValidationProblem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: A operação deixaria o sistema sem Administrador ativo.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    Unauthorized:
+      description: Sessão ausente, inválida, expirada ou revogada.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+    Forbidden:
+      description: Conta autenticada não possui permissão de Administrador.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+    NotFound:
+      description: Conta não encontrada.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+    ValidationProblem:
+      description: Requisição inválida.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+    ServiceUnavailable:
+      description: Não foi possível persistir a revogação; a sessão não é informada como revogada.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+  schemas:
+    UserAccount:
+      type: object
+      required: [id, email, displayName, role, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+          description: E-mail atual de login; só é substituído após confirmação de uma troca solicitada.
+        displayName:
+          type: string
+        pendingEmail:
+          type: string
+          format: email
+          nullable: true
+          description: Novo e-mail reservado aguardando confirmação do titular.
+        role:
+          type: string
+          enum: [Administrador, Operador]
+        status:
+          type: string
+          enum: [ConvitePendente, Ativa, Inativa]
+    PaginatedUsers:
+      type: object
+      required: [items, page, pageSize, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserAccount"
+        page:
+          type: integer
+          minimum: 1
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 100
+        total:
+          type: integer
+          minimum: 0
+    InviteUserRequest:
+      type: object
+      required: [email, displayName, role]
+      properties:
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+        role:
+          type: string
+          enum: [Administrador, Operador]
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+        role:
+          type: string
+          enum: [Administrador, Operador]
+    ProblemDetails:
+      type: object
+      required: [type, title, status, traceId]
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        traceId:
+          type: string
