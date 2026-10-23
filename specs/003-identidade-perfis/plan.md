@@ -12,7 +12,7 @@ Implementar a primeira capacidade de negócio após a fundação técnica: auten
 
 **Linguagem/Versão**: C# / .NET 8; TypeScript strict com Next.js 14 App Router; Node.js 20 para validação web.
 
-**Dependências principais**: ASP.NET Core, EF Core 8/Npgsql e FluentValidation existentes; Supabase Auth para identidade por e-mail/senha; `@supabase/supabase-js` e `@supabase/ssr` para Next.js/App Router; `Microsoft.AspNetCore.Authentication.JwtBearer` para validar tokens; Axios para chamadas à API da aplicação; xUnit, Vitest e Testing Library.
+**Dependências principais**: ASP.NET Core, EF Core 8/Npgsql e FluentValidation existentes; Supabase Auth para identidade por e-mail/senha; `@supabase/supabase-js` e `@supabase/ssr` para Next.js/App Router; `Microsoft.AspNetCore.Authentication.JwtBearer` para validar tokens; TanStack Query v5 para estado do servidor; React Hook Form com `@hookform/resolvers` e Zod para formulários; Axios para chamadas à API da aplicação; xUnit, Vitest e Testing Library.
 
 **Armazenamento**: PostgreSQL existente. Adicionar registro de conta da aplicação vinculado ao identificador da identidade no provedor e marca mínima de revogação da sessão atual para logout imediato; nunca persistir senhas. Identidades e emissão de sessões permanecem sob gestão do Supabase Auth.
 
@@ -22,7 +22,7 @@ Implementar a primeira capacidade de negócio após a fundação técnica: auten
 
 **Tipo de projeto**: Aplicação web em monorepo modular, com API em camadas.
 
-**Metas de desempenho**: Listagem de usuários pelo Administrador deve concluir em até 3 segundos para o volume esperado de uma única loja. A API deve aplicar situação e perfil atuais sem consultar o provedor externo em cada requisição.
+**Metas de desempenho**: Listagem paginada de usuários pelo Administrador deve responder em até 3 segundos no percentil 95, medida na API após aquecimento e pelo menos 100 requisições, com 1.000 contas em uma única loja e ambiente de teste documentado. A API deve aplicar situação e perfil atuais sem consultar o provedor externo em cada requisição.
 
 **Restrições**: Preservar Supabase Auth, JWT, PostgreSQL, Clean Architecture, monorepo e decisões aprovadas. Validar assinatura, emissor, público e expiração do JWT. Consultar o perfil e a situação da conta na persistência da aplicação, não em metadados de identidade alteráveis pelo usuário. Aplicar mudanças de situação/perfil na próxima requisição protegida, inclusive com token previamente emitido; revogar a sessão corrente no servidor durante o logout. Manter credenciais administrativas do provedor no servidor, fora de logs, bundles de cliente e controle de versão. Provisionar o primeiro Administrador por processo seguro de implantação. Manter consultas de listagem paginadas e leituras sem rastreamento do ORM. Preservar auditoria de alterações (`updated_at`, `updated_by`). Não implementar produtos, fornecedores, localizações nem operações de preço nesta funcionalidade.
 
@@ -35,8 +35,8 @@ Implementar a primeira capacidade de negócio após a fundação técnica: auten
 - **Camadas e arquitetura (I, IV)**: Manter fluxos de identidade na Application; integrações com provedor e banco na Infrastructure; autenticação HTTP, autorização e endpoints na API; experiência de navegador no web existente. Não adicionar projetos nem inverter dependências.
 - **Monorepo (II)**: Manter implementação e testes em `src/`, `tests/` e `.github/workflows/ci.yml`. Não criar diretório de topo.
 - **Testes obrigatórios (III)**: Cobrir regras de domínio/aplicação com testes unitários, endpoints protegidos com integração HTTP e comportamento interativo web com Vitest/Testing Library.
-- **Tipagem e erros (V)**: Preservar TypeScript strict e tipos C# explícitos; validar entradas com Zod e FluentValidation; retornar erros RFC 7807 seguros e logs estruturados sem credenciais ou tokens.
-- **Frontend e acessibilidade (VI)**: Usar Next.js App Router, interface mobile-first e acessível, integração via `lib/` e estado de servidor pelos padrões aprovados.
+- **Tipagem e erros (V)**: Preservar TypeScript strict e tipos C# explícitos; validar entradas com Zod e FluentValidation; retornar erros RFC 7807 seguros e logs estruturados sem credenciais ou tokens, verificando essa ausência nos testes.
+- **Frontend e acessibilidade (VI)**: Usar Next.js App Router, interface mobile-first e acessível, integração via `lib/`, TanStack Query para estado do servidor, e React Hook Form com Zod nos formulários.
 - **Segurança e dados (VII)**: Usar Supabase Auth como autoridade de identidade; validar JWT na API; aplicar perfis Administrador/Operador no servidor; não persistir senhas nem segredos de provedor; preservar estado de conta e perfil auditáveis.
 - **Limites tecnológicos**: Não adicionar plataforma ou camada arquitetural. SDKs novos para integração com o Supabase, se usados, devem ser justificados pela pesquisa e permanecem dentro da plataforma já aprovada.
 
@@ -94,7 +94,7 @@ Pesquisar a integração aprovada de Supabase Auth e JWT com .NET, o convite seg
 - Testes: projetos existentes em `tests/api/` e `tests/web/`.
 - CI: jobs existentes de API e web; testes automatizados não dependem de credenciais de produção ou projeto Supabase ativo.
 
-**Gate após design: PASS** — alterações preservam os projetos e tecnologias estabelecidos, usam PostgreSQL para o estado de autorização da aplicação e deixam credenciais de autenticação sob gestão do Supabase Auth. Testes de integração com o provedor devem ser isolados ou utilizar doubles para não exigir segredos de produção no CI.
+**Gate após design: PASS** — alterações preservam os projetos e tecnologias estabelecidos, usam PostgreSQL para o estado de autorização da aplicação e deixam credenciais de autenticação sob gestão do Supabase Auth. As tarefas especificam o uso das bibliotecas mandatórias da constituição e a validação de logs estruturados sem dados sensíveis. Testes de integração com o provedor devem ser isolados ou utilizar doubles para não exigir segredos de produção no CI.
 
 ## Registro de Complexidade
 

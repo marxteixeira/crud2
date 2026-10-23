@@ -30,7 +30,7 @@ Como Administrador ou Operador, quero entrar com minhas credenciais e encerrar m
 1. **Given** uma conta ativa e credenciais válidas, **When** a pessoa entra no sistema, **Then** passa a acessar as áreas permitidas ao seu perfil.
 2. **Given** uma conta ativa e credenciais inválidas, **When** a pessoa tenta entrar, **Then** o acesso é recusado com uma mensagem compreensível e sem revelar qual parte das credenciais estava correta.
 3. **Given** uma sessão autenticada, **When** a pessoa encerra a sessão, **Then** as áreas protegidas deixam de estar acessíveis até um novo login.
-4. **Given** uma conta inativada, **When** a pessoa tenta iniciar uma sessão, **Then** o acesso é recusado.
+4. **Given** uma conta inativada, **When** a pessoa tenta entrar, **Then** não acessa áreas do sistema; se o provedor emitir uma sessão antes da verificação da situação da conta, a aplicação a rejeita, encerra a sessão local e apresenta uma mensagem genérica.
 
 ### User Story 2 - Administrar usuários e perfis (Priority: P1)
 
@@ -80,7 +80,7 @@ Como responsável pela loja, quero que as permissões sejam verificadas em cada 
 ### Functional Requirements
 
 - **FR-001**: O sistema MUST permitir que pessoas com contas ativas entrem usando e-mail e senha e encerrem suas próprias sessões.
-- **FR-002**: O sistema MUST recusar acesso para credenciais inválidas ou contas inativadas e MUST apresentar uma mensagem que não revele se o e-mail está cadastrado.
+- **FR-002**: O sistema MUST recusar o acesso à aplicação para credenciais inválidas ou contas inativadas e MUST apresentar uma mensagem que não revele se o e-mail está cadastrado. Se o provedor emitir uma sessão antes da verificação da situação da conta, a aplicação MUST negar o acesso protegido e encerrar a sessão local.
 - **FR-003**: O sistema MUST permitir que Administradores provisionem e consultem contas contendo nome, e-mail e perfil.
 - **FR-004**: O sistema MUST permitir que Administradores editem os dados e o perfil de uma conta e inativem contas sem apagar seus registros.
 - **FR-005**: O sistema MUST garantir que cada e-mail seja único e que os únicos perfis atribuíveis sejam Administrador e Operador.
@@ -104,7 +104,7 @@ Como responsável pela loja, quero que as permissões sejam verificadas em cada 
 ### Measurable Outcomes
 
 - **SC-001**: 100% das tentativas de login com credenciais válidas de contas ativas dos dois perfis são concluídas com o perfil correto; 100% das tentativas inválidas ou de contas inativas são recusadas.
-- **SC-002**: Em todos os testes de permissão, Operadores não conseguem gerenciar usuários nem alterar preços, e tentativas recusadas não modificam dados.
+- **SC-002**: Em todos os testes das operações incluídas nesta fase, Operadores não conseguem gerenciar usuários e tentativas recusadas não modificam dados. A restrição de alteração de preços definida em FR-007 será verificada com as operações do catálogo na fase em que forem disponibilizadas.
 - **SC-003**: Um Administrador consegue provisionar, localizar, editar e inativar uma conta em até 3 minutos, sem assistência técnica.
 - **SC-004**: Em uma validação com pelo menos cinco pessoas representando os perfis previstos, todas conseguem identificar como entrar e encerrar a sessão; pelo menos 90% concluem essas tarefas sem ajuda.
 - **SC-005**: Após encerramento da sessão ou inativação da conta, 100% das novas tentativas de acessar áreas protegidas são recusadas; após alteração do perfil, 100% das novas ações respeitam imediatamente as permissões atualizadas.
