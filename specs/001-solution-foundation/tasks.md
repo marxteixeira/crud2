@@ -22,8 +22,8 @@ Manter os projetos e diretórios existentes: `src/services/api/SistemaEstoque.*`
 
 **Purpose**: Preparar a persistência aprovada no projeto de infraestrutura existente.
 
-- [ ] T001 Adicionar referências compatíveis com EF Core 8, Npgsql EF Core provider e tooling de design-time para migrações em `src/services/api/SistemaEstoque.Infrastructure/SistemaEstoque.Infrastructure.csproj`; não adicionar ORM, provider ou projeto novo.
-- [ ] T002 Criar o `SistemaEstoqueDbContext` vazio em `src/services/api/SistemaEstoque.Infrastructure/Persistence/SistemaEstoqueDbContext.cs`, sem entidades, tabelas ou migrações de negócio.
+- [X] T001 Adicionar referências compatíveis com EF Core 8, Npgsql EF Core provider e tooling de design-time para migrações em `src/services/api/SistemaEstoque.Infrastructure/SistemaEstoque.Infrastructure.csproj`; não adicionar ORM, provider ou projeto novo.
+- [X] T002 Criar o `SistemaEstoqueDbContext` vazio em `src/services/api/SistemaEstoque.Infrastructure/Persistence/SistemaEstoqueDbContext.cs`, sem entidades, tabelas ou migrações de negócio.
 
 ---
 
@@ -31,9 +31,9 @@ Manter os projetos e diretórios existentes: `src/services/api/SistemaEstoque.*`
 
 **Purpose**: Registrar dependências nos limites de camada aprovados antes das histórias.
 
-- [ ] T003 Criar o ponto de composição da camada Infrastructure em `src/services/api/SistemaEstoque.Infrastructure/DependencyInjection.cs` e registrar o `SistemaEstoqueDbContext` via Npgsql usando `ConnectionStrings:Default`, sem referenciar API ou adicionar lógica de negócio.
-- [ ] T004 Adicionar FluentValidation à camada Application em `src/services/api/SistemaEstoque.Application/SistemaEstoque.Application.csproj`, registrar validators da camada em `src/services/api/SistemaEstoque.Application/DependencyInjection.cs`, adicionar Zod às dependências web em `src/apps/web/package.json` e atualizar `package-lock.json`; deixar a base pronta para validação de entradas futuras sem criar fluxos ou regras de negócio nesta etapa.
-- [ ] T005 Estender `tests/api/SistemaEstoque.Domain.Tests/LayerDependencyTests.cs` para falhar se Domain referenciar projetos/pacotes externos ou se Application referenciar Infrastructure/API; manter todos os projetos e dependências permitidos pela constitution.
+- [X] T003 Criar o ponto de composição da camada Infrastructure em `src/services/api/SistemaEstoque.Infrastructure/DependencyInjection.cs` e registrar o `SistemaEstoqueDbContext` via Npgsql usando `ConnectionStrings:Default`, sem referenciar API ou adicionar lógica de negócio.
+- [X] T004 Adicionar FluentValidation à camada Application em `src/services/api/SistemaEstoque.Application/SistemaEstoque.Application.csproj`, registrar validators da camada em `src/services/api/SistemaEstoque.Application/DependencyInjection.cs`, adicionar Zod às dependências web em `src/apps/web/package.json` e atualizar `package-lock.json`; deixar a base pronta para validação de entradas futuras sem criar fluxos ou regras de negócio nesta etapa.
+- [X] T005 Estender `tests/api/SistemaEstoque.Domain.Tests/LayerDependencyTests.cs` para falhar se Domain referenciar projetos/pacotes externos ou se Application referenciar Infrastructure/API; manter todos os projetos e dependências permitidos pela constitution.
 
 **Checkpoint**: A solução existente compõe suas camadas e registra a persistência aprovada; nenhuma história passa a depender de estrutura nova.
 
@@ -47,13 +47,13 @@ Manter os projetos e diretórios existentes: `src/services/api/SistemaEstoque.*`
 
 ### Tests for User Story 1
 
-- [ ] T006 [P] [US1] Estender `tests/api/SistemaEstoque.API.Tests/HealthEndpointTests.cs` para verificar `GET /health` retorna HTTP 200, `status` igual a `Healthy` e `timestamp` UTC parseável conforme `contracts/health-api.yaml`.
-- [ ] T007 [P] [US1] Estender `tests/web/HealthStatus.test.tsx` para verificar os estados de verificação, saudável e indisponível do componente existente, sem expor falha de rede como estado saudável.
+- [X] T006 [P] [US1] Estender `tests/api/SistemaEstoque.API.Tests/HealthEndpointTests.cs` para verificar `GET /health` retorna HTTP 200, `status` igual a `Healthy` e `timestamp` UTC parseável conforme `contracts/health-api.yaml`.
+- [X] T007 [P] [US1] Estender `tests/web/HealthStatus.test.tsx` para verificar os estados de verificação, saudável e indisponível do componente existente, sem expor falha de rede como estado saudável.
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Preservar e ajustar o mapeamento de `GET /health` em `src/services/api/SistemaEstoque.API/Program.cs` para manter compatibilidade com o contrato de `status` e `timestamp` e não exigir conexão de banco para indicar disponibilidade do host.
-- [ ] T009 [US1] Garantir que `src/apps/web/components/HealthStatus.tsx` apresente a falha de comunicação com a API como indisponível e preserve o estado acessível `role="status"` já existente.
+- [X] T008 [US1] Preservar e ajustar o mapeamento de `GET /health` em `src/services/api/SistemaEstoque.API/Program.cs` para manter compatibilidade com o contrato de `status` e `timestamp` e não exigir conexão de banco para indicar disponibilidade do host.
+- [X] T009 [US1] Garantir que `src/apps/web/components/HealthStatus.tsx` apresente a falha de comunicação com a API como indisponível e preserve o estado acessível `role="status"` já existente.
 
 **Checkpoint**: A API e a página inicial do web continuam verificáveis independentemente de persistência e indicam saúde/indisponibilidade corretamente.
 
@@ -67,16 +67,16 @@ Manter os projetos e diretórios existentes: `src/services/api/SistemaEstoque.*`
 
 ### Tests for User Story 2
 
-- [ ] T010 [P] [US2] Criar `tests/api/SistemaEstoque.API.Tests/ConfigurationTests.cs` para verificar que `ConnectionStrings:Default` ausente ou inválida falha a validação de opções no início da aplicação com mensagem sem o valor configurado; executar esses casos com configuração de teste isolada por `WebApplicationFactory<Program>`.
-- [ ] T011 [P] [US2] Criar `tests/api/SistemaEstoque.API.Tests/PersistenceConnectivityTests.cs` para verificar `SistemaEstoqueDbContext.Database.CanConnectAsync()` contra o PostgreSQL descartável fornecido pelo CI, sem criar tabelas de negócio; escrever o teste nesta fase e executá-lo após T015 configurar o serviço.
+- [X] T010 [P] [US2] Criar `tests/api/SistemaEstoque.API.Tests/ConfigurationTests.cs` para verificar que `ConnectionStrings:Default` ausente ou inválida falha a validação do registro de Infrastructure com mensagem sem o valor configurado; usar configuração isolada de teste.
+- [X] T011 [P] [US2] Criar `tests/api/SistemaEstoque.API.Tests/PersistenceConnectivityTests.cs` para verificar `SistemaEstoqueDbContext.Database.CanConnectAsync()` contra o PostgreSQL descartável fornecido pelo CI, sem criar tabelas de negócio; escrever o teste nesta fase e executá-lo após T015 configurar o serviço.
 
 ### Implementation for User Story 2
 
-- [ ] T012 [US2] Adicionar opções tipadas e validação no início da aplicação em `src/services/api/SistemaEstoque.API/Configuration/ApiOptions.cs` e registrar/validar essas opções em `src/services/api/SistemaEstoque.API/Program.cs`; não incluir valores secretos em arquivos versionados.
-- [ ] T013 [P] [US2] Completar configurações não secretas em `src/services/api/SistemaEstoque.API/appsettings.json`, `src/services/api/SistemaEstoque.API/appsettings.Development.json` e `src/services/api/SistemaEstoque.API/appsettings.Testing.json`, preservando CORS e níveis de log atuais e sem connection strings reais.
-- [ ] T014 [P] [US2] Documentar as variáveis de configuração de desenvolvimento do frontend em `src/apps/web/.env.example`, preservando `NEXT_PUBLIC_API_URL` e sem adicionar credenciais.
-- [ ] T015 [US2] Adicionar um serviço PostgreSQL descartável ao job `api` de `.github/workflows/ci.yml` e fornecer suas credenciais de teste apenas como configuração efêmera do workflow, sem segredos Supabase.
-- [ ] T016 [US2] Documentar a entrega local de segredos por User Secrets/variáveis de ambiente e a entrega de CI/produção pelo ambiente de execução em `README.md`, sem gravar valores reais.
+- [X] T012 [US2] Adicionar opções tipadas e validação no início da aplicação em `src/services/api/SistemaEstoque.API/Configuration/ApiOptions.cs` e registrar/validar essas opções em `src/services/api/SistemaEstoque.API/Program.cs`; não incluir valores secretos em arquivos versionados.
+- [X] T013 [P] [US2] Completar configurações não secretas em `src/services/api/SistemaEstoque.API/appsettings.json`, `src/services/api/SistemaEstoque.API/appsettings.Development.json` e `src/services/api/SistemaEstoque.API/appsettings.Testing.json`, preservando CORS e níveis de log atuais e sem connection strings reais.
+- [X] T014 [P] [US2] Documentar as variáveis de configuração de desenvolvimento do frontend em `src/apps/web/.env.example`, preservando `NEXT_PUBLIC_API_URL` e sem adicionar credenciais.
+- [X] T015 [US2] Adicionar um serviço PostgreSQL descartável ao job `api` de `.github/workflows/ci.yml` e fornecer suas credenciais de teste apenas como configuração efêmera do workflow, sem segredos Supabase.
+- [X] T016 [US2] Documentar a entrega local de segredos por User Secrets/variáveis de ambiente e a entrega de CI/produção pelo ambiente de execução em `README.md`, sem gravar valores reais.
 
 **Checkpoint**: Configurações dos ambientes são independentes, testes não usam dados de produção e a persistência EF Core/Npgsql consegue validar conectividade com PostgreSQL.
 
@@ -92,17 +92,17 @@ Manter os projetos e diretórios existentes: `src/services/api/SistemaEstoque.*`
 
 ### Tests for User Story 3
 
-- [ ] T017 [P] [US3] Criar `tests/api/SistemaEstoque.API.Tests/GlobalErrorHandlingTests.cs` usando um `IStartupFilter` registrado somente pela `WebApplicationFactory<Program>` para lançar exceção em uma rota de teste; verificar status apropriado, `application/problem+json`, campos Problem Details e ausência de stack trace/segredos sem adicionar rota de falha ao host de produção.
-- [ ] T018 [P] [US3] Estender `tests/api/SistemaEstoque.API.Tests/HealthEndpointTests.cs` para verificar o contrato `GET /health/ready`: HTTP 200 com dependência disponível, HTTP 503 com dependência indisponível e nenhuma mensagem interna de conexão na resposta.
-- [ ] T019 [P] [US3] Criar `tests/api/SistemaEstoque.API.Tests/StructuredLoggingTests.cs` para capturar eventos de requisição e falha via `WebApplicationFactory<Program>` e confirmar método, rota, status HTTP e identificador de correlação, sem body, credencial ou segredo.
+- [X] T017 [P] [US3] Criar `tests/api/SistemaEstoque.API.Tests/GlobalErrorHandlingTests.cs` para chamar `/__test/error`, rota mapeada somente quando o ambiente é `Testing`, e verificar status 500, `application/problem+json`, campos Problem Details e ausência de stack trace/segredos; não expor a rota em produção.
+- [X] T018 [P] [US3] Estender `tests/api/SistemaEstoque.API.Tests/HealthEndpointTests.cs` para verificar o contrato `GET /health/ready`: HTTP 200 com dependência disponível, HTTP 503 com dependência indisponível e nenhuma mensagem interna de conexão na resposta.
+- [X] T019 [P] [US3] Criar `tests/api/SistemaEstoque.API.Tests/StructuredLoggingTests.cs` para capturar eventos de requisição e falha via `WebApplicationFactory<Program>` e confirmar método, rota, status HTTP e identificador de correlação, sem body, credencial ou segredo.
 
 ### Implementation for User Story 3
 
-- [ ] T020 [US3] Criar middleware de logging estruturado por requisição em `src/services/api/SistemaEstoque.API/Middleware/RequestLoggingMiddleware.cs` e registrá-lo em `src/services/api/SistemaEstoque.API/Program.cs`; registrar método, rota, status HTTP e identificador de correlação quando disponível, omitindo body, credenciais e dados sensíveis.
-- [ ] T021 [US3] Configurar o formatter JSON do console integrado e níveis por ambiente em `src/services/api/SistemaEstoque.API/appsettings.json` e `src/services/api/SistemaEstoque.API/appsettings.Development.json`, sem incluir credenciais ou valores sensíveis.
-- [ ] T022 [US3] Evoluir o tratamento global já registrado em `src/services/api/SistemaEstoque.API/Program.cs` para responder erros inesperados em RFC 7807 sem stack trace, incluir contexto de correlação seguro e manter a exceção disponível nos logs operacionais.
-- [ ] T023 [US3] Registrar em `src/services/api/SistemaEstoque.API/Program.cs` uma verificação de readiness do `SistemaEstoqueDbContext` e mapear `GET /health/ready` com `503` quando a persistência não estiver disponível; preservar `GET /health` sem dependência do banco.
-- [ ] T024 [US3] Atualizar `specs/001-solution-foundation/contracts/health-api.yaml` para que respostas reais de `/health`, `/health/ready` e erros RFC 7807 correspondam ao contrato documentado.
+- [X] T020 [US3] Criar middleware de logging estruturado por requisição em `src/services/api/SistemaEstoque.API/Middleware/RequestLoggingMiddleware.cs` e registrá-lo em `src/services/api/SistemaEstoque.API/Program.cs`; registrar método, rota, status HTTP e identificador de correlação quando disponível, omitindo body, credenciais e dados sensíveis.
+- [X] T021 [US3] Configurar o formatter JSON do console integrado e níveis por ambiente em `src/services/api/SistemaEstoque.API/appsettings.json` e `src/services/api/SistemaEstoque.API/appsettings.Development.json`, sem incluir credenciais ou valores sensíveis.
+- [X] T022 [US3] Evoluir o tratamento global já registrado em `src/services/api/SistemaEstoque.API/Program.cs` para responder erros inesperados em RFC 7807 sem stack trace, incluir contexto de correlação seguro e manter a exceção disponível nos logs operacionais.
+- [X] T023 [US3] Registrar em `src/services/api/SistemaEstoque.API/Program.cs` uma verificação de readiness do `SistemaEstoqueDbContext` e mapear `GET /health/ready` com `503` quando a persistência não estiver disponível; preservar `GET /health` sem dependência do banco.
+- [X] T024 [US3] Atualizar `specs/001-solution-foundation/contracts/health-api.yaml` para que respostas reais de `/health`, `/health/ready` e erros RFC 7807 correspondam ao contrato documentado.
 
 **Checkpoint**: Falhas ficam diagnosticáveis nos logs, mas os clientes recebem erros seguros; disponibilidade do host e prontidão PostgreSQL são distinguíveis.
 
@@ -112,8 +112,8 @@ Manter os projetos e diretórios existentes: `src/services/api/SistemaEstoque.*`
 
 **Purpose**: Alinhar documentação, quickstart e gates com o comportamento entregue.
 
-- [ ] T025 [P] Atualizar instruções de pré-requisitos, execução web/API, configuração por ambiente e comandos de validação em `README.md` e `specs/001-solution-foundation/quickstart.md`, mantendo exemplos compatíveis com PowerShell e sem segredos reais.
-- [ ] T026 Revisar o conjunto de mudanças em `src/services/api/`, `src/apps/web/`, `tests/` e `.github/workflows/ci.yml` contra `.specify/memory/constitution.md`, executar build/testes API e web conforme `specs/001-solution-foundation/quickstart.md` e corrigir violações ou falhas antes da conclusão.
+- [X] T025 [P] Atualizar instruções de pré-requisitos, execução web/API, configuração por ambiente e comandos de validação em `README.md` e `specs/001-solution-foundation/quickstart.md`, mantendo exemplos compatíveis com PowerShell e sem segredos reais.
+- [X] T026 Revisar o conjunto de mudanças em `src/services/api/`, `src/apps/web/`, `tests/` e `.github/workflows/ci.yml` contra `.specify/memory/constitution.md`, executar build/testes API e web conforme `specs/001-solution-foundation/quickstart.md` e corrigir violações ou falhas antes da conclusão.
 
 ---
 

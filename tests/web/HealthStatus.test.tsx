@@ -12,6 +12,12 @@ describe("HealthStatus", () => {
     expect(await screen.findByText("API: Healthy")).toBeInTheDocument();
   });
 
+  it("mostra o estado de verificação enquanto aguarda a API", () => {
+    vi.mocked(getHealth).mockImplementation(() => new Promise(() => {}));
+    render(<HealthStatus />);
+    expect(screen.getByRole("status", { name: "Status da API" })).toHaveTextContent("API: verificando...");
+  });
+
   it("mostra indisponível quando a API falha", async () => {
     vi.mocked(getHealth).mockRejectedValue(new Error("network"));
     render(<HealthStatus />);

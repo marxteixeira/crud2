@@ -11,9 +11,12 @@ Este guia valida o skeleton e os critérios desta feature sem pressupor implemen
 
 ## Configurar e executar localmente
 
-1. Configure os valores locais de API/web e, quando aplicável, a conexão PostgreSQL por variáveis de ambiente ou User Secrets. Para sessão PowerShell, a conexão pode ser fornecida sem gravar um arquivo no repositório:
+1. Configure os valores locais de API/web e, quando aplicável, a conexão PostgreSQL por variáveis de ambiente ou User Secrets:
 
    ```powershell
+   dotnet user-secrets init --project src/services/api/SistemaEstoque.API
+   dotnet user-secrets set --project src/services/api/SistemaEstoque.API "ConnectionStrings:Default" "<connection-string-local>"
+   # Alternativa somente para a sessão atual:
    $env:ConnectionStrings__Default = "<connection-string-de-desenvolvimento>"
    ```
 
@@ -47,7 +50,7 @@ O comportamento esperado de `/health` e de prontidão está descrito em [contrac
 
 ## Validar build e testes
 
-Na raiz do repositório:
+Na raiz do repositório, com PostgreSQL de teste local isolado disponível e configurado em `ConnectionStrings:Default`:
 
 ```powershell
 dotnet build src/services/api/SistemaEstoque.sln

@@ -12,7 +12,22 @@ public class LayerDependencyTests
     }
 
     [Fact]
-    public void Application_ReferencesOnlyDomainWhenUsed()
+    public void Domain_DoesNotReferenceExternalPackages()
+    {
+        Assembly domain = Assembly.Load("SistemaEstoque.Domain");
+        string[] externalReferences = domain.GetReferencedAssemblies()
+            .Where(assembly =>
+                assembly.Name is not ("System" or "netstandard")
+                && assembly.Name?.StartsWith("System.", StringComparison.Ordinal) is false
+                && assembly.Name?.StartsWith("Microsoft.", StringComparison.Ordinal) is false)
+            .Select(assembly => assembly.Name!)
+            .ToArray();
+
+        Assert.Empty(externalReferences);
+    }
+
+    [Fact]
+    public void Application_ReferencesDomainButNotOuterLayers()
     {
         Assembly app = Assembly.Load("SistemaEstoque.Application");
         Assert.DoesNotContain(app.GetReferencedAssemblies(),

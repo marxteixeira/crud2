@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SistemaEstoque.Domain\SistemaEstoque.Domain.csproj" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
   </ItemGroup>
 
   <PropertyGroup>
