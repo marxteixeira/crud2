@@ -14,7 +14,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        bool requireVerifiedTls = false)
     {
         string? connectionString = configuration.GetConnectionString("Default");
         if (string.IsNullOrWhiteSpace(connectionString))
@@ -23,14 +24,23 @@ public static class DependencyInjection
                 "Required configuration 'ConnectionStrings:Default' is missing.");
         }
 
+        NpgsqlConnectionStringBuilder connectionOptions;
         try
         {
-            _ = new NpgsqlConnectionStringBuilder(connectionString);
+            connectionOptions = new NpgsqlConnectionStringBuilder(connectionString);
         }
         catch (Exception exception) when (exception is ArgumentException or FormatException)
         {
             throw new InvalidOperationException(
                 "Configuration 'ConnectionStrings:Default' is invalid.");
+        }
+
+        if (requireVerifiedTls
+            && (connectionOptions.SslMode != SslMode.VerifyFull
+                || connectionOptions.TrustServerCertificate))
+        {
+            throw new InvalidOperationException(
+                "Configuration 'ConnectionStrings:Default' must require verified TLS.");
         }
 
         services.AddDbContext<SistemaEstoqueDbContext>(options =>

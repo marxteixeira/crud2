@@ -68,6 +68,8 @@ public class HealthEndpointTests : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
         Assert.DoesNotContain("not-a-secret", body, StringComparison.Ordinal);
         Assert.DoesNotContain("127.0.0.1", body, StringComparison.Ordinal);
+        Assert.DoesNotContain("Password", body, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("connection string", body, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

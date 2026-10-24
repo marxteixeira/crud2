@@ -16,7 +16,7 @@ Cada tarefa usa `- [ ] TNNN [P?] [USn?] descrição com caminho de arquivo`. `[P
 
 **Purpose**: Preparar a documentação do fluxo de configuração sem adicionar dependências.
 
-- [ ] T001 Atualizar `README.md` para apontar ao contrato de configuração do banco e ao quickstart desta feature, sem incluir valores de credenciais.
+- [X] T001 Atualizar `README.md` para apontar ao contrato de configuração do banco e ao quickstart desta feature, sem incluir valores de credenciais.
 
 ---
 
@@ -24,8 +24,8 @@ Cada tarefa usa `- [ ] TNNN [P?] [USn?] descrição com caminho de arquivo`. `[P
 
 **Purpose**: Habilitar o armazenamento local de configurações privadas e garantir que defaults versionados não contenham credenciais.
 
-- [ ] T002 Adicionar `UserSecretsId` ao projeto `src/services/api/SistemaEstoque.API/SistemaEstoque.API.csproj` para que a API carregue ASP.NET Core User Secrets em desenvolvimento.
-- [ ] T003 Remover valores de senha, inclusive placeholders com aparência de credencial, e manter somente defaults locais não secretos em `src/services/api/SistemaEstoque.API/appsettings.Development.json` e `src/services/api/SistemaEstoque.API/appsettings.Testing.json`.
+- [X] T002 Adicionar `UserSecretsId` ao projeto `src/services/api/SistemaEstoque.API/SistemaEstoque.API.csproj` para que a API carregue ASP.NET Core User Secrets em desenvolvimento.
+- [X] T003 Remover valores de senha, inclusive placeholders com aparência de credencial, e manter somente defaults locais não secretos em `src/services/api/SistemaEstoque.API/appsettings.Development.json` e `src/services/api/SistemaEstoque.API/appsettings.Testing.json`.
 
 **Checkpoint**: As histórias podem iniciar com User Secrets disponíveis localmente e arquivos de configuração versionados sem credenciais.
 
@@ -39,14 +39,14 @@ Cada tarefa usa `- [ ] TNNN [P?] [USn?] descrição com caminho de arquivo`. `[P
 
 ### Tests for User Story 1
 
-- [ ] T004 [P] [US1] Adicionar testes em `tests/api/SistemaEstoque.API.Tests/ConfigurationTests.cs` para exigir `VerifyFull` em configuração de produção, recusar TLS desativado ou validação permissiva e aceitar configurações locais de teste isolado.
-- [ ] T005 [P] [US1] Estender `tests/api/SistemaEstoque.API.Tests/HealthEndpointTests.cs` para verificar `/health` independente do banco e `/health/ready` com `200` para banco acessível e `503` para indisponibilidade, sem detalhes de conexão na resposta.
+- [X] T004 [P] [US1] Adicionar testes em `tests/api/SistemaEstoque.API.Tests/ConfigurationTests.cs` para exigir `VerifyFull` em configuração de produção, recusar TLS desativado ou validação permissiva e aceitar configurações locais de teste isolado.
+- [X] T005 [P] [US1] Estender `tests/api/SistemaEstoque.API.Tests/HealthEndpointTests.cs` para verificar `/health` independente do banco e `/health/ready` com `200` para banco acessível e `503` para indisponibilidade, sem detalhes de conexão na resposta.
 
 ### Implementation for User Story 1
 
-- [ ] T006 [US1] Validar no host em `src/services/api/SistemaEstoque.API/Program.cs` o modo TLS da connection string por ambiente, exigindo validação de certificado e hostname em produção e preservando a configuração explícita do PostgreSQL isolado em testes locais/CI.
-- [ ] T007 [US1] Preservar o uso de `ConnectionStrings:Default` e a validação sem ecoar valores em `src/services/api/SistemaEstoque.Infrastructure/DependencyInjection.cs`; garantir que a configuração Npgsql aceita a connection string aprovada do endpoint Supabase, incluindo caracteres especiais e CA quando configurada.
-- [ ] T008 [US1] Detalhar em `specs/004-supabase-database-config/contracts/database-configuration.md` e `specs/004-supabase-database-config/quickstart.md` o provisionamento operacional de role runtime sem DDL, role separada para migrações com grants DDL mínimos e execução explícita de migrations por conexão direta.
+- [X] T006 [US1] Validar no host em `src/services/api/SistemaEstoque.API/Program.cs` o modo TLS da connection string por ambiente, exigindo validação de certificado e hostname em produção e preservando a configuração explícita do PostgreSQL isolado em testes locais/CI.
+- [X] T007 [US1] Preservar o uso de `ConnectionStrings:Default` e a validação sem ecoar valores em `src/services/api/SistemaEstoque.Infrastructure/DependencyInjection.cs`; garantir que a configuração Npgsql aceita a connection string aprovada do endpoint Supabase, incluindo caracteres especiais e CA quando configurada.
+- [X] T008 [US1] Detalhar em `specs/004-supabase-database-config/contracts/database-configuration.md` e `specs/004-supabase-database-config/quickstart.md` o provisionamento operacional de role runtime sem DDL, role separada para migrações com grants DDL mínimos e execução explícita de migrations por conexão direta.
 
 **Checkpoint**: A API conecta ao banco de teste com prontidão correta; uma credencial de produção não pode ser usada com TLS permissivo, e startup não aplica migrations.
 
@@ -60,14 +60,14 @@ Cada tarefa usa `- [ ] TNNN [P?] [USn?] descrição com caminho de arquivo`. `[P
 
 ### Tests for User Story 2
 
-- [ ] T009 [P] [US2] Criar `tests/api/SistemaEstoque.API.Tests/SecretConfigurationTests.cs` para verificar que configuração ausente/inválida e falhas de conectividade não expõem senha, connection string ou segredo administrativo em exceções, logs ou respostas de saúde.
-- [ ] T010 [P] [US2] Estender `tests/api/SistemaEstoque.API.Tests/PersistenceConnectivityTests.cs` para exercitar apenas o PostgreSQL isolado de teste e confirmar que o teste não depende de configuração Supabase nem de credenciais de produção.
+- [X] T009 [P] [US2] Criar `tests/api/SistemaEstoque.API.Tests/SecretConfigurationTests.cs` para verificar que configuração ausente/inválida e falhas de conectividade não expõem senha, connection string ou segredo administrativo em exceções, logs ou respostas de saúde.
+- [X] T010 [P] [US2] Estender `tests/api/SistemaEstoque.API.Tests/PersistenceConnectivityTests.cs` para exercitar apenas o PostgreSQL isolado de teste e confirmar que o teste não depende de configuração Supabase nem de credenciais de produção.
 
 ### Implementation for User Story 2
 
-- [ ] T011 [US2] Sanitizar erros de parsing e conexão sem preservar exceções internas que contenham credenciais em `src/services/api/SistemaEstoque.Infrastructure/DependencyInjection.cs` e `src/services/api/SistemaEstoque.Infrastructure/Persistence/DatabaseReadinessHealthCheck.cs`.
-- [ ] T012 [US2] Garantir em `.github/workflows/ci.yml` que testes da API usam somente o serviço PostgreSQL descartável com credenciais de teste e não recebem segredos ou endpoints do projeto Supabase.
-- [ ] T013 [US2] Documentar em `README.md` e `specs/004-supabase-database-config/quickstart.md` configuração local por User Secrets, armazenamento no secret manager em produção, limitações de proteção local dos User Secrets e rotação obrigatória da senha compartilhada antes do uso.
+- [X] T011 [US2] Sanitizar erros de parsing e conexão sem preservar exceções internas que contenham credenciais em `src/services/api/SistemaEstoque.Infrastructure/DependencyInjection.cs` e `src/services/api/SistemaEstoque.Infrastructure/Persistence/DatabaseReadinessHealthCheck.cs`.
+- [X] T012 [US2] Garantir em `.github/workflows/ci.yml` que testes da API usam somente o serviço PostgreSQL descartável com credenciais de teste e não recebem segredos ou endpoints do projeto Supabase.
+- [X] T013 [US2] Documentar em `README.md` e `specs/004-supabase-database-config/quickstart.md` configuração local por User Secrets, armazenamento no secret manager em produção, limitações de proteção local dos User Secrets e rotação obrigatória da senha compartilhada antes do uso.
 
 **Checkpoint**: Segredos não aparecem em arquivos versionados, logs, respostas ou bundle web; CI e desenvolvimento usam ambientes isolados e o procedimento de rotação é executável sem alterar código.
 
@@ -81,13 +81,13 @@ Cada tarefa usa `- [ ] TNNN [P?] [USn?] descrição com caminho de arquivo`. `[P
 
 ### Tests for User Story 3
 
-- [ ] T014 [P] [US3] Criar `tests/web/SupabaseConfiguration.test.ts` para cobrir a leitura da URL e chave publicável e falhar quando a configuração pública obrigatória estiver ausente, sem exigir connection string do banco.
+- [X] T014 [P] [US3] Criar `tests/web/SupabaseConfiguration.test.ts` para cobrir a leitura da URL e chave publicável e falhar quando a configuração pública obrigatória estiver ausente, sem exigir connection string do banco.
 
 ### Implementation for User Story 3
 
-- [ ] T015 [US3] Atualizar os consumidores em `src/apps/web/lib/supabase/client.ts`, `src/apps/web/lib/supabase/server.ts` e `src/apps/web/middleware.ts` para usar `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` e nunca ler configuração de banco ou chaves administrativas.
-- [ ] T016 [US3] Atualizar `src/apps/web/.env.example` com `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` vazio e remover o nome legado de chave pública depois de atualizar todos os consumidores e testes.
-- [ ] T017 [US3] Atualizar testes e setup do web em `tests/web/AuthFlow.test.tsx` e `tests/web/setup.ts` para cobrir a configuração publicável sem incluir segredos de servidor.
+- [X] T015 [US3] Atualizar os consumidores em `src/apps/web/lib/supabase/client.ts`, `src/apps/web/lib/supabase/server.ts` e `src/apps/web/middleware.ts` para usar `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` e nunca ler configuração de banco ou chaves administrativas.
+- [X] T016 [US3] Atualizar `src/apps/web/.env.example` com `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` vazio e remover o nome legado de chave pública depois de atualizar todos os consumidores e testes.
+- [X] T017 [US3] Atualizar testes e setup do web em `tests/web/AuthFlow.test.tsx` e `tests/web/setup.ts` para cobrir a configuração publicável sem incluir segredos de servidor.
 
 **Checkpoint**: O cliente web usa somente URL e chave publicável; autenticação existente permanece funcional e o bundle não depende da senha PostgreSQL nem de chave administrativa.
 
@@ -98,7 +98,9 @@ Cada tarefa usa `- [ ] TNNN [P?] [USn?] descrição com caminho de arquivo`. `[P
 **Purpose**: Validar os cenários documentados e resolver divergências finais.
 
 - [ ] T018 [P] Executar os comandos de validação de `specs/004-supabase-database-config/quickstart.md` para API e web e corrigir falhas nos arquivos afetados.
-- [ ] T019 [P] Revisar `src/services/api/SistemaEstoque.API/appsettings.json`, `src/services/api/SistemaEstoque.API/appsettings.Development.json`, `src/services/api/SistemaEstoque.API/appsettings.Testing.json`, `src/apps/web/.env.example` e o diff da feature para confirmar que nenhum segredo ou connection string de produção foi versionado.
+- [X] T019 [P] Revisar `src/services/api/SistemaEstoque.API/appsettings.json`, `src/services/api/SistemaEstoque.API/appsettings.Development.json`, `src/services/api/SistemaEstoque.API/appsettings.Testing.json`, `src/apps/web/.env.example` e o diff da feature para confirmar que nenhum segredo ou connection string de produção foi versionado.
+
+**T018 status**: Parcialmente bloqueada no ambiente local: build, testes direcionados de configuração e toda a suíte web passaram; 61 dos 63 testes API passaram usando configuração descartável. Os dois testes restantes exigem um PostgreSQL local em `localhost:5432`, que não está disponível. A validação integral deve ser repetida em ambiente com o serviço PostgreSQL descartável do CI.
 
 ---
 

@@ -7,6 +7,9 @@ node_modules/
 .next/
 out/
 coverage/
+dist/
+build/
+*.log
 .env*
 !.env.example
 *.tsbuildinfo

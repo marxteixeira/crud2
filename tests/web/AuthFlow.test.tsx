@@ -31,6 +31,8 @@ vi.mock("@/lib/supabase/client", () => ({
 describe("AuthFlow", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://example.supabase.co");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "test-publishable-key");
     mocks.signInWithPassword.mockResolvedValue({ error: null });
     mocks.updateUser.mockResolvedValue({ error: null });
     mocks.signOut.mockResolvedValue({ error: null });

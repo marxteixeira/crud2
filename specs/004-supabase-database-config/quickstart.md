@@ -16,13 +16,7 @@ Este procedimento configura credenciais novas e segregadas por ambiente. A senha
 2. Crie uma role PostgreSQL específica da API com login e privilégios mínimos para as operações persistentes já implementadas. Não use `postgres` como identidade de runtime e não conceda privilégios de superuser ou DDL à API.
 3. Crie uma role distinta para migrações, com DDL somente no schema gerenciado, e guarde sua credencial separadamente. Use-a apenas na operação de implantação de migrations por conexão direta.
 4. Habilite/verifique a exigência de SSL do projeto e obtenha a CA oficial quando o ambiente necessitar dela. A conexão deve validar CA e hostname.
-5. Para desenvolvimento local, inicialize User Secrets:
-
-   ```powershell
-   dotnet user-secrets init --project src/services/api/SistemaEstoque.API
-   ```
-
-   Em seguida, grave `ConnectionStrings:Default` e as opções administrativas Supabase no armazenamento de User Secrets por uma ferramenta/fluxo local confiável que não coloque os valores em argumentos de processo ou no histórico do shell. O armazenamento de User Secrets é de conveniência para desenvolvimento e não criptografa os valores; proteja a conta/disco local. Não copie segredos para `appsettings.Development.json` nem para `.env.local`.
+5. O projeto API já habilita User Secrets. Grave `ConnectionStrings:Default` e as opções administrativas Supabase no armazenamento local por uma ferramenta/fluxo confiável que não coloque os valores em argumentos de processo ou no histórico do shell. O armazenamento de User Secrets é de conveniência para desenvolvimento e não criptografa os valores; proteja a conta/disco local. Não copie segredos para `appsettings.Development.json` nem para `.env.local`.
 
 6. No web, configure somente os valores públicos necessários em `.env.local`, que permanece ignorado pelo Git:
 

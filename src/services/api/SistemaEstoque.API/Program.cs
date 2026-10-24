@@ -38,7 +38,9 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
         policy.WithOrigins(corsOptions.AllowedOrigins).AllowAnyHeader().AllowAnyMethod()));
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
+bool requireVerifiedDatabaseTls = !builder.Environment.IsDevelopment()
+    && !builder.Environment.IsEnvironment("Testing");
+builder.Services.AddInfrastructure(builder.Configuration, requireVerifiedDatabaseTls);
 if (builder.Environment.IsEnvironment("Testing"))
 {
     builder.Services.AddAuthentication("Missing")

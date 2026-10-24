@@ -11,13 +11,13 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     return redirect;
   };
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!supabaseUrl || !anonKey || !apiUrl) {
+  if (!supabaseUrl || !publishableKey || !apiUrl) {
     return redirectWithSessionCookies(new URL("/login?error=configuration", request.url));
   }
 
-  const supabase = createServerClient(supabaseUrl, anonKey, {
+  const supabase = createServerClient(supabaseUrl, publishableKey, {
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll: (values: { name: string; value: string; options: CookieOptions }[]) => values.forEach(({ name, value, options }) => {

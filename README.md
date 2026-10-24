@@ -32,20 +32,15 @@ O endpoint `GET /health` verifica o host sem depender do banco. `GET /health/rea
 
 ### Identidade e perfis
 
-A autenticação da aplicação usa Supabase Auth. Copie `src/apps/web/.env.example` para `.env.local` e configure a URL e a chave pública do projeto Supabase. Configure `Supabase__Url`, `Supabase__Audience`, `Supabase__AnonKey` e `Supabase__ServiceRoleKey` somente no ambiente servidor da API (User Secrets em desenvolvimento); nunca exponha a chave administrativa no web ou em arquivos versionados. O procedimento de bootstrap do primeiro Administrador e os cenários locais estão em [specs/003-identidade-perfis/quickstart.md](specs/003-identidade-perfis/quickstart.md).
+Autenticação usa Supabase Auth. Copie `src/apps/web/.env.example` para `.env.local` e configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; ambos são valores de cliente públicos, não credenciais PostgreSQL. Configure `Supabase__Url`, `Supabase__Audience`, `Supabase__AnonKey` e `Supabase__ServiceRoleKey` somente no servidor da API. A chave service-role é administrativa e nunca pode ser exposta ao web nem versionada. O procedimento de bootstrap do primeiro Administrador e os cenários locais estão em [specs/003-identidade-perfis/quickstart.md](specs/003-identidade-perfis/quickstart.md).
 
 ### Configuração e segredos
 
-A API carrega `appsettings.json`, `appsettings.{Environment}.json` e variáveis de ambiente. Em desenvolvimento, configure uma conexão PostgreSQL por User Secrets ou variável de ambiente:
+A API carrega `appsettings.json`, `appsettings.{Environment}.json`, User Secrets no ambiente Development e variáveis de ambiente. Os arquivos `appsettings*.json` versionados não contêm connection strings. O projeto já habilita User Secrets por meio de um identificador configurado no arquivo de projeto. Armazene `ConnectionStrings:Default` e demais chaves administrativas por um fluxo local que não exponha valores no histórico ou em argumentos de processo. User Secrets são armazenados localmente sem criptografia e são apropriados para desenvolvimento, não como cofre de produção. Em ambientes hospedados, forneça `ConnectionStrings__Default` e as chaves administrativas pelo secret manager do host. Ambientes não locais exigem `SSL Mode=VerifyFull` e validação do certificado; não desative a verificação TLS para contornar erros de conexão.
 
-```powershell
-dotnet user-secrets init --project src/services/api/SistemaEstoque.API
-dotnet user-secrets set --project src/services/api/SistemaEstoque.API "ConnectionStrings:Default" "<connection-string-local>"
-# Alternativa somente para a sessão atual:
-$env:ConnectionStrings__Default = "<connection-string-local>"
-```
+A API persistente deve usar uma role PostgreSQL de runtime com privilégios mínimos, separada da role administrativa e da role usada para aplicar migrações. A migração de esquema é uma operação explícita de implantação; ela não roda no startup. O CI usa um PostgreSQL descartável e credenciais de teste. Nunca copie uma senha compartilhada em conversa para configuração; rotacione-a antes de qualquer uso.
 
-Em produção, forneça `ConnectionStrings__Default` pelo ambiente de execução ou pelo mecanismo de segredos do host. Não adicione connection strings ou chaves reais a arquivos versionados. O CI usa uma instância PostgreSQL descartável com credenciais de teste.
+Consulte o [contrato de configuração e privilégios](specs/004-supabase-database-config/contracts/database-configuration.md) e o [quickstart de provisionamento e validação](specs/004-supabase-database-config/quickstart.md) para escolher endpoint direto ou Supavisor session de acordo com a rede do host, validar readiness e rotacionar credenciais sem alterar o código.
 
 ## Build e testes
 ```powershell
