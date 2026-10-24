@@ -30,6 +30,10 @@ npm run dev                                                   # http://localhost
 
 O endpoint `GET /health` verifica o host sem depender do banco. `GET /health/ready` retorna `503` quando o PostgreSQL configurado está indisponível.
 
+### Identidade e perfis
+
+A autenticação da aplicação usa Supabase Auth. Copie `src/apps/web/.env.example` para `.env.local` e configure a URL e a chave pública do projeto Supabase. Configure `Supabase__Url`, `Supabase__Audience`, `Supabase__AnonKey` e `Supabase__ServiceRoleKey` somente no ambiente servidor da API (User Secrets em desenvolvimento); nunca exponha a chave administrativa no web ou em arquivos versionados. O procedimento de bootstrap do primeiro Administrador e os cenários locais estão em [specs/003-identidade-perfis/quickstart.md](specs/003-identidade-perfis/quickstart.md).
+
 ### Configuração e segredos
 
 A API carrega `appsettings.json`, `appsettings.{Environment}.json` e variáveis de ambiente. Em desenvolvimento, configure uma conexão PostgreSQL por User Secrets ou variável de ambiente:

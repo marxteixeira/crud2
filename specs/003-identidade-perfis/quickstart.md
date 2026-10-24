@@ -8,7 +8,7 @@ Este guia descreve a validação ponta a ponta da fase de identidade e perfis. C
 - Dependências restauradas: `dotnet restore src/services/api/SistemaEstoque.sln` e `npm ci`.
 - Banco PostgreSQL isolado disponível e configurado em `ConnectionStrings:Default`.
 - Projeto Supabase Auth de desenvolvimento com URLs de redirecionamento de ativação configuradas para a origem local do web.
-- Configuração local do provedor fornecida por User Secrets ou variáveis de ambiente (`Supabase__Url`, `Supabase__ServiceRoleKey`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`); nunca gravada em arquivos versionados. O segredo administrativo do provedor fica somente no processo da API.
+- Configuração local do provedor fornecida por User Secrets ou variáveis de ambiente (`Supabase__Url`, `Supabase__AnonKey`, `Supabase__ServiceRoleKey`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`); nunca gravada em arquivos versionados. O segredo administrativo do provedor fica somente no processo da API.
 
 ## Preparar o ambiente local
 

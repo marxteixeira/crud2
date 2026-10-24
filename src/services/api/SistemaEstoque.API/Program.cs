@@ -33,13 +33,44 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddHealthChecks();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
         policy.WithOrigins(corsOptions.AllowedOrigins).AllowAnyHeader().AllowAnyMethod()));
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+if (builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddAuthentication("Missing")
+        .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, MissingAuthenticationHandler>(
+            "Missing",
+            _ => { });
+    builder.Services.AddApplicationAuthorization();
+}
+else if (!string.IsNullOrWhiteSpace(builder.Configuration[$"{SupabaseOptions.SectionName}:Url"]))
+{
+    builder.Services.AddSupabaseAuthentication(builder.Configuration, builder.Environment);
+}
+else if (builder.Environment.IsProduction())
+{
+    throw new InvalidOperationException("Supabase authentication configuration is required in production.");
+}
+else
+{
+    builder.Services.AddAuthentication("Missing")
+        .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, MissingAuthenticationHandler>(
+            "Missing",
+            _ => { });
+    builder.Services.AddApplicationAuthorization();
+}
 
 var app = builder.Build();
+if (!builder.Environment.IsEnvironment("Testing")
+    && string.IsNullOrWhiteSpace(builder.Configuration[$"{SupabaseOptions.SectionName}:Url"]))
+{
+    app.Logger.LogWarning(
+        "Supabase authentication is not configured; authenticated API endpoints will reject all requests.");
+}
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
@@ -52,6 +83,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.MapHealthChecks("/health", new HealthCheckOptions
 {

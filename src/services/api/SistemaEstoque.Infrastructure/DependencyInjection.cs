@@ -3,6 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Npgsql;
+using SistemaEstoque.Application.Authentication;
+using SistemaEstoque.Application.Users;
+using SistemaEstoque.Infrastructure.Identity;
 using SistemaEstoque.Infrastructure.Persistence;
 
 namespace SistemaEstoque.Infrastructure;
@@ -32,6 +35,11 @@ public static class DependencyInjection
 
         services.AddDbContext<SistemaEstoqueDbContext>(options =>
             options.UseNpgsql(connectionString));
+        services.AddScoped<ICurrentAccountAuthorization, CurrentAccountAuthorization>();
+        services.AddHttpClient<SupabaseAdminClient>();
+        services.AddScoped<IIdentityAdministration>(provider =>
+            provider.GetRequiredService<SupabaseAdminClient>());
+        services.AddScoped<IUserManagementService, UserManagementService>();
 
         services.AddHealthChecks()
             .AddCheck<DatabaseReadinessHealthCheck>("postgresql", tags: ["ready"]);

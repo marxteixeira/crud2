@@ -26,6 +26,8 @@ paths:
                 $ref: "#/components/schemas/UserAccount"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
   /api/auth/logout:
     post:
       operationId: logout
@@ -201,7 +203,7 @@ paths:
     put:
       operationId: setUserActivation
       summary: Ativar ou inativar conta de usuário
-      description: Somente Administrador. A inativação bloqueia futuras requisições protegidas e não apaga os dados da conta.
+      description: Somente Administrador. A inativação bloqueia futuras requisições protegidas e não apaga os dados da conta. Convites pendentes só podem ser ativados pelo titular após confirmar o endereço.
       parameters:
         - $ref: "#/components/parameters/UserId"
       requestBody:
@@ -227,7 +229,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
         "409":
-          description: A operação deixaria o sistema sem Administrador ativo.
+          description: A operação deixaria o sistema sem Administrador ativo ou tentaria ativar um convite antes da confirmação pelo titular.
           content:
             application/problem+json:
               schema:
