@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^dotnet build src/services/api/SistemaEstoque\\.sln$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
