@@ -9,6 +9,8 @@ internal sealed class FakeLocationManagementService : ILocationManagementService
 
     public Guid? LastActor { get; private set; }
 
+    public Exception? CreateRackFailure { get; set; }
+
     public Task<IReadOnlyList<RackDto>> ListRacksAsync(string? status, CancellationToken cancellationToken) =>
         Task.FromResult(Racks);
 
@@ -20,6 +22,11 @@ internal sealed class FakeLocationManagementService : ILocationManagementService
         Guid actor,
         CancellationToken cancellationToken)
     {
+        if (CreateRackFailure is not null)
+        {
+            throw CreateRackFailure;
+        }
+
         LastActor = actor;
         RackDto created = new(Guid.NewGuid(), request.Code, request.Description, "Active", []);
         Racks = [.. Racks, created];

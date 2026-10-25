@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { AxiosError, AxiosHeaders } from "axios";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import LocationsPageClient from "@/app/locations/LocationsPageClient";
 import { createShelf, listRacks } from "@/lib/locations";
@@ -104,5 +105,24 @@ describe("LocationsPage", () => {
       </QueryClientProvider>,
     );
     expect(await screen.findByRole("alert")).toHaveTextContent("Não foi possível carregar as localizações.");
+  });
+
+  it("shows the trace id when creating a rack fails with an internal error", async () => {
+    mocks.createRack.mockRejectedValue(
+      new AxiosError("fail", "ERR_BAD_RESPONSE", undefined, undefined, {
+        status: 500,
+        data: { traceId: "trace-123" },
+        statusText: "",
+        headers: {},
+        config: { headers: new AxiosHeaders() },
+      }),
+    );
+    renderPage();
+    await screen.findByRole("region", { name: "Prateleiras da estante A" });
+
+    fireEvent.change(screen.getByLabelText("Código da estante"), { target: { value: "C" } });
+    fireEvent.click(screen.getByRole("button", { name: "Cadastrar estante" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("trace-123");
   });
 });

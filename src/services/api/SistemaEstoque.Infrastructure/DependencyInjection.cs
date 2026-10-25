@@ -52,6 +52,7 @@ public static class DependencyInjection
         services.AddScoped<IIdentityAdministration>(provider =>
             provider.GetRequiredService<SupabaseAdminClient>());
         services.AddScoped<IUserManagementService, UserManagementService>();
+        services.AddScoped<IPendingMigrationsProvider, EfPendingMigrationsProvider>();
         services.AddScoped<ILocationManagementService, LocationManagementService>();
         services.AddScoped<IProductManagementService, ProductManagementService>();
 
@@ -60,4 +61,7 @@ public static class DependencyInjection
 
         return services;
     }
+
+    public static IServiceCollection AddPendingMigrationsStartupCheck(this IServiceCollection services) =>
+        services.AddHostedService<PendingMigrationsStartupCheck>();
 }

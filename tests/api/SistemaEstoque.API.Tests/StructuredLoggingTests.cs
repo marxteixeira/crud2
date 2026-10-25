@@ -61,6 +61,32 @@ public sealed class StructuredLoggingTests
         }
     }
 
+    [Fact]
+    public async Task CorsPreflight_LogsRequestPathInsteadOfMethodNotSupportedRoute()
+    {
+        using CapturingLoggerProvider provider = new();
+        using WebApplicationFactory<Program> factory = new WebApplicationFactory<Program>()
+            .WithWebHostBuilder(builder =>
+            {
+                builder.UseEnvironment("Testing");
+                builder.ConfigureLogging(logging => logging.AddProvider(provider));
+            });
+        using HttpClient client = factory.CreateClient();
+        using HttpRequestMessage preflight = new(HttpMethod.Options, "/api/locations/racks");
+        preflight.Headers.Add("Origin", "http://localhost:3000");
+        preflight.Headers.Add("Access-Control-Request-Method", "POST");
+
+        using HttpResponseMessage response = await client.SendAsync(preflight);
+
+        Assert.Equal(System.Net.HttpStatusCode.NoContent, response.StatusCode);
+        CapturedLog log = Assert.Single(provider.Logs.Where(entry =>
+            entry.Category.EndsWith("RequestLoggingMiddleware", StringComparison.Ordinal)
+            && Equals(entry.Values["Method"], "OPTIONS")));
+        string route = Assert.IsType<string>(log.Values["Route"]);
+        Assert.Contains("/api/locations/racks", route, StringComparison.Ordinal);
+        Assert.DoesNotContain("405", route, StringComparison.Ordinal);
+    }
+
     private sealed record CapturedLog(
         string Category,
         string Message,

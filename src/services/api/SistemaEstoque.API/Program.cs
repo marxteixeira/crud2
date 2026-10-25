@@ -41,6 +41,11 @@ builder.Services.AddApplication();
 bool requireVerifiedDatabaseTls = !builder.Environment.IsDevelopment()
     && !builder.Environment.IsEnvironment("Testing");
 builder.Services.AddInfrastructure(builder.Configuration, requireVerifiedDatabaseTls);
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddPendingMigrationsStartupCheck();
+}
+
 if (builder.Environment.IsEnvironment("Testing"))
 {
     builder.Services.AddAuthentication("Missing")

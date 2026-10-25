@@ -30,6 +30,16 @@ npm run dev                                                   # http://localhost
 
 O endpoint `GET /health` verifica o host sem depender do banco. `GET /health/ready` retorna `503` quando o PostgreSQL configurado está indisponível.
 
+### Migrations do banco
+
+O esquema (estantes, prateleiras, produtos etc.) só existe depois de aplicar as migrations, o que não acontece no startup. Sem isso, endpoints como `POST /api/locations/racks` retornam `500`. Com a role de migração configurada, aplique-as a partir da raiz do repositório:
+
+```powershell
+dotnet ef database update --project src/services/api/SistemaEstoque.Infrastructure --startup-project src/services/api/SistemaEstoque.API
+```
+
+Ao iniciar (exceto no ambiente `Testing`), a API registra um aviso com os nomes das migrations pendentes. Quando um erro `500` ocorrer, procure nos logs da API o `TraceId` retornado na resposta (`traceId`) para ver a causa.
+
 ### Identidade e perfis
 
 Autenticação usa Supabase Auth. Copie `src/apps/web/.env.example` para `.env.local` e configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; ambos são valores de cliente públicos, não credenciais PostgreSQL. Configure `Supabase__Url`, `Supabase__Audience`, `Supabase__AnonKey` e `Supabase__ServiceRoleKey` somente no servidor da API. A chave service-role é administrativa e nunca pode ser exposta ao web nem versionada. O procedimento de bootstrap do primeiro Administrador e os cenários locais estão em [specs/003-identidade-perfis/quickstart.md](specs/003-identidade-perfis/quickstart.md).

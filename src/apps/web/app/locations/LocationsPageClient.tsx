@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import AuthenticatedNavigation from "@/components/AuthenticatedNavigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { describeApiError } from "@/lib/api";
 import {
   createRack,
   createShelf,
@@ -44,48 +45,52 @@ export default function LocationsPageClient(): JSX.Element {
       setSelectedRackId(rack.id);
       await refresh();
     },
-    onError: () => setErrorMessage("Não foi possível cadastrar a estante. Verifique o código e tente novamente."),
+    onError: (error) => setErrorMessage(describeApiError(error, "Não foi possível cadastrar a estante. Verifique o código e tente novamente.")),
   });
   const updateRackMutation = useMutation({
     mutationFn: ({ rackId, code, description }: { rackId: string; code: string; description: string | null }) =>
       updateRack(getSupabaseBrowserClient(), rackId, { code, description }),
     onSuccess: refresh,
-    onError: () => setErrorMessage("Não foi possível atualizar a estante."),
+    onError: (error) => setErrorMessage(describeApiError(error, "Não foi possível atualizar a estante.")),
   });
   const rackStatusMutation = useMutation({
     mutationFn: ({ rackId, status }: { rackId: string; status: LocationStatus }) =>
       setRackStatus(getSupabaseBrowserClient(), rackId, status),
     onSuccess: refresh,
-    onError: () => setErrorMessage("Não foi possível alterar a situação da estante."),
+    onError: (error) => setErrorMessage(describeApiError(error, "Não foi possível alterar a situação da estante.")),
   });
   const createShelfMutation = useMutation({
     mutationFn: ({ rackId, code }: { rackId: string; code: string }) =>
       createShelf(getSupabaseBrowserClient(), rackId, { code }),
     onSuccess: refresh,
-    onError: () => setErrorMessage("Não foi possível cadastrar a prateleira."),
+    onError: (error) => setErrorMessage(describeApiError(error, "Não foi possível cadastrar a prateleira.")),
   });
   const updateShelfMutation = useMutation({
     mutationFn: ({ rackId, shelfId, code }: { rackId: string; shelfId: string; code: string }) =>
       updateShelf(getSupabaseBrowserClient(), rackId, shelfId, { code }),
     onSuccess: refresh,
-    onError: () => setErrorMessage("Não foi possível atualizar a prateleira."),
+    onError: (error) => setErrorMessage(describeApiError(error, "Não foi possível atualizar a prateleira.")),
   });
   const shelfStatusMutation = useMutation({
     mutationFn: ({ rackId, shelfId, status }: { rackId: string; shelfId: string; status: LocationStatus }) =>
       setShelfStatus(getSupabaseBrowserClient(), rackId, shelfId, status),
     onSuccess: refresh,
-    onError: () => setErrorMessage("Não foi possível alterar a situação da prateleira."),
+    onError: (error) => setErrorMessage(describeApiError(error, "Não foi possível alterar a situação da prateleira.")),
   });
 
   async function submitRack(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
-    await createRackMutation.mutateAsync({
-      code: String(form.get("code") ?? "").trim(),
-      description: String(form.get("description") ?? "").trim() || null,
-    });
-    formElement.reset();
+    try {
+      await createRackMutation.mutateAsync({
+        code: String(form.get("code") ?? "").trim(),
+        description: String(form.get("description") ?? "").trim() || null,
+      });
+      formElement.reset();
+    } catch {
+      // O erro já é exibido pelo onError da mutação.
+    }
   }
 
   async function submitShelf(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -94,8 +99,12 @@ export default function LocationsPageClient(): JSX.Element {
     const form = new FormData(formElement);
     const code = String(form.get("shelf-code") ?? "").trim();
     if (selectedRackId && code) {
-      await createShelfMutation.mutateAsync({ rackId: selectedRackId, code });
-      formElement.reset();
+      try {
+        await createShelfMutation.mutateAsync({ rackId: selectedRackId, code });
+        formElement.reset();
+      } catch {
+        // O erro já é exibido pelo onError da mutação.
+      }
     }
   }
 

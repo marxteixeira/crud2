@@ -33,7 +33,7 @@ Resultados esperados:
 
 ## Validar manualmente via web
 
-1. Aplique a migração aprovada pelo processo explícito de implantação/desenvolvimento; as migrações não são executadas automaticamente no startup.
+1. Aplique as migrações (comando em "Migrations do banco" no [README.md](../../README.md)); elas não são executadas automaticamente no startup e, sem elas, o cadastro de estantes retorna `500`.
 2. Inicie a API e a aplicação web conforme a seção de execução local do [README.md](../../README.md).
 3. Como Administrador, crie uma estante e pelo menos duas prateleiras. Confirme que a seleção de prateleira depende da estante.
 4. Como Administrador, crie um produto com preço, quantidade inteira e localização. Pesquise pelo nome, filtre por estante/prateleira/situação, abra o detalhe e consulte o conteúdo da localização.
@@ -59,4 +59,4 @@ Resultados esperados:
 - `npm run lint -w @crud2/web` e `npm run build -w @crud2/web`: aprovados; o build também concluiu verificação de tipos e geração estática.
 - Validação do YAML OpenAPI com `js-yaml` e `git diff --check`: aprovadas.
 - O teste de busca executou 100 chamadas aquecidas contra 5.000 produtos e passou no limite p95 de 2 segundos usando o provedor EF Core InMemory. Esse resultado é um sinal de regressão da lógica de consulta, não substitui a medição de latência com PostgreSQL.
-- A migração não foi aplicada. A validação ponta a ponta com PostgreSQL e credenciais locais de desenvolvimento permanece necessária antes da implantação; não foram usados serviços nem dados de produção.
+- A migração não foi aplicada nesta validação automatizada. Na feature 008, ela foi aplicada ao banco de desenvolvimento e o cadastro de estante foi validado manualmente; a validação ponta a ponta completa permanece necessária antes da implantação; não foram usados serviços nem dados de produção.

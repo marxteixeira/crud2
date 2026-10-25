@@ -15,7 +15,11 @@ public sealed class RequestLoggingMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        string route = context.GetEndpoint()?.DisplayName ?? "unmatched";
+        string? displayName = context.GetEndpoint()?.DisplayName;
+        string route = string.IsNullOrEmpty(displayName)
+            || displayName.StartsWith("405 HTTP Method Not Supported", StringComparison.Ordinal)
+                ? $"unmatched {context.Request.Path}"
+                : displayName;
 
         try
         {

@@ -42,3 +42,17 @@ export async function getHealth(): Promise<HealthResponse> {
   const response = await http.get<HealthResponse>("/health");
   return response.data;
 }
+
+export function describeApiError(error: unknown, fallback: string): string {
+  if (axios.isAxiosError(error) && (error.response?.status ?? 0) >= 500) {
+    const data: unknown = error.response?.data;
+    const traceId =
+      typeof data === "object" && data !== null && "traceId" in data
+        ? (data as { traceId?: unknown }).traceId
+        : undefined;
+    if (typeof traceId === "string" && traceId.length > 0) {
+      return `${fallback} Erro interno no servidor (código de rastreio: ${traceId}).`;
+    }
+  }
+  return fallback;
+}
