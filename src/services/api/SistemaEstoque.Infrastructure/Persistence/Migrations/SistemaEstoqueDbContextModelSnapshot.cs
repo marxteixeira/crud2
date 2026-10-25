@@ -97,6 +97,178 @@ namespace SistemaEstoque.Infrastructure.Persistence.Migrations
                     b.ToTable("contas_de_usuario", (string)null);
                 });
 
+            modelBuilder.Entity("SistemaEstoque.Domain.Entities.Estante", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("AtualizadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("AtualizadoPor")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("code");
+
+                    b.Property<string>("CodigoNormalizado")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("normalized_code");
+
+                    b.Property<DateTimeOffset>("CriadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CriadoPor")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Situacao")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CodigoNormalizado")
+                        .IsUnique();
+
+                    b.HasIndex("Situacao");
+
+                    b.ToTable("estantes", (string)null);
+                });
+
+            modelBuilder.Entity("SistemaEstoque.Domain.Entities.Prateleira", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("AtualizadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("AtualizadoPor")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("code");
+
+                    b.Property<string>("CodigoNormalizado")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("normalized_code");
+
+                    b.Property<DateTimeOffset>("CriadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CriadoPor")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<Guid>("EstanteId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("rack_id");
+
+                    b.Property<string>("Situacao")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Situacao");
+
+                    b.HasIndex("EstanteId", "CodigoNormalizado")
+                        .IsUnique();
+
+                    b.ToTable("prateleiras", (string)null);
+                });
+
+            modelBuilder.Entity("SistemaEstoque.Domain.Entities.Produto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("AtualizadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("AtualizadoPor")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTimeOffset>("CriadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CriadoPor")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("NomeNormalizado")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("normalized_name");
+
+                    b.Property<Guid?>("PrateleiraId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shelf_id");
+
+                    b.Property<decimal?>("Preco")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("price");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.Property<string>("Situacao")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NomeNormalizado")
+                        .IsUnique();
+
+                    b.HasIndex("PrateleiraId");
+
+                    b.HasIndex("Situacao");
+
+                    b.ToTable("produtos", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_produtos_price_nonnegative", "price IS NULL OR price >= 0");
+
+                            t.HasCheckConstraint("ck_produtos_quantity_nonnegative", "quantity >= 0");
+                        });
+                });
+
             modelBuilder.Entity("SistemaEstoque.Domain.Entities.SessaoRevogada", b =>
                 {
                     b.Property<Guid>("Identificador")
@@ -111,6 +283,32 @@ namespace SistemaEstoque.Infrastructure.Persistence.Migrations
                     b.HasKey("Identificador");
 
                     b.ToTable("sessoes_revogadas", (string)null);
+                });
+
+            modelBuilder.Entity("SistemaEstoque.Domain.Entities.Prateleira", b =>
+                {
+                    b.HasOne("SistemaEstoque.Domain.Entities.Estante", "Estante")
+                        .WithMany("Prateleiras")
+                        .HasForeignKey("EstanteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Estante");
+                });
+
+            modelBuilder.Entity("SistemaEstoque.Domain.Entities.Produto", b =>
+                {
+                    b.HasOne("SistemaEstoque.Domain.Entities.Prateleira", "Prateleira")
+                        .WithMany()
+                        .HasForeignKey("PrateleiraId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Prateleira");
+                });
+
+            modelBuilder.Entity("SistemaEstoque.Domain.Entities.Estante", b =>
+                {
+                    b.Navigation("Prateleiras");
                 });
 #pragma warning restore 612, 618
         }

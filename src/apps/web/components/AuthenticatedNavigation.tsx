@@ -53,6 +53,8 @@ export default function AuthenticatedNavigation(): JSX.Element {
     <header className="flex flex-wrap items-center justify-between gap-4 border-b px-6 py-4">
       <nav aria-label="Navegação principal" className="flex flex-wrap items-center gap-4">
         <Link href="/" className="font-semibold">Sistema de Estoque</Link>
+        <Link href="/products" className="underline">Produtos</Link>
+        <Link href="/locations" className="underline">Localizações</Link>
         {accountQuery.data?.role === "Administrador" && <Link href="/users" className="underline">Usuários</Link>}
       </nav>
       <div className="flex items-center gap-3">

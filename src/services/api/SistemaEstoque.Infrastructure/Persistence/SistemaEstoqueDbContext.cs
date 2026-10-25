@@ -14,6 +14,12 @@ public sealed class SistemaEstoqueDbContext : DbContext
 
     public DbSet<SessaoRevogada> SessoesRevogadas => Set<SessaoRevogada>();
 
+    public DbSet<Estante> Estantes => Set<Estante>();
+
+    public DbSet<Prateleira> Prateleiras => Set<Prateleira>();
+
+    public DbSet<Produto> Produtos => Set<Produto>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SistemaEstoqueDbContext).Assembly);

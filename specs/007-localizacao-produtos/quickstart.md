@@ -50,3 +50,13 @@ Resultados esperados:
 - Em avaliação com participantes, registre somente dados agregados: 90% ou mais devem localizar o produto em menos de 10 segundos, e 90% ou mais devem concluir sem ajuda cadastro e consulta de localização.
 - Confirme que as tarefas de cadastro/localização exigem no máximo três cliques desde a área de produtos.
 - Não inclua nomes, e-mails, tokens, strings de conexão ou outros dados pessoais em evidências.
+
+## Resultado da validação desta implementação
+
+- `dotnet build src/services/api/SistemaEstoque.sln --no-restore`: aprovado, sem avisos ou erros.
+- `dotnet test src/services/api/SistemaEstoque.sln --no-restore`: 109 aprovados, 0 falhos e 1 ignorado. O teste ignorado verifica conectividade PostgreSQL.
+- `npm test`: 25 testes aprovados em 9 arquivos.
+- `npm run lint -w @crud2/web` e `npm run build -w @crud2/web`: aprovados; o build também concluiu verificação de tipos e geração estática.
+- Validação do YAML OpenAPI com `js-yaml` e `git diff --check`: aprovadas.
+- O teste de busca executou 100 chamadas aquecidas contra 5.000 produtos e passou no limite p95 de 2 segundos usando o provedor EF Core InMemory. Esse resultado é um sinal de regressão da lógica de consulta, não substitui a medição de latência com PostgreSQL.
+- A migração não foi aplicada. A validação ponta a ponta com PostgreSQL e credenciais locais de desenvolvimento permanece necessária antes da implantação; não foram usados serviços nem dados de produção.

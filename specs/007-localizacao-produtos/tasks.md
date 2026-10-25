@@ -20,8 +20,8 @@ Os projetos .NET, web e testes já existem e as dependências requeridas estão 
 
 **Objetivo**: Fornecer a normalização determinística usada para impedir duplicidades em nomes e códigos em todas as histórias.
 
-- [ ] T001 Implementar normalização Unicode, remoção de marcas diacríticas e caixa invariável em `src/services/api/SistemaEstoque.Domain/ValueObjects/ChaveNormalizada.cs`
-- [ ] T002 Cobrir texto vazio, espaços externos, diferenças de caixa, acentos e equivalência Unicode em `tests/api/SistemaEstoque.Domain.Tests/ChaveNormalizadaTests.cs`
+- [X] T001 Implementar normalização Unicode, remoção de marcas diacríticas e caixa invariável em `src/services/api/SistemaEstoque.Domain/ValueObjects/ChaveNormalizada.cs`
+- [X] T002 Cobrir texto vazio, espaços externos, diferenças de caixa, acentos e equivalência Unicode em `tests/api/SistemaEstoque.Domain.Tests/ChaveNormalizadaTests.cs`
 
 **Checkpoint**: Concluir a normalização compartilhada antes de iniciar os cadastros.
 
@@ -35,18 +35,18 @@ Os projetos .NET, web e testes já existem e as dependências requeridas estão 
 
 ### Implementação da User Story 1
 
-- [ ] T003 [US1] Criar `Estante` com `id` UUID; `code` obrigatório e único sem distinção de caixa/acentos; `normalized_code` obrigatório; `description` opcional; `status` Active/Inactive; `created_at`/`updated_at` UTC; `created_by`/`updated_by` UUID em `src/services/api/SistemaEstoque.Domain/Entities/Estante.cs`
-- [ ] T004 [US1] Criar `Prateleira` com `id` UUID; `rack_id` obrigatório; `code` obrigatório; `normalized_code` único por estante sem distinção de caixa/acentos; `status` Active/Inactive; auditoria UTC e UUID em `src/services/api/SistemaEstoque.Domain/Entities/Prateleira.cs`
-- [ ] T005 [US1] Testar criação, edição, normalização de códigos, vínculo com uma única estante e transições de situação em `tests/api/SistemaEstoque.Domain.Tests/LocalizacaoTests.cs`
-- [ ] T006 [US1] Mapear `Estante` e `Prateleira` no EF Core, com chave única de código normalizado, chave composta da prateleira, chaves estrangeiras restritivas e auditoria em `src/services/api/SistemaEstoque.Infrastructure/Persistence/Configurations/EstanteConfiguration.cs`, `src/services/api/SistemaEstoque.Infrastructure/Persistence/Configurations/PrateleiraConfiguration.cs` e `src/services/api/SistemaEstoque.Infrastructure/Persistence/SistemaEstoqueDbContext.cs`
-- [ ] T007 [US1] Criar migração explícita para tabelas de estantes e prateleiras, índices normalizados e vínculos restritivos em `src/services/api/SistemaEstoque.Infrastructure/Persistence/Migrations/`
-- [ ] T008 [US1] Definir DTOs, operações e validadores de criação, edição e situação de estantes/prateleiras em `src/services/api/SistemaEstoque.Application/Locations/LocationContracts.cs` e `src/services/api/SistemaEstoque.Application/Locations/LocationValidators.cs`
-- [ ] T009 [US1] Implementar os casos de uso de consulta e manutenção de estantes/prateleiras, incluindo atribuição de autoria pela conta autenticada e normalização dos códigos, em `src/services/api/SistemaEstoque.Application/Locations/LocationManagementService.cs`
-- [ ] T010 [US1] Implementar endpoints protegidos de estantes e prateleiras conforme `contracts/catalog-api.yaml`, incluindo validação de que a prateleira pertence à estante informada, em `src/services/api/SistemaEstoque.API/Controllers/LocationsController.cs`
-- [ ] T011 [US1] Cobrir endpoints de localização, autorização, códigos duplicados, vínculo inválido e mudanças de situação com PostgreSQL de teste em `tests/api/SistemaEstoque.API.Tests/LocationEndpointsTests.cs`
-- [ ] T012 [P] [US1] Implementar funções tipadas de consulta e manutenção de estantes/prateleiras conforme o contrato HTTP em `src/apps/web/lib/locations.ts`
-- [ ] T013 [US1] Criar interface acessível e mobile-first para consultar e manter estantes/prateleiras, com prateleiras dependentes da estante escolhida, em `src/apps/web/app/locations/page.tsx` e `src/apps/web/app/locations/LocationsPageClient.tsx`
-- [ ] T014 [US1] Testar manutenção de estantes/prateleiras, vínculo entre seleção de estante e prateleira e mensagens de erro da interface em `tests/web/LocationsPage.test.tsx`
+- [X] T003 [US1] Criar `Estante` com `id` UUID; `code` obrigatório e único sem distinção de caixa/acentos; `normalized_code` obrigatório; `description` opcional; `status` Active/Inactive; `created_at`/`updated_at` UTC; `created_by`/`updated_by` UUID em `src/services/api/SistemaEstoque.Domain/Entities/Estante.cs`
+- [X] T004 [US1] Criar `Prateleira` com `id` UUID; `rack_id` obrigatório; `code` obrigatório; `normalized_code` único por estante sem distinção de caixa/acentos; `status` Active/Inactive; auditoria UTC e UUID em `src/services/api/SistemaEstoque.Domain/Entities/Prateleira.cs`
+- [X] T005 [US1] Testar criação, edição, normalização de códigos, vínculo com uma única estante e transições de situação em `tests/api/SistemaEstoque.Domain.Tests/LocalizacaoTests.cs`
+- [X] T006 [US1] Mapear `Estante` e `Prateleira` no EF Core, com chave única de código normalizado, chave composta da prateleira, chaves estrangeiras restritivas e auditoria em `src/services/api/SistemaEstoque.Infrastructure/Persistence/Configurations/EstanteConfiguration.cs`, `src/services/api/SistemaEstoque.Infrastructure/Persistence/Configurations/PrateleiraConfiguration.cs` e `src/services/api/SistemaEstoque.Infrastructure/Persistence/SistemaEstoqueDbContext.cs`
+- [X] T007 [US1] Criar migração explícita para tabelas de estantes e prateleiras, índices normalizados e vínculos restritivos em `src/services/api/SistemaEstoque.Infrastructure/Persistence/Migrations/`
+- [X] T008 [US1] Definir DTOs, operações e validadores de criação, edição e situação de estantes/prateleiras em `src/services/api/SistemaEstoque.Application/Locations/LocationContracts.cs` e `src/services/api/SistemaEstoque.Application/Locations/LocationValidators.cs`
+- [X] T009 [US1] Implementar os casos de uso de consulta e manutenção de estantes/prateleiras, incluindo atribuição de autoria pela conta autenticada e normalização dos códigos, em `src/services/api/SistemaEstoque.Infrastructure/Persistence/LocationManagementService.cs`
+- [X] T010 [US1] Implementar endpoints protegidos de estantes e prateleiras conforme `contracts/catalog-api.yaml`, incluindo validação de que a prateleira pertence à estante informada, em `src/services/api/SistemaEstoque.API/Controllers/LocationsController.cs`
+- [X] T011 [US1] Cobrir endpoints de localização, autorização, códigos duplicados, vínculo inválido e mudanças de situação com PostgreSQL de teste em `tests/api/SistemaEstoque.API.Tests/LocationEndpointsTests.cs`
+- [X] T012 [P] [US1] Implementar funções tipadas de consulta e manutenção de estantes/prateleiras conforme o contrato HTTP em `src/apps/web/lib/locations.ts`
+- [X] T013 [US1] Criar interface acessível e mobile-first para consultar e manter estantes/prateleiras, com prateleiras dependentes da estante escolhida, em `src/apps/web/app/locations/page.tsx` e `src/apps/web/app/locations/LocationsPageClient.tsx`
+- [X] T014 [US1] Testar manutenção de estantes/prateleiras, vínculo entre seleção de estante e prateleira e mensagens de erro da interface em `tests/web/LocationsPage.test.tsx`
 
 **Checkpoint**: A história é demonstrável sem produtos: pessoas autenticadas mantêm a estrutura e uma prateleira é sempre consultada no contexto da estante proprietária.
 
@@ -62,19 +62,19 @@ Os projetos .NET, web e testes já existem e as dependências requeridas estão 
 
 ### Implementação da User Story 2
 
-- [ ] T015 [US2] Criar `Produto` com `id` UUID; `name` obrigatório e não vazio; `normalized_name` obrigatório e único inclusive entre inativos; `quantity` inteiro maior ou igual a zero; `price` opcional, não negativo, em reais com precisão de centavos; `shelf_id` opcional apenas enquanto inativo; `status` Active/Inactive; `created_at`/`updated_at` UTC; `created_by`/`updated_by` UUID em `src/services/api/SistemaEstoque.Domain/Entities/Produto.cs`
-- [ ] T016 [US2] Implementar invariantes do produto: ativo exige preço e prateleira ativa pertencente a estante ativa; ativação exige preço/localização válidos; inativação preserva cadastro; alterações registram ator e horário UTC em `src/services/api/SistemaEstoque.Domain/Entities/Produto.cs`
-- [ ] T017 [US2] Testar nome vazio e duplicado normalizado, quantidade negativa, preço negativo ou com mais de duas casas, transições de situação, localização obrigatória para ativo e auditoria em `tests/api/SistemaEstoque.Domain.Tests/ProdutoTests.cs`
-- [ ] T018 [US2] Mapear `Produto` com índice único em `normalized_name`, índices de situação/localização, chave estrangeira restritiva para prateleira e restrições numéricas em `src/services/api/SistemaEstoque.Infrastructure/Persistence/Configurations/ProdutoConfiguration.cs` e `src/services/api/SistemaEstoque.Infrastructure/Persistence/SistemaEstoqueDbContext.cs`
-- [ ] T019 [US2] Criar migração explícita da tabela de produtos, índices e restrições de preço/quantidade em `src/services/api/SistemaEstoque.Infrastructure/Persistence/Migrations/`
-- [ ] T020 [US2] Definir comandos, DTOs e validadores de produto, preservando preço opcional somente para inativos, em `src/services/api/SistemaEstoque.Application/Products/ProductContracts.cs` e `src/services/api/SistemaEstoque.Application/Products/ProductValidators.cs`
-- [ ] T021 [US2] Implementar cadastro, edição, detalhe e transições de situação de produto com autoria; rejeitar campo de preço de Operador no servidor e limitar definição/alteração de preço a Administrador em `src/services/api/SistemaEstoque.Application/Products/ProductManagementService.cs`; estender `src/services/api/SistemaEstoque.Application/Locations/LocationManagementService.cs` para recusar inativação de estante/prateleira que contenha produtos ativos
-- [ ] T022 [US2] Implementar endpoints autenticados de criação, detalhe, edição e situação conforme `contracts/catalog-api.yaml`, com respostas Problem Details para validação/conflito e autorização de preço em `src/services/api/SistemaEstoque.API/Controllers/ProductsController.cs`; aplicar a regra de inativação de localizações em `src/services/api/SistemaEstoque.API/Controllers/LocationsController.cs`
-- [ ] T023 [US2] Testar cadastro/edição de produto, autorização de preço por Administrador/Operador, ativação sem preço/localização, auditoria e bloqueio de inativação de localização usada em `tests/api/SistemaEstoque.API.Tests/ProductEndpointsTests.cs`
-- [ ] T024 [P] [US2] Implementar funções tipadas para cadastro, detalhe, edição e situação de produto conforme o contrato em `src/apps/web/lib/products.ts`
-- [ ] T025 [US2] Criar formulário acessível de produto com validação Zod e seleção de estante/prateleira; omitir preço para Operador e apresentar produto sem preço como inativo em `src/apps/web/app/products/new/page.tsx` e `src/apps/web/components/products/ProductForm.tsx`
-- [ ] T026 [US2] Criar interface de edição/detalhe e ações de inativar/reativar produto, exibindo preço somente como leitura para Operador e editável apenas para Administrador, em `src/apps/web/app/products/[productId]/page.tsx` e `src/apps/web/components/products/ProductDetails.tsx`
-- [ ] T027 [US2] Testar criação e edição com os dois perfis, validações, estados sem preço e recusa visual de alteração de preço pelo Operador em `tests/web/ProductForm.test.tsx`
+- [X] T015 [US2] Criar `Produto` com `id` UUID; `name` obrigatório e não vazio; `normalized_name` obrigatório e único inclusive entre inativos; `quantity` inteiro maior ou igual a zero; `price` opcional, não negativo, em reais com precisão de centavos; `shelf_id` opcional apenas enquanto inativo; `status` Active/Inactive; `created_at`/`updated_at` UTC; `created_by`/`updated_by` UUID em `src/services/api/SistemaEstoque.Domain/Entities/Produto.cs`
+- [X] T016 [US2] Implementar invariantes do produto: ativo exige preço e prateleira ativa pertencente a estante ativa; ativação exige preço/localização válidos; inativação preserva cadastro; alterações registram ator e horário UTC em `src/services/api/SistemaEstoque.Domain/Entities/Produto.cs`
+- [X] T017 [US2] Testar nome vazio e duplicado normalizado, quantidade negativa, preço negativo ou com mais de duas casas, transições de situação, localização obrigatória para ativo e auditoria em `tests/api/SistemaEstoque.Domain.Tests/ProdutoTests.cs`
+- [X] T018 [US2] Mapear `Produto` com índice único em `normalized_name`, índices de situação/localização, chave estrangeira restritiva para prateleira e restrições numéricas em `src/services/api/SistemaEstoque.Infrastructure/Persistence/Configurations/ProdutoConfiguration.cs` e `src/services/api/SistemaEstoque.Infrastructure/Persistence/SistemaEstoqueDbContext.cs`
+- [X] T019 [US2] Criar migração explícita da tabela de produtos, índices e restrições de preço/quantidade em `src/services/api/SistemaEstoque.Infrastructure/Persistence/Migrations/`
+- [X] T020 [US2] Definir comandos, DTOs e validadores de produto, preservando preço opcional somente para inativos, em `src/services/api/SistemaEstoque.Application/Products/ProductContracts.cs` e `src/services/api/SistemaEstoque.Application/Products/ProductValidators.cs`
+- [X] T021 [US2] Implementar cadastro, edição, detalhe e transições de situação de produto com autoria; rejeitar campo de preço de Operador no servidor e limitar definição/alteração de preço a Administrador em `src/services/api/SistemaEstoque.Infrastructure/Persistence/ProductManagementService.cs`; estender `src/services/api/SistemaEstoque.Infrastructure/Persistence/LocationManagementService.cs` para recusar inativação de estante/prateleira que contenha produtos ativos
+- [X] T022 [US2] Implementar endpoints autenticados de criação, detalhe, edição e situação conforme `contracts/catalog-api.yaml`, com respostas Problem Details para validação/conflito e autorização de preço em `src/services/api/SistemaEstoque.API/Controllers/ProductsController.cs`; aplicar a regra de inativação de localizações em `src/services/api/SistemaEstoque.API/Controllers/LocationsController.cs`
+- [X] T023 [US2] Testar cadastro/edição de produto, autorização de preço por Administrador/Operador, ativação sem preço/localização, auditoria e bloqueio de inativação de localização usada em `tests/api/SistemaEstoque.API.Tests/ProductEndpointsTests.cs` e `tests/api/SistemaEstoque.API.Tests/LocationProductIntegrationTests.cs`
+- [X] T024 [P] [US2] Implementar funções tipadas para cadastro, detalhe, edição e situação de produto conforme o contrato em `src/apps/web/lib/products.ts`
+- [X] T025 [US2] Criar formulário acessível de produto com validação Zod e seleção de estante/prateleira; omitir preço para Operador e apresentar produto sem preço como inativo em `src/apps/web/app/products/new/page.tsx` e `src/apps/web/components/products/ProductForm.tsx`
+- [X] T026 [US2] Criar interface de edição/detalhe e ações de inativar/reativar produto, exibindo preço somente como leitura para Operador e editável apenas para Administrador, em `src/apps/web/app/products/[productId]/page.tsx` e `src/apps/web/components/products/ProductDetails.tsx`
+- [X] T027 [US2] Testar criação e edição com os dois perfis, validações, estados sem preço e recusa visual de alteração de preço pelo Operador em `tests/web/ProductForm.test.tsx`
 
 **Checkpoint**: Produtos válidos são persistidos e auditados; nenhuma operação de Operador define preço; produto sem preço não pode ficar ativo.
 
@@ -90,14 +90,14 @@ Os projetos .NET, web e testes já existem e as dependências requeridas estão 
 
 ### Implementação da User Story 3
 
-- [ ] T028 [US3] Implementar consulta paginada com busca por nome normalizado e filtros combináveis de estante, prateleira e situação usando leituras sem rastreamento em `src/services/api/SistemaEstoque.Application/Products/ProductSearchService.cs`
-- [ ] T029 [US3] Implementar listagem paginada de produtos, busca/filtros e consulta paginada do conteúdo de uma prateleira nos endpoints definidos em `contracts/catalog-api.yaml`, validando `page >= 1` e `1 <= pageSize <= 100`, em `src/services/api/SistemaEstoque.API/Controllers/ProductsController.cs` e `src/services/api/SistemaEstoque.API/Controllers/LocationsController.cs`
-- [ ] T030 [US3] Testar combinação de busca/filtros, paginação, situação, localização vazia e conteúdo de prateleira em `tests/api/SistemaEstoque.API.Tests/ProductSearchEndpointsTests.cs`
-- [ ] T031 [US3] Medir busca em catálogo de 5.000 produtos com pelo menos 100 requisições após aquecimento e verificar p95 de no máximo 2 segundos em `tests/api/SistemaEstoque.API.Tests/ProductSearchPerformanceTests.cs`
-- [ ] T032 [US3] Implementar função tipada de listagem e consulta paginada com filtros em `src/apps/web/lib/products.ts`
-- [ ] T033 [US3] Criar catálogo com busca, filtros por estante/prateleira/situação, paginação e estado vazio; manter filtros e página na URL em `src/apps/web/app/products/page.tsx` e `src/apps/web/components/products/ProductList.tsx`
-- [ ] T034 [US3] Exibir produtos da localização escolhida e link para detalhe, com consulta à API e paginação, em `src/apps/web/app/locations/[rackId]/shelves/[shelfId]/page.tsx`
-- [ ] T035 [US3] Testar busca, filtros combinados, paginação na URL, estados vazios e lista de produtos da localização em `tests/web/ProductList.test.tsx`
+- [X] T028 [US3] Implementar consulta paginada com busca por nome normalizado e filtros combináveis de estante, prateleira e situação usando leituras sem rastreamento em `src/services/api/SistemaEstoque.Infrastructure/Persistence/ProductManagementService.cs`
+- [X] T029 [US3] Implementar listagem paginada de produtos, busca/filtros e consulta paginada do conteúdo de uma prateleira nos endpoints definidos em `contracts/catalog-api.yaml`, validando `page >= 1` e `1 <= pageSize <= 100`, em `src/services/api/SistemaEstoque.API/Controllers/ProductsController.cs` e `src/services/api/SistemaEstoque.API/Controllers/LocationsController.cs`
+- [X] T030 [US3] Testar combinação de busca/filtros, paginação, situação, localização vazia e conteúdo de prateleira em `tests/api/SistemaEstoque.API.Tests/ProductSearchEndpointsTests.cs`
+- [X] T031 [US3] Medir busca em catálogo de 5.000 produtos com pelo menos 100 requisições após aquecimento e verificar p95 de no máximo 2 segundos em `tests/api/SistemaEstoque.API.Tests/ProductSearchPerformanceTests.cs`
+- [X] T032 [US3] Implementar função tipada de listagem e consulta paginada com filtros em `src/apps/web/lib/products.ts`
+- [X] T033 [US3] Criar catálogo com busca, filtros por estante/prateleira/situação, paginação e estado vazio; manter filtros e página na URL em `src/apps/web/app/products/page.tsx` e `src/apps/web/components/products/ProductList.tsx`
+- [X] T034 [US3] Exibir produtos da localização escolhida e link para detalhe, com consulta à API e paginação, em `src/apps/web/app/locations/[rackId]/shelves/[shelfId]/page.tsx`
+- [X] T035 [US3] Testar busca, filtros combinados, paginação na URL, estados vazios e lista de produtos da localização em `tests/web/ProductList.test.tsx`
 
 **Checkpoint**: Usuários encontram produtos e consultam sua localização com filtros combináveis; listagens não carregam o catálogo inteiro.
 
@@ -107,10 +107,10 @@ Os projetos .NET, web e testes já existem e as dependências requeridas estão 
 
 **Objetivo**: Confirmar gates completos, contrato, desempenho, documentação operacional e critérios de aceite entre histórias.
 
-- [ ] T036 Atualizar a navegação autenticada e os links entre catálogo, detalhe, localização e telas existentes em `src/apps/web/app/layout.tsx`
-- [ ] T037 Confirmar que o contrato OpenAPI corresponde aos endpoints e validar seu YAML em `specs/007-localizacao-produtos/contracts/catalog-api.yaml`
-- [ ] T038 Executar cenários automatizados e ponta a ponta e registrar resultados esperados em `specs/007-localizacao-produtos/quickstart.md`
-- [ ] T039 Executar validação da API, web, lint, builds, busca com 5.000 produtos e gates existentes e corrigir falhas da feature em `specs/007-localizacao-produtos/plan.md`
+- [X] T036 Atualizar a navegação autenticada e os links entre catálogo, detalhe, localização e telas existentes em `src/apps/web/components/AuthenticatedNavigation.tsx` e `src/apps/web/app/locations/LocationsPageClient.tsx`
+- [X] T037 Confirmar que o contrato OpenAPI corresponde aos endpoints e validar seu YAML em `specs/007-localizacao-produtos/contracts/catalog-api.yaml`
+- [X] T038 Executar os cenários automatizados da API e web, registrar os resultados esperados e documentar pré-requisitos da validação ponta a ponta local em `specs/007-localizacao-produtos/quickstart.md`
+- [X] T039 Executar validação da API, web, lint, builds, busca com 5.000 produtos e gates existentes; corrigir falhas da feature e registrar resultados em `specs/007-localizacao-produtos/quickstart.md`
 
 ## Dependências e ordem de execução
 

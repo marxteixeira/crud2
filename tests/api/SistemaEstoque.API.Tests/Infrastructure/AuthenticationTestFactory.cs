@@ -9,13 +9,17 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SistemaEstoque.Application.Authentication;
+using SistemaEstoque.Application.Locations;
+using SistemaEstoque.Application.Products;
 using SistemaEstoque.Application.Users;
 
 namespace SistemaEstoque.API.Tests.Infrastructure;
 
 internal sealed class AuthenticationTestFactory(
     Guid identity,
-    IUserManagementService? userManagementService = null) : WebApplicationFactory<Program>
+    IUserManagementService? userManagementService = null,
+    ILocationManagementService? locationManagementService = null,
+    IProductManagementService? productManagementService = null) : WebApplicationFactory<Program>
 {
     internal FakeCurrentAccountAuthorization Authorization { get; } = new(identity);
 
@@ -35,6 +39,13 @@ internal sealed class AuthenticationTestFactory(
                 services.RemoveAll<IUserManagementService>();
                 services.AddSingleton(userManagementService);
             }
+            if (locationManagementService is not null)
+            {
+                services.RemoveAll<ILocationManagementService>();
+                services.AddSingleton(locationManagementService);
+            }
+            services.RemoveAll<IProductManagementService>();
+            services.AddSingleton(productManagementService ?? new FakeProductManagementService());
 
             services.AddAuthentication(options =>
                 {
