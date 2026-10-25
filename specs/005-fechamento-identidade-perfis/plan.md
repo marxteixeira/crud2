@@ -50,6 +50,7 @@ specs/005-fechamento-identidade-perfis/
 ├── research.md
 ├── data-model.md
 ├── quickstart.md
+├── readiness-report.md     # Evidências agregadas e decisão de transição
 └── tasks.md                 # Criado posteriormente por /speckit-tasks
 ```
 
@@ -80,7 +81,7 @@ Registrar em [research.md](research.md) como determinar a fonte de verdade para 
 
 - Definir em [data-model.md](data-model.md) os campos e estados conceituais de critério, evidência, pendência e decisão, sem criar persistência de aplicação.
 - Não gerar contratos externos: não existe endpoint nem interface pública nesta feature.
-- Documentar em [quickstart.md](quickstart.md) os comandos de validação, ambiente isolado, evidências necessárias e condições para liberar ou bloquear a próxima fase.
+- Documentar em [quickstart.md](quickstart.md) os comandos de validação, ambiente isolado, evidências necessárias e condições para liberar ou bloquear a próxima fase; registrar resultados agregados e decisão em `readiness-report.md`.
 
 **Constitution Check pós-design: PASS** — os artefatos seguem a estrutura existente, introduzem apenas documentação, preservam os gates automatizados obrigatórios e não incluem dados confidenciais.
 
