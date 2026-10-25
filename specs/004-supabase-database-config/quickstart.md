@@ -34,6 +34,14 @@ Este procedimento configura credenciais novas e segregadas por ambiente. A senha
 
 Com o PostgreSQL de teste existente no job CI ou em um banco de desenvolvimento isolado:
 
+Para um banco descartável local (o teste de conectividade só roda com `ConnectionStrings__Default` apontando para `localhost`; sem ela, é ignorado com mensagem explícita):
+
+```powershell
+docker run --name crud2-test-db -e POSTGRES_DB=crud2 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=<senha-local-descartavel> -p 5432:5432 -d postgres:16
+$env:ConnectionStrings__Default = "Host=localhost;Port=5432;Database=crud2;Username=postgres;Password=<senha-local-descartavel>;SSL Mode=Disable"
+# ao terminar: docker rm -f crud2-test-db
+```
+
 ```powershell
 dotnet build src/services/api/SistemaEstoque.sln
 dotnet test src/services/api/SistemaEstoque.sln

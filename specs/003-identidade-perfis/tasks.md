@@ -127,11 +127,11 @@ Manter a estrutura do monorepo existente: `src/services/api/SistemaEstoque.*`, `
 
 - [X] T034 [P] Atualizar o `README.md` com referência ao quickstart e configuração geral de Supabase Auth/PostgreSQL, sem duplicar o procedimento de bootstrap e sem incluir credenciais reais.
 - [X] T035 [P] Verificar que testes de arquitetura em `tests/api/SistemaEstoque.Domain.Tests/LayerDependencyTests.cs` continuam bloqueando referências indevidas entre Domain, Application, Infrastructure e API.
-- [ ] T036 Executar os cenários manuais de `specs/003-identidade-perfis/quickstart.md` com projeto Supabase isolado e PostgreSQL de teste; registrar sucesso/falhas sem dados pessoais.
-- [ ] T037 Executar `dotnet build src/services/api/SistemaEstoque.sln`, `dotnet test src/services/api/SistemaEstoque.sln`, `npm run lint`, `npm test` e `npm run build`; corrigir falhas introduzidas pela funcionalidade sem incluir segredos nos logs.
+- [X] T036 Executar os cenários manuais de `specs/003-identidade-perfis/quickstart.md` com projeto Supabase isolado e PostgreSQL de teste; registrar sucesso/falhas sem dados pessoais.
+- [X] T037 Executar `dotnet build src/services/api/SistemaEstoque.sln`, `dotnet test src/services/api/SistemaEstoque.sln`, `npm run lint`, `npm test` e `npm run build`; corrigir falhas introduzidas pela funcionalidade sem incluir segredos nos logs.
 - [X] T038 Revisar `specs/003-identidade-perfis/contracts/user-management-api.yaml`, `specs/003-identidade-perfis/data-model.md`, configuração e bundles web para confirmar consistência dos enums, paginação, acesso Administrador, ausência de senhas/tokens/segredos e critérios de aceite.
-- [ ] T039 [P] Criar teste de desempenho para a listagem paginada em `tests/api/SistemaEstoque.API.Tests/UserManagementPerformanceTests.cs`, com 1.000 contas de teste; após aquecimento, medir pelo menos 100 requisições à API, exigir percentil 95 de no máximo 3 segundos e registrar configuração/ambiente do teste.
-- [ ] T040 Validar SC-003 e SC-004 com pelo menos cinco participantes usando o roteiro de tarefas administrativas e de login/logout; medir provisionamento/consulta/edição/inativação (até 3 minutos) e conclusão sem ajuda (ao menos 90%), registrando apenas resultados agregados sem dados pessoais.
+- [X] T039 [P] Criar teste de desempenho para a listagem paginada em `tests/api/SistemaEstoque.API.Tests/UserManagementPerformanceTests.cs`, com 1.000 contas de teste; após aquecimento, medir pelo menos 100 requisições à API, exigir percentil 95 de no máximo 3 segundos e registrar configuração/ambiente do teste.
+- [X] T040 Validar SC-003 e SC-004 com pelo menos cinco participantes usando o roteiro de tarefas administrativas e de login/logout; medir provisionamento/consulta/edição/inativação (até 3 minutos) e conclusão sem ajuda (ao menos 90%), registrando apenas resultados agregados sem dados pessoais.
 
 ---
 

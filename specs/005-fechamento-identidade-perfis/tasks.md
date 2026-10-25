@@ -23,7 +23,7 @@ Cada tarefa segue `- [ ] TNNN [P?] [USn?] descrição com caminho(s) exato(s)`. 
 
 **Purpose**: Preparar um registro consistente para as evidências e a decisão desta avaliação.
 
-- [ ] T001 Criar `specs/005-fechamento-identidade-perfis/readiness-report.md` com tabela de critérios, resultado, data, ambiente, evidência agregada e ação pendente; incluir os itens T036, T037, T039 e T040 de `specs/003-identidade-perfis/tasks.md` e T018 de `specs/004-supabase-database-config/tasks.md`, inicialmente como pendentes até confirmação de evidência atual.
+- [X] T001 Criar `specs/005-fechamento-identidade-perfis/readiness-report.md` com tabela de critérios, resultado, data, ambiente, evidência agregada e ação pendente; incluir os itens T036, T037, T039 e T040 de `specs/003-identidade-perfis/tasks.md` e T018 de `specs/004-supabase-database-config/tasks.md`, inicialmente como pendentes até confirmação de evidência atual.
 
 ---
 
@@ -33,7 +33,7 @@ Cada tarefa segue `- [ ] TNNN [P?] [USn?] descrição com caminho(s) exato(s)`. 
 
 **Critical**: As histórias não podem declarar prontidão antes que os critérios de origem e o registro estejam alinhados.
 
-- [ ] T002 Conferir os critérios de saída da Fase 1 e de entrada da Fase 2 em `specs/002-implementation-roadmap/spec.md`, os estados das tarefas em `specs/003-identidade-perfis/tasks.md` e `specs/004-supabase-database-config/tasks.md`, e reconciliar a matriz em `specs/005-fechamento-identidade-perfis/readiness-report.md` sem alterar status sem evidência.
+- [X] T002 Conferir os critérios de saída da Fase 1 e de entrada da Fase 2 em `specs/002-implementation-roadmap/spec.md`, os estados das tarefas em `specs/003-identidade-perfis/tasks.md` e `specs/004-supabase-database-config/tasks.md`, e reconciliar a matriz em `specs/005-fechamento-identidade-perfis/readiness-report.md` sem alterar status sem evidência.
 
 **Checkpoint**: Fontes de verdade e lista completa de validações impeditivas estão registradas; US1 pode recolher evidências.
 

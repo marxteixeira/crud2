@@ -97,7 +97,7 @@ Cada tarefa usa `- [ ] TNNN [P?] [USn?] descrição com caminho de arquivo`. `[P
 
 **Purpose**: Validar os cenários documentados e resolver divergências finais.
 
-- [ ] T018 [P] Executar os comandos de validação de `specs/004-supabase-database-config/quickstart.md` para API e web e corrigir falhas nos arquivos afetados.
+- [X] T018 [P] Executar os comandos de validação de `specs/004-supabase-database-config/quickstart.md` para API e web e corrigir falhas nos arquivos afetados.
 - [X] T019 [P] Revisar `src/services/api/SistemaEstoque.API/appsettings.json`, `src/services/api/SistemaEstoque.API/appsettings.Development.json`, `src/services/api/SistemaEstoque.API/appsettings.Testing.json`, `src/apps/web/.env.example` e o diff da feature para confirmar que nenhum segredo ou connection string de produção foi versionado.
 
 **T018 status**: Parcialmente bloqueada no ambiente local: build, testes direcionados de configuração e toda a suíte web passaram; 61 dos 63 testes API passaram usando configuração descartável. Os dois testes restantes exigem um PostgreSQL local em `localhost:5432`, que não está disponível. A validação integral deve ser repetida em ambiente com o serviço PostgreSQL descartável do CI.
