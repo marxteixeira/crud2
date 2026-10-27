@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaEstoque.Application.Products;
+using SistemaEstoque.Application.Suppliers;
 using SistemaEstoque.Domain.Entities;
 
 namespace SistemaEstoque.API.Controllers;
@@ -12,6 +13,7 @@ namespace SistemaEstoque.API.Controllers;
 [Authorize(Policy = "ActiveAccount")]
 public sealed class ProductsController(
     IProductManagementService products,
+    IProductSupplierService supplierLinks,
     IValidator<CreateProductRequest> createValidator,
     IValidator<UpdateProductRequest> updateValidator,
     IValidator<SetProductStatusRequest> statusValidator,
@@ -24,6 +26,7 @@ public sealed class ProductsController(
         [FromQuery] Guid? rackId,
         [FromQuery] Guid? shelfId,
         [FromQuery] string? status,
+        [FromQuery] Guid? supplierId,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 25,
         CancellationToken cancellationToken = default)
@@ -34,7 +37,7 @@ public sealed class ProductsController(
         }
 
         PaginatedProductsDto result = await products.ListAsync(
-            search, rackId, shelfId, status, page, pageSize, cancellationToken);
+            search, rackId, shelfId, status, supplierId, page, pageSize, cancellationToken);
         logger.LogInformation(
             "Products listed; Page {Page}; PageSize {PageSize}; ResultCount {ResultCount}; TraceId {TraceId}",
             page,
@@ -190,6 +193,67 @@ public sealed class ProductsController(
         }
     }
 
+    [HttpGet("{productId:guid}/suppliers")]
+    [ProducesResponseType<PaginatedSupplierLinksDto>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<PaginatedSupplierLinksDto>> ListSuppliers(
+        Guid productId,
+        [FromQuery] string? linkStatus,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 25,
+        CancellationToken cancellationToken = default)
+    {
+        if (!IsValidStatus(linkStatus) || page < 1 || pageSize is < 1 or > 100)
+        {
+            return BadRequest(ValidationError("query", "Os filtros de paginação ou situação são inválidos."));
+        }
+
+        PaginatedSupplierLinksDto? result = await supplierLinks.ListSuppliersAsync(
+            productId, linkStatus, page, pageSize, cancellationToken);
+        return result is null ? NotFound() : Ok(result);
+    }
+
+    [HttpPut("{productId:guid}/suppliers/{supplierId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> AssociateSupplier(
+        Guid productId,
+        Guid supplierId,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await supplierLinks.AssociateAsync(productId, supplierId, GetActor(), cancellationToken);
+            LogMutation("Product supplier associated", productId, supplierId.ToString());
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (ProductSupplierConflictException exception)
+        {
+            return ConflictProblem(exception.Message);
+        }
+    }
+
+    [HttpDelete("{productId:guid}/suppliers/{supplierId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DisassociateSupplier(
+        Guid productId,
+        Guid supplierId,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await supplierLinks.DisassociateAsync(productId, supplierId, GetActor(), cancellationToken);
+            LogMutation("Product supplier disassociated", productId, supplierId.ToString());
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
     private async Task<ActionResult?> ValidateAsync<TRequest>(
         TRequest request,
         IValidator<TRequest> validator,
@@ -234,6 +298,8 @@ public sealed class ProductsController(
 
     private static bool IsValidQuery(int page, int pageSize, string? status) =>
         page >= 1 && pageSize is >= 1 and <= 100 && status is null or "Active" or "Inactive";
+
+    private static bool IsValidStatus(string? status) => status is null or "Active" or "Inactive";
 
     private static SituacaoCadastro ParseStatus(string status) =>
         status switch

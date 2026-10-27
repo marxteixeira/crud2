@@ -5,12 +5,14 @@ import ProductsPageClient from "@/app/products/ProductsPageClient";
 
 const mocks = vi.hoisted(() => ({
   listProducts: vi.fn(),
+  listSuppliers: vi.fn(),
   listRacks: vi.fn(),
   replace: vi.fn(),
   queryString: "",
 }));
 
 vi.mock("@/lib/products", () => ({ listProducts: mocks.listProducts }));
+vi.mock("@/lib/suppliers", () => ({ listSuppliers: mocks.listSuppliers }));
 vi.mock("@/lib/locations", () => ({ listRacks: mocks.listRacks }));
 vi.mock("@/lib/supabase/client", () => ({ getSupabaseBrowserClient: () => ({}) }));
 vi.mock("next/navigation", () => ({
@@ -59,6 +61,12 @@ describe("ProductsPage", () => {
       pageSize: 25,
       total: 1,
     });
+    mocks.listSuppliers.mockResolvedValue({
+      items: [{ id: "supplier-1", name: "Fornecedor Central", status: "Active" }],
+      page: 1,
+      pageSize: 100,
+      total: 1,
+    });
   });
 
   it("lists products and writes combined filters into the URL", async () => {
@@ -93,5 +101,37 @@ describe("ProductsPage", () => {
     mocks.listProducts.mockResolvedValue({ items: [], page: 1, pageSize: 25, total: 0 });
     renderPage();
     expect(await screen.findByText("Nenhum produto encontrado.")).toBeInTheDocument();
+  });
+
+  it("applies supplier filtering from the URL and preserves combined filters", async () => {
+    mocks.queryString = "search=cafe&rackId=rack-1&shelfId=shelf-1&status=Active&supplierId=supplier-1&page=2";
+    const { rerenderPage } = renderPage();
+
+    expect(await screen.findByRole("link", { name: "Café" })).toBeInTheDocument();
+    expect(mocks.listProducts).toHaveBeenCalledWith(
+      expect.anything(),
+      {
+        search: "cafe",
+        rackId: "rack-1",
+        shelfId: "shelf-1",
+        status: "Active",
+        supplierId: "supplier-1",
+        page: 2,
+        pageSize: 25,
+      },
+    );
+    expect(screen.getByLabelText("Fornecedor")).toHaveValue("supplier-1");
+
+    fireEvent.change(screen.getByLabelText("Fornecedor"), { target: { value: "" } });
+    rerenderPage();
+
+    expect(mocks.replace).toHaveBeenCalledWith(
+      expect.stringContaining("search=cafe"),
+      { scroll: false },
+    );
+    expect(mocks.replace).toHaveBeenCalledWith(
+      expect.not.stringContaining("supplierId="),
+      { scroll: false },
+    );
   });
 });

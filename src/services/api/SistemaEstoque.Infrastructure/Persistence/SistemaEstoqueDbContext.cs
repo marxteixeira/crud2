@@ -20,6 +20,10 @@ public sealed class SistemaEstoqueDbContext : DbContext
 
     public DbSet<Produto> Produtos => Set<Produto>();
 
+    public DbSet<Fornecedor> Fornecedores => Set<Fornecedor>();
+
+    public DbSet<VinculoProdutoFornecedor> VinculosProdutoFornecedor => Set<VinculoProdutoFornecedor>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SistemaEstoqueDbContext).Assembly);

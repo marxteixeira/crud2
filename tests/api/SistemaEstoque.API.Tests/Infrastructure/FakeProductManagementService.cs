@@ -17,15 +17,15 @@ internal sealed class FakeProductManagementService : IProductManagementService
 
     public bool? LastIsAdministrator { get; private set; }
 
-    public (string? Search, Guid? RackId, Guid? ShelfId, string? Status, int Page, int PageSize)? LastFilters { get; private set; }
+    public (string? Search, Guid? RackId, Guid? ShelfId, string? Status, Guid? SupplierId, int Page, int PageSize)? LastFilters { get; private set; }
 
     public (Guid RackId, Guid ShelfId, string? Status, int Page, int PageSize)? LastShelfFilters { get; private set; }
 
     public Task<PaginatedProductsDto> ListAsync(
-        string? search, Guid? rackId, Guid? shelfId, string? status, int page, int pageSize,
+        string? search, Guid? rackId, Guid? shelfId, string? status, Guid? supplierId, int page, int pageSize,
         CancellationToken cancellationToken)
     {
-        LastFilters = (search, rackId, shelfId, status, page, pageSize);
+        LastFilters = (search, rackId, shelfId, status, supplierId, page, pageSize);
         return Task.FromResult(ListResult with { Page = page, PageSize = pageSize });
     }
 

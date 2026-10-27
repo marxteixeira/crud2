@@ -13,6 +13,7 @@ public sealed class ProductManagementService(SistemaEstoqueDbContext dbContext) 
         Guid? rackId,
         Guid? shelfId,
         string? status,
+        Guid? supplierId,
         int page,
         int pageSize,
         CancellationToken cancellationToken)
@@ -44,6 +45,12 @@ public sealed class ProductManagementService(SistemaEstoqueDbContext dbContext) 
             query = query.Where(product => product.Situacao == parsedStatus);
         }
 
+        if (supplierId.HasValue)
+        {
+            query = query.Where(product => product.Fornecedores.Any(link =>
+                link.FornecedorId == supplierId.Value && link.Situacao == SituacaoCadastro.Ativa));
+        }
+
         int total = await query.CountAsync(cancellationToken);
         List<Produto> products = await query
             .OrderBy(product => product.NomeNormalizado)
@@ -69,7 +76,7 @@ public sealed class ProductManagementService(SistemaEstoqueDbContext dbContext) 
             return null;
         }
 
-        return await ListAsync(null, rackId, shelfId, status, page, pageSize, cancellationToken);
+        return await ListAsync(null, rackId, shelfId, status, null, page, pageSize, cancellationToken);
     }
 
     public async Task<ProductDto?> FindAsync(Guid productId, CancellationToken cancellationToken)

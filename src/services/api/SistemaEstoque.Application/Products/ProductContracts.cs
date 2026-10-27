@@ -43,6 +43,7 @@ public interface IProductManagementService
         Guid? rackId,
         Guid? shelfId,
         string? status,
+        Guid? supplierId,
         int page,
         int pageSize,
         CancellationToken cancellationToken);

@@ -149,6 +149,77 @@ namespace SistemaEstoque.Infrastructure.Persistence.Migrations
                     b.ToTable("estantes", (string)null);
                 });
 
+            modelBuilder.Entity("SistemaEstoque.Domain.Entities.Fornecedor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("AtualizadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("AtualizadoPor")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTimeOffset>("CriadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CriadoPor")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("Documento")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("character varying(14)")
+                        .HasColumnName("tax_identifier");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(254)
+                        .HasColumnType("character varying(254)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("NomeContato")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("contact_name");
+
+                    b.Property<string>("Observacoes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("notes");
+
+                    b.Property<string>("Situacao")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("status");
+
+                    b.Property<string>("Telefone")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("phone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Documento")
+                        .IsUnique();
+
+                    b.HasIndex("Situacao");
+
+                    b.ToTable("fornecedores", (string)null);
+                });
+
             modelBuilder.Entity("SistemaEstoque.Domain.Entities.Prateleira", b =>
                 {
                     b.Property<Guid>("Id")
@@ -285,6 +356,56 @@ namespace SistemaEstoque.Infrastructure.Persistence.Migrations
                     b.ToTable("sessoes_revogadas", (string)null);
                 });
 
+            modelBuilder.Entity("SistemaEstoque.Domain.Entities.VinculoProdutoFornecedor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("AtualizadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("AtualizadoPor")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTimeOffset>("CriadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CriadoPor")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<Guid>("FornecedorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("supplier_id");
+
+                    b.Property<Guid>("ProdutoId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<string>("Situacao")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FornecedorId", "Situacao");
+
+                    b.HasIndex("ProdutoId", "FornecedorId")
+                        .IsUnique()
+                        .HasFilter("status = 'Ativa'");
+
+                    b.HasIndex("ProdutoId", "Situacao");
+
+                    b.ToTable("produtos_fornecedores", (string)null);
+                });
+
             modelBuilder.Entity("SistemaEstoque.Domain.Entities.Prateleira", b =>
                 {
                     b.HasOne("SistemaEstoque.Domain.Entities.Estante", "Estante")
@@ -306,9 +427,38 @@ namespace SistemaEstoque.Infrastructure.Persistence.Migrations
                     b.Navigation("Prateleira");
                 });
 
+            modelBuilder.Entity("SistemaEstoque.Domain.Entities.VinculoProdutoFornecedor", b =>
+                {
+                    b.HasOne("SistemaEstoque.Domain.Entities.Fornecedor", "Fornecedor")
+                        .WithMany("Vinculos")
+                        .HasForeignKey("FornecedorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SistemaEstoque.Domain.Entities.Produto", "Produto")
+                        .WithMany("Fornecedores")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Fornecedor");
+
+                    b.Navigation("Produto");
+                });
+
             modelBuilder.Entity("SistemaEstoque.Domain.Entities.Estante", b =>
                 {
                     b.Navigation("Prateleiras");
+                });
+
+            modelBuilder.Entity("SistemaEstoque.Domain.Entities.Fornecedor", b =>
+                {
+                    b.Navigation("Vinculos");
+                });
+
+            modelBuilder.Entity("SistemaEstoque.Domain.Entities.Produto", b =>
+                {
+                    b.Navigation("Fornecedores");
                 });
 #pragma warning restore 612, 618
         }

@@ -336,7 +336,8 @@ components:
           maxLength: 2000
     SupplierUpdateRequest:
       type: object
-      minProperties: 1
+      description: Atualização completa dos dados editáveis do fornecedor.
+      required: [name, taxIdentifier]
       properties:
         name:
           type: string

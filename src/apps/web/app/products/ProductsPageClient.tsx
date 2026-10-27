@@ -9,6 +9,7 @@ import ProductList from "@/components/products/ProductList";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { listRacks } from "@/lib/locations";
 import { listProducts, type ProductStatus } from "@/lib/products";
+import { listSuppliers } from "@/lib/suppliers";
 
 const pageSize = 25;
 
@@ -21,6 +22,7 @@ export default function ProductsPageClient(): JSX.Element {
   const rackId = searchParams.get("rackId") ?? "";
   const shelfId = searchParams.get("shelfId") ?? "";
   const status = searchParams.get("status") ?? "";
+  const supplierId = searchParams.get("supplierId") ?? "";
   const page = Math.max(1, Number(searchParams.get("page") ?? "1") || 1);
   useEffect(() => setSearchDraft(search), [search]);
 
@@ -29,10 +31,14 @@ export default function ProductsPageClient(): JSX.Element {
     queryFn: () => listRacks(getSupabaseBrowserClient()),
   });
   const productsQuery = useQuery({
-    queryKey: ["products", search, rackId, shelfId, status, page],
+    queryKey: ["products", search, rackId, shelfId, status, supplierId, page],
     queryFn: () => listProducts(getSupabaseBrowserClient(), {
-      search, rackId, shelfId, status: status as ProductStatus | undefined, page, pageSize,
+      search, rackId, shelfId, status: status as ProductStatus | undefined, supplierId, page, pageSize,
     }),
+  });
+  const suppliersQuery = useQuery({
+    queryKey: ["suppliers", "catalog-filter"],
+    queryFn: () => listSuppliers(getSupabaseBrowserClient(), { search: "", status: "", page: 1, pageSize: 100 }),
   });
 
   function updateQuery(values: Record<string, string>): void {
@@ -100,8 +106,21 @@ export default function ProductsPageClient(): JSX.Element {
               <option value="Inactive">Inativos</option>
             </select>
           </div>
+          <div>
+            <label htmlFor="product-supplier-filter" className="mb-1 block text-sm font-medium">Fornecedor</label>
+            <select id="product-supplier-filter" value={supplierId}
+              onChange={(event) => updateQuery({ supplierId: event.target.value })} className="rounded border p-2">
+              <option value="">Todos</option>
+              {suppliersQuery.data?.items.map((supplier) => (
+                <option key={supplier.id} value={supplier.id}>
+                  {supplier.name}{supplier.status === "Inactive" ? " (inativo)" : ""}
+                </option>
+              ))}
+            </select>
+          </div>
         </section>
         {racksQuery.isError && <p role="alert">Não foi possível carregar as localizações.</p>}
+        {suppliersQuery.isError && <p role="alert">Não foi possível carregar os fornecedores para o filtro.</p>}
         {productsQuery.isLoading && <p role="status">Carregando produtos...</p>}
         {productsQuery.isError && <p role="alert">Não foi possível carregar o catálogo.</p>}
         {productsQuery.data && (

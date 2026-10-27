@@ -65,6 +65,8 @@ public sealed class Produto
 
     public Guid AtualizadoPor { get; private set; }
 
+    public ICollection<VinculoProdutoFornecedor> Fornecedores { get; } = new List<VinculoProdutoFornecedor>();
+
     public static Produto Criar(
         string nome,
         int quantidade,

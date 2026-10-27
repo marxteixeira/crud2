@@ -55,6 +55,7 @@ export default function AuthenticatedNavigation(): JSX.Element {
         <Link href="/" className="font-semibold">Sistema de Estoque</Link>
         <Link href="/products" className="underline">Produtos</Link>
         <Link href="/locations" className="underline">Localizações</Link>
+        <Link href="/suppliers" className="underline">Fornecedores</Link>
         {accountQuery.data?.role === "Administrador" && <Link href="/users" className="underline">Usuários</Link>}
       </nav>
       <div className="flex items-center gap-3">

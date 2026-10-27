@@ -91,11 +91,12 @@ public sealed class ProductEndpointsTests
         using AuthenticationTestFactory factory = new(identity, productManagementService: products);
         using HttpClient client = AuthenticatedClient(factory, identity, "Operador");
 
+        Guid supplierId = Guid.NewGuid();
         HttpResponseMessage response = await client.GetAsync(
-            $"/api/products?search=cafe&rackId={rackId}&shelfId={shelfId}&status=Active&page=2&pageSize=10");
+            $"/api/products?search=cafe&rackId={rackId}&shelfId={shelfId}&status=Active&supplierId={supplierId}&page=2&pageSize=10");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Equal(("cafe", rackId, shelfId, "Active", 2, 10), products.LastFilters);
+        Assert.Equal(("cafe", rackId, shelfId, "Active", supplierId, 2, 10), products.LastFilters);
     }
 
     [Fact]

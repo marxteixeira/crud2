@@ -37,6 +37,7 @@ export interface ProductFilters {
   rackId?: string;
   shelfId?: string;
   status?: ProductStatus;
+  supplierId?: string;
   page: number;
   pageSize: number;
 }
@@ -53,6 +54,7 @@ export async function listProducts(
   if (filters.rackId) query.set("rackId", filters.rackId);
   if (filters.shelfId) query.set("shelfId", filters.shelfId);
   if (filters.status) query.set("status", filters.status);
+  if (filters.supplierId) query.set("supplierId", filters.supplierId);
   return requestWithSession<PaginatedProducts>(client, "GET", `/api/products?${query.toString()}`);
 }
 

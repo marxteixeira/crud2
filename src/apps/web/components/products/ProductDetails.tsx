@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import AuthenticatedNavigation from "@/components/AuthenticatedNavigation";
 import ProductForm from "@/components/products/ProductForm";
+import ProductSuppliers from "@/components/products/ProductSuppliers";
 import { getCurrentAccount } from "@/lib/auth";
 import { listRacks } from "@/lib/locations";
 import { getProduct, setProductStatus, updateProduct, type ProductStatus } from "@/lib/products";
@@ -76,6 +77,7 @@ export default function ProductDetails(): JSX.Element {
                 await updateMutation.mutateAsync(input);
               }}
             />
+            <ProductSuppliers product={product} />
             {isAdministrator && (
               <button type="button" disabled={statusMutation.isPending}
                 onClick={() => statusMutation.mutate(product.status === "Active" ? "Inactive" : "Active")}

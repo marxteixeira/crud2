@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using SistemaEstoque.Application.Authentication;
 using SistemaEstoque.Application.Locations;
 using SistemaEstoque.Application.Products;
+using SistemaEstoque.Application.Suppliers;
 using SistemaEstoque.Application.Users;
 
 namespace SistemaEstoque.API.Tests.Infrastructure;
@@ -19,7 +20,9 @@ internal sealed class AuthenticationTestFactory(
     Guid identity,
     IUserManagementService? userManagementService = null,
     ILocationManagementService? locationManagementService = null,
-    IProductManagementService? productManagementService = null) : WebApplicationFactory<Program>
+    IProductManagementService? productManagementService = null,
+    ISupplierManagementService? supplierManagementService = null,
+    IProductSupplierService? productSupplierService = null) : WebApplicationFactory<Program>
 {
     internal FakeCurrentAccountAuthorization Authorization { get; } = new(identity);
 
@@ -46,6 +49,10 @@ internal sealed class AuthenticationTestFactory(
             }
             services.RemoveAll<IProductManagementService>();
             services.AddSingleton(productManagementService ?? new FakeProductManagementService());
+            services.RemoveAll<ISupplierManagementService>();
+            services.AddSingleton(supplierManagementService ?? new FakeSupplierManagementService());
+            services.RemoveAll<IProductSupplierService>();
+            services.AddSingleton(productSupplierService ?? new FakeProductSupplierService());
 
             services.AddAuthentication(options =>
                 {

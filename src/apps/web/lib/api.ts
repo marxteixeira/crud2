@@ -24,7 +24,7 @@ export async function getAccessToken(client: SupabaseClient): Promise<string> {
 
 export async function requestWithSession<T>(
   client: SupabaseClient,
-  method: "GET" | "POST" | "PATCH" | "PUT",
+  method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE",
   path: string,
   body?: unknown,
 ): Promise<T> {

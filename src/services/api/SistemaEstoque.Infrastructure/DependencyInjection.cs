@@ -6,6 +6,7 @@ using Npgsql;
 using SistemaEstoque.Application.Authentication;
 using SistemaEstoque.Application.Locations;
 using SistemaEstoque.Application.Products;
+using SistemaEstoque.Application.Suppliers;
 using SistemaEstoque.Application.Users;
 using SistemaEstoque.Infrastructure.Identity;
 using SistemaEstoque.Infrastructure.Persistence;
@@ -55,6 +56,8 @@ public static class DependencyInjection
         services.AddScoped<IPendingMigrationsProvider, EfPendingMigrationsProvider>();
         services.AddScoped<ILocationManagementService, LocationManagementService>();
         services.AddScoped<IProductManagementService, ProductManagementService>();
+        services.AddScoped<ISupplierManagementService, SupplierManagementService>();
+        services.AddScoped<IProductSupplierService, ProductSupplierService>();
 
         services.AddHealthChecks()
             .AddCheck<DatabaseReadinessHealthCheck>("postgresql", tags: ["ready"]);

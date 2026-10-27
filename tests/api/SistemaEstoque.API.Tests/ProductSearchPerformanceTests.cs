@@ -36,14 +36,14 @@ public sealed class ProductSearchPerformanceTests
 
         await context.SaveChangesAsync();
         ProductManagementService service = new(context);
-        await service.ListAsync("produto", null, null, null, 1, 25, CancellationToken.None);
+        await service.ListAsync("produto", null, null, null, null, 1, 25, CancellationToken.None);
 
         List<TimeSpan> durations = [];
         for (int request = 0; request < RequestCount; request++)
         {
             long start = Stopwatch.GetTimestamp();
             PaginatedProductsDto result = await service.ListAsync(
-                "produto", null, null, null, 1, 25, CancellationToken.None);
+                "produto", null, null, null, null, 1, 25, CancellationToken.None);
             durations.Add(Stopwatch.GetElapsedTime(start));
             Assert.NotEmpty(result.Items);
         }

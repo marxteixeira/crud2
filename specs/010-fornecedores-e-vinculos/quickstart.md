@@ -29,6 +29,17 @@ npm test
 
 Resultados esperados: os testes de domínio cobrem CPF/CNPJ válido, inválido e normalização; os testes de aplicação cobrem unicidade, vínculos, inativação e auditoria; os testes de integração cobrem endpoints e autorização; os testes web cobrem cadastro, consulta, filtro, associação, desassociação e mensagens acessíveis.
 
+## Resultados verificados nesta implementação
+
+- `dotnet test tests/api/SistemaEstoque.API.Tests/SistemaEstoque.API.Tests.csproj --configuration FeatureBuild`: 122 aprovados, 1 ignorado por depender de conectividade PostgreSQL.
+- `dotnet test tests/api/SistemaEstoque.Domain.Tests/SistemaEstoque.Domain.Tests.csproj --configuration FeatureBuild`: 48 aprovados.
+- `npm run test -w @crud2/web-tests`: 56 testes aprovados.
+- `npx tsc --noEmit -p src/apps/web/tsconfig.json`: concluído sem diagnósticos.
+- `npm run lint -w @crud2/web`: concluído sem avisos ou erros.
+- O contrato OpenAPI foi analisado com `js-yaml` e passou no parse.
+- `npm run build -w @crud2/web` foi tentado duas vezes, mas o processo Next.js ficou sem progresso durante a inicialização e precisou ser encerrado após o limite de espera; o build de produção permanece não verificado.
+- As migrações foram geradas, mas não aplicadas. Os cenários manuais ponta a ponta com PostgreSQL e contas reais de Administrador/Operador não foram executados.
+
 ## Validação ponta a ponta
 
 1. Iniciar API e aplicação web conforme o README e autenticar como Administrador.
