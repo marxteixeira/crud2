@@ -16,9 +16,16 @@ public sealed class SupabaseAdminClient(
         CancellationToken cancellationToken)
     {
         SupabaseAdminOptions options = ReadOptions();
+        string inviteEndpoint = "auth/v1/invite";
+        if (!string.IsNullOrWhiteSpace(options.RedirectUrl))
+        {
+            string confirmUrl = options.RedirectUrl.TrimEnd('/') + "/auth/confirm";
+            inviteEndpoint += "?redirect_to=" + Uri.EscapeDataString(confirmUrl);
+        }
+
         using HttpRequestMessage request = CreateAdminRequest(
             HttpMethod.Post,
-            new Uri(new Uri(options.Url.TrimEnd('/') + "/"), "auth/v1/invite"),
+            new Uri(new Uri(options.Url.TrimEnd('/') + "/"), inviteEndpoint),
             options.ServiceRoleKey);
         request.Content = JsonContent.Create(new
         {

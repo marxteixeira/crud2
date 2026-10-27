@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   signInWithPassword: vi.fn(),
   updateUser: vi.fn(),
   signOut: vi.fn(),
+  getSession: vi.fn(),
   requestWithSession: vi.fn(),
   replace: vi.fn(),
   refresh: vi.fn(),
@@ -24,6 +25,7 @@ vi.mock("@/lib/supabase/client", () => ({
       signInWithPassword: mocks.signInWithPassword,
       updateUser: mocks.updateUser,
       signOut: mocks.signOut,
+      getSession: mocks.getSession,
     },
   }),
 }));
@@ -31,6 +33,7 @@ vi.mock("@/lib/supabase/client", () => ({
 describe("AuthFlow", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.getSession.mockResolvedValue({ data: { session: { access_token: "token" } } });
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://example.supabase.co");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "test-publishable-key");
     mocks.signInWithPassword.mockResolvedValue({ error: null });
@@ -79,7 +82,7 @@ describe("AuthFlow", () => {
 
   it("define senha e ativa o convite confirmado pela API", async () => {
     render(<ActivatePage />);
-    fireEvent.change(screen.getByLabelText("Crie uma senha"), { target: { value: "secure-password" } });
+    fireEvent.change(await screen.findByLabelText("Crie uma senha"), { target: { value: "secure-password" } });
     fireEvent.change(screen.getByLabelText("Confirme sua senha"), { target: { value: "secure-password" } });
     fireEvent.click(screen.getByRole("button", { name: "Definir senha e ativar" }));
 
@@ -90,6 +93,36 @@ describe("AuthFlow", () => {
       "POST",
       "/api/auth/activation",
     );
+  });
+
+  it("informa convite inválido e não tenta ativar quando não há sessão", async () => {
+    mocks.getSession.mockResolvedValue({ data: { session: null } });
+    render(<ActivatePage />);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("O convite é inválido ou expirou.");
+    expect(screen.queryByLabelText("Crie uma senha")).not.toBeInTheDocument();
+    expect(mocks.updateUser).not.toHaveBeenCalled();
+  });
+
+  it("distingue senha rejeitada de falha de serviço na ativação", async () => {
+    mocks.updateUser.mockResolvedValueOnce({ error: { code: "weak_password", status: 422, name: "AuthWeakPasswordError" } });
+    render(<ActivatePage />);
+    fireEvent.change(await screen.findByLabelText("Crie uma senha"), { target: { value: "secure-password" } });
+    fireEvent.change(screen.getByLabelText("Confirme sua senha"), { target: { value: "secure-password" } });
+    fireEvent.click(screen.getByRole("button", { name: "Definir senha e ativar" }));
+    expect(await screen.findByText(/A senha não foi aceita/)).toBeInTheDocument();
+
+    mocks.updateUser.mockResolvedValueOnce({ error: { status: 503, name: "AuthRetryableFetchError" } });
+    fireEvent.click(screen.getByRole("button", { name: "Definir senha e ativar" }));
+    expect(await screen.findByText(/serviço de autenticação está indisponível/)).toBeInTheDocument();
+  });
+
+  it("exibe mensagem amigável para erro de convite no fragmento da URL de login", async () => {
+    window.history.replaceState(null, "", "/login#error=access_denied&error_code=otp_expired&error_description=x");
+    render(<LoginPage />);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("O convite é inválido ou expirou.");
+    window.history.replaceState(null, "", "/");
   });
 
   it("revoga a sessão na API antes de encerrar a sessão Supabase", async () => {

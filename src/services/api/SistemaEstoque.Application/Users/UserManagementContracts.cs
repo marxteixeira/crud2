@@ -52,6 +52,8 @@ public interface IUserManagementService
         string actor,
         CancellationToken cancellationToken);
 
+    Task ResendInvitationAsync(Guid id, CancellationToken cancellationToken);
+
     Task ConfirmEmailAsync(
         Guid identity,
         string confirmedEmail,

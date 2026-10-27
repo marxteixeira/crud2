@@ -7,6 +7,7 @@ import { listUsers } from "@/lib/users";
 const mocks = vi.hoisted(() => ({
   replace: vi.fn(),
   listUsers: vi.fn(),
+  resendInvitation: vi.fn(),
   search: "search=ana&status=Ativa&page=2",
 }));
 
@@ -20,6 +21,7 @@ vi.mock("@/lib/users", () => ({
   listUsers: mocks.listUsers,
   inviteUser: vi.fn(),
   setUserStatus: vi.fn(),
+  resendInvitation: mocks.resendInvitation,
 }));
 vi.mock("@/components/AuthenticatedNavigation", () => ({
   default: () => <nav aria-label="Navegação principal">Navegação</nav>,
@@ -77,6 +79,25 @@ describe("UsersPage", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Próxima" }));
     expect(mocks.replace).toHaveBeenCalledWith("/users?search=ana&status=Ativa&page=3", { scroll: false });
+  });
+
+  it("offers resending the invitation only for pending accounts", async () => {
+    mocks.resendInvitation.mockResolvedValue(undefined);
+    mocks.listUsers.mockResolvedValue({
+      ...pageData,
+      items: [
+        { ...pageData.items[0] },
+        { ...pageData.items[0], id: "user-2", email: "bia@example.com", displayName: "Bia", status: "ConvitePendente" as const },
+      ],
+    });
+    renderPage();
+    await screen.findByText("bia@example.com");
+
+    expect(screen.queryByRole("button", { name: "Reenviar convite para Ana" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Reenviar convite para Bia" }));
+
+    expect(await screen.findByText(/Convite reenviado/)).toBeInTheDocument();
+    expect(mocks.resendInvitation).toHaveBeenCalledWith(expect.anything(), "user-2");
   });
 
   it("shows loading, empty, and error states accessibly", async () => {

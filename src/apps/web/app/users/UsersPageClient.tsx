@@ -7,7 +7,7 @@ import AuthenticatedNavigation from "@/components/AuthenticatedNavigation";
 import UserForm from "@/components/users/UserForm";
 import UserTable from "@/components/users/UserTable";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { inviteUser, listUsers, setUserStatus, type UserAccount, type UserStatus } from "@/lib/users";
+import { inviteUser, listUsers, resendInvitation, setUserStatus, type UserAccount, type UserStatus } from "@/lib/users";
 
 const pageSize = 25;
 
@@ -35,6 +35,18 @@ export default function UsersPageClient(): JSX.Element {
       await queryClient.invalidateQueries({ queryKey: ["current-account"] });
     },
     onError: () => setMutationError("Não foi possível enviar o convite. Revise os dados ou tente novamente."),
+  });
+  const [notice, setNotice] = useState<string | null>(null);
+  const resendMutation = useMutation({
+    mutationFn: (account: UserAccount) => resendInvitation(getSupabaseBrowserClient(), account.id),
+    onSuccess: () => {
+      setMutationError(null);
+      setNotice("Convite reenviado. Os convites anteriores deixaram de valer.");
+    },
+    onError: () => {
+      setNotice(null);
+      setMutationError("Não foi possível reenviar o convite. Tente novamente.");
+    },
   });
   const statusMutation = useMutation({
     mutationFn: ({ account, nextStatus }: { account: UserAccount; nextStatus: Exclude<UserStatus, "ConvitePendente"> }) =>
@@ -111,6 +123,7 @@ export default function UsersPageClient(): JSX.Element {
         </section>
 
         {mutationError && <p role="alert" className="text-sm text-red-700">{mutationError}</p>}
+        {notice && <p role="status" className="text-sm text-green-800">{notice}</p>}
         {usersQuery.isLoading && <p role="status">Carregando contas...</p>}
         {usersQuery.isError && <p role="alert" className="text-sm text-red-700">Não foi possível carregar as contas.</p>}
         {usersQuery.data && (
@@ -118,6 +131,12 @@ export default function UsersPageClient(): JSX.Element {
             <UserTable
               accounts={usersQuery.data.items}
               changingId={statusMutation.isPending ? statusMutation.variables?.account.id : undefined}
+              resendingId={resendMutation.isPending ? resendMutation.variables?.id : undefined}
+              onResendInvitation={(account) => {
+                setMutationError(null);
+                setNotice(null);
+                resendMutation.mutate(account);
+              }}
               onStatusChange={(account, nextStatus) => {
                 setMutationError(null);
                 statusMutation.mutate({ account, nextStatus });

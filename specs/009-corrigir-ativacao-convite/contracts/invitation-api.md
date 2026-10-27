@@ -19,9 +19,9 @@ Parâmetro de entrada `type` aceito: apenas `invite`. Destinos de redirecionamen
 - **404**: usuário inexistente.
 - **409**: usuário não está pendente.
 - **401/403**: não autenticado / sem perfil.
-- **502**: provedor de autenticação indisponível (Problem Details, sem detalhes internos).
+- **500**: falha do provedor de autenticação (Problem Details padrão, sem detalhes internos).
 
 ## Configuração
 
 - `Supabase:RedirectUrl`: URL base do web usada no `redirect_to` do convite; deve estar nas URLs permitidas do Supabase.
-- Template "Invite user" do Supabase: link `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=invite`.
+- Template "Invite user" do Supabase: link `{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=invite` (a API envia `redirect_to` = `Supabase:RedirectUrl` + `/auth/confirm`).

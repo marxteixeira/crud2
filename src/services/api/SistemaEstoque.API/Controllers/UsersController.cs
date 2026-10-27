@@ -145,5 +145,19 @@ public sealed class UsersController(
         return NoContent();
     }
 
+    [HttpPost("{userId:guid}/invitation")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> ResendInvitation(Guid userId, CancellationToken cancellationToken)
+    {
+        await userManagement.ResendInvitationAsync(userId, cancellationToken);
+        logger.LogInformation(
+            "User invitation resent; AccountId {AccountId}; TraceId {TraceId}",
+            userId,
+            HttpContext.TraceIdentifier);
+        return NoContent();
+    }
+
     public sealed record SetUserStatusRequest(string Status);
 }

@@ -42,7 +42,7 @@ Ao iniciar (exceto no ambiente `Testing`), a API registra um aviso com os nomes 
 
 ### Identidade e perfis
 
-Autenticação usa Supabase Auth. Copie `src/apps/web/.env.example` para `.env.local` e configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; ambos são valores de cliente públicos, não credenciais PostgreSQL. Configure `Supabase__Url`, `Supabase__Audience`, `Supabase__AnonKey` e `Supabase__ServiceRoleKey` somente no servidor da API. A chave service-role é administrativa e nunca pode ser exposta ao web nem versionada. O procedimento de bootstrap do primeiro Administrador e os cenários locais estão em [specs/003-identidade-perfis/quickstart.md](specs/003-identidade-perfis/quickstart.md).
+Autenticação usa Supabase Auth. Copie `src/apps/web/.env.example` para `.env.local` e configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; ambos são valores de cliente públicos, não credenciais PostgreSQL. Configure `Supabase__Url`, `Supabase__Audience`, `Supabase__AnonKey` e `Supabase__ServiceRoleKey` somente no servidor da API. Configure também `Supabase__RedirectUrl` (URL base do web, padrão `http://localhost:3000`), que deve constar nas URLs de redirecionamento permitidas do Supabase, e ajuste o template "Invite user" para `{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=invite` (ver [specs/009-corrigir-ativacao-convite/quickstart.md](specs/009-corrigir-ativacao-convite/quickstart.md)). A chave service-role é administrativa e nunca pode ser exposta ao web nem versionada. O procedimento de bootstrap do primeiro Administrador e os cenários locais estão em [specs/003-identidade-perfis/quickstart.md](specs/003-identidade-perfis/quickstart.md).
 
 ### Configuração e segredos
 

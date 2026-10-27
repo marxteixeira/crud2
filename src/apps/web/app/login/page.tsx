@@ -3,10 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { requestWithSession } from "@/lib/api";
+import { mapInvitationError, parseAuthErrorFromUrl } from "@/lib/auth/invitation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 const loginSchema = z.object({
@@ -24,6 +25,13 @@ export default function LoginPage(): JSX.Element {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
+
+  useEffect(() => {
+    const urlError = parseAuthErrorFromUrl(window.location.href);
+    if (urlError) {
+      setErrorMessage(mapInvitationError(urlError.code));
+    }
+  }, []);
 
   async function submit(values: LoginValues): Promise<void> {
     setErrorMessage(null);

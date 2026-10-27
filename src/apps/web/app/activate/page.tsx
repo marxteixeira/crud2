@@ -2,9 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { classifyInvitationError, invitationMessages } from "@/lib/auth/invitation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { requestWithSession } from "@/lib/api";
 
@@ -17,22 +18,41 @@ const activationSchema = z.object({
 });
 
 type ActivationValues = z.infer<typeof activationSchema>;
+type SessionState = "checking" | "ready" | "invalid";
 
 export default function ActivatePage(): JSX.Element {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [sessionState, setSessionState] = useState<SessionState>("checking");
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<ActivationValues>({ resolver: zodResolver(activationSchema) });
 
+  useEffect(() => {
+    let active = true;
+    getSupabaseBrowserClient().auth.getSession()
+      .then(({ data }) => {
+        if (active) setSessionState(data.session ? "ready" : "invalid");
+      })
+      .catch(() => {
+        if (active) setSessionState("invalid");
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   async function submit(values: ActivationValues): Promise<void> {
     setErrorMessage(null);
     const supabase = getSupabaseBrowserClient();
     const { error: passwordError } = await supabase.auth.updateUser({ password: values.password });
     if (passwordError) {
-      setErrorMessage("Não foi possível concluir a ativação. Solicite um novo convite ao Administrador.");
+      const kind = classifyInvitationError(passwordError);
+      console.warn("Activation failed", { code: passwordError.code ?? passwordError.name, kind });
+      if (kind === "expired") setSessionState("invalid");
+      setErrorMessage(invitationMessages[kind]);
       return;
     }
 
@@ -40,8 +60,28 @@ export default function ActivatePage(): JSX.Element {
       await requestWithSession(supabase, "POST", "/api/auth/activation");
       router.replace("/");
     } catch {
-      setErrorMessage("Não foi possível concluir a ativação. Solicite um novo convite ao Administrador.");
+      console.warn("Activation confirmation failed", { kind: "service" });
+      setErrorMessage(invitationMessages.unknown);
     }
+  }
+
+  if (sessionState === "checking") {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-6">
+        <p role="status">Verificando convite...</p>
+      </main>
+    );
+  }
+
+  if (sessionState === "invalid") {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-6">
+        <section aria-labelledby="activation-heading" className="w-full rounded-lg border p-6 shadow-sm">
+          <h1 id="activation-heading" className="mb-4 text-2xl font-bold">Ative sua conta</h1>
+          <p role="alert" className="text-sm text-red-700">{errorMessage ?? invitationMessages.expired}</p>
+        </section>
+      </main>
+    );
   }
 
   return (

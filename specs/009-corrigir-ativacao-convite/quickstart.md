@@ -3,7 +3,8 @@
 ## Pré-requisitos
 
 - API em `http://localhost:5013` e web em `http://localhost:3000` em execução.
-- No painel do Supabase: URL `http://localhost:3000/**` nas URLs de redirecionamento permitidas e template "Invite user" conforme [contrato](./contracts/invitation-api.md).
+- No painel do Supabase: URL `http://localhost:3000/**` nas URLs de redirecionamento permitidas e template "Invite user" com o link `{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=invite` (ver [contrato](./contracts/invitation-api.md)).
+- API com `Supabase__RedirectUrl` apontando para a URL do web do ambiente (padrão `http://localhost:3000`).
 - Conta de Administrador ativa.
 
 ## Cenários

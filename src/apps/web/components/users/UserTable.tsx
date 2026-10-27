@@ -6,13 +6,17 @@ import type { UserAccount, UserStatus } from "@/lib/users";
 interface UserTableProps {
   accounts: UserAccount[];
   changingId?: string;
+  resendingId?: string;
   onStatusChange: (account: UserAccount, status: Exclude<UserStatus, "ConvitePendente">) => void;
+  onResendInvitation?: (account: UserAccount) => void;
 }
 
 export default function UserTable({
   accounts,
   changingId,
+  resendingId,
   onStatusChange,
+  onResendInvitation,
 }: UserTableProps): JSX.Element {
   if (accounts.length === 0) {
     return <p className="rounded border p-6 text-center">Nenhuma conta encontrada.</p>;
@@ -51,6 +55,17 @@ export default function UserTable({
                     aria-label={`${account.status === "Ativa" ? "Inativar" : "Reativar"} ${account.displayName}`}
                   >
                     {account.status === "Ativa" ? "Inativar" : "Reativar"}
+                  </button>
+                )}
+                {account.status === "ConvitePendente" && onResendInvitation && (
+                  <button
+                    type="button"
+                    disabled={resendingId === account.id}
+                    onClick={() => onResendInvitation(account)}
+                    className="underline disabled:opacity-60"
+                    aria-label={`Reenviar convite para ${account.displayName}`}
+                  >
+                    Reenviar convite
                   </button>
                 )}
               </td>

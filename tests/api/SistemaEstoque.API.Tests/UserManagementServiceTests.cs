@@ -30,6 +30,48 @@ public sealed class UserManagementServiceTests
     }
 
     [Fact]
+    public async Task ResendInvitation_PendingAccountCallsProvider()
+    {
+        await using SistemaEstoqueDbContext context = CreateContext();
+        ContaDeUsuario pending = CreateAccount("pending@example.com");
+        context.ContasDeUsuario.Add(pending);
+        await context.SaveChangesAsync();
+        FakeIdentityAdministration identity = new();
+        UserManagementService service = CreateService(context, identity);
+
+        await service.ResendInvitationAsync(pending.Id, CancellationToken.None);
+
+        Assert.Equal(1, identity.InviteCalls);
+    }
+
+    [Fact]
+    public async Task ResendInvitation_ActiveAccountIsConflict()
+    {
+        await using SistemaEstoqueDbContext context = CreateContext();
+        ContaDeUsuario active = CreateAccount("active@example.com");
+        active.DefinirSituacao(SituacaoConta.Ativa, DateTimeOffset.UtcNow, "admin");
+        context.ContasDeUsuario.Add(active);
+        await context.SaveChangesAsync();
+        FakeIdentityAdministration identity = new();
+        UserManagementService service = CreateService(context, identity);
+
+        await Assert.ThrowsAsync<AccountConflictException>(
+            () => service.ResendInvitationAsync(active.Id, CancellationToken.None));
+
+        Assert.Equal(0, identity.InviteCalls);
+    }
+
+    [Fact]
+    public async Task ResendInvitation_UnknownAccountIsNotFound()
+    {
+        await using SistemaEstoqueDbContext context = CreateContext();
+        UserManagementService service = CreateService(context, new FakeIdentityAdministration());
+
+        await Assert.ThrowsAsync<KeyNotFoundException>(
+            () => service.ResendInvitationAsync(Guid.NewGuid(), CancellationToken.None));
+    }
+
+    [Fact]
     public async Task Invite_CreatesPendingAccountAndSynchronizesProviderRole()
     {
         await using SistemaEstoqueDbContext context = CreateContext();

@@ -158,10 +158,87 @@ public sealed class UserManagementEndpointsTests
         Assert.Equal(SituacaoConta.Inativa, service.LastStatus);
     }
 
+    [Fact]
+    public async Task ResendInvitation_ReturnsNoContentForAdministrator()
+    {
+        FakeUserManagementService service = new();
+        using AuthenticationTestFactory factory = new(Guid.NewGuid(), service);
+        using HttpClient client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("X-Test-Subject", Guid.NewGuid().ToString());
+
+        using HttpResponseMessage response = await client.PostAsync($"/api/users/{UserId}/invitation", null);
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Equal(UserId, service.ResentInvitationId);
+    }
+
+    [Fact]
+    public async Task ResendInvitation_NonPendingAccountReturnsConflict()
+    {
+        FakeUserManagementService service = new() { ConflictOnResend = true };
+        using AuthenticationTestFactory factory = new(Guid.NewGuid(), service);
+        using HttpClient client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("X-Test-Subject", Guid.NewGuid().ToString());
+
+        using HttpResponseMessage response = await client.PostAsync($"/api/users/{UserId}/invitation", null);
+
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task ResendInvitation_UnknownAccountReturnsNotFound()
+    {
+        FakeUserManagementService service = new() { MissingOnResend = true };
+        using AuthenticationTestFactory factory = new(Guid.NewGuid(), service);
+        using HttpClient client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("X-Test-Subject", Guid.NewGuid().ToString());
+
+        using HttpResponseMessage response = await client.PostAsync($"/api/users/{UserId}/invitation", null);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task ResendInvitation_RequiresAdministratorPolicy()
+    {
+        FakeUserManagementService service = new();
+        using AuthenticationTestFactory factory = new(Guid.NewGuid(), service);
+        using HttpClient client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("X-Test-Subject", Guid.NewGuid().ToString());
+        client.DefaultRequestHeaders.Add("X-Test-Role", "Operador");
+
+        using HttpResponseMessage response = await client.PostAsync($"/api/users/{UserId}/invitation", null);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Null(service.ResentInvitationId);
+    }
+
     internal sealed class FakeUserManagementService : IUserManagementService
     {
         private static readonly UserAccountDto User = new(
             UserId, "user@example.com", "Test User", null, "Operador", "Ativa");
+
+        public Guid? ResentInvitationId { get; private set; }
+
+        public bool ConflictOnResend { get; init; }
+
+        public bool MissingOnResend { get; init; }
+
+        public Task ResendInvitationAsync(Guid id, CancellationToken cancellationToken)
+        {
+            if (ConflictOnResend)
+            {
+                throw new AccountConflictException("Somente contas com convite pendente podem receber um novo convite.");
+            }
+
+            if (MissingOnResend)
+            {
+                throw new KeyNotFoundException("A conta solicitada não foi encontrada.");
+            }
+
+            ResentInvitationId = id;
+            return Task.CompletedTask;
+        }
 
         public int ListCalls { get; private set; }
 

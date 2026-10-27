@@ -68,3 +68,7 @@ export function setUserStatus(
 ): Promise<void> {
   return requestWithSession<void>(client, "PUT", `/api/users/${userId}/activation`, { status });
 }
+
+export function resendInvitation(client: SupabaseClient, userId: string): Promise<void> {
+  return requestWithSession<void>(client, "POST", `/api/users/${userId}/invitation`);
+}

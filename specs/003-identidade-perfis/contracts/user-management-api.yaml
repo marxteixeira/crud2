@@ -234,6 +234,28 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
+  /api/users/{userId}/invitation:
+    post:
+      operationId: resendUserInvitation
+      summary: Reenviar convite de conta pendente
+      description: Somente Administrador. Disponível apenas para contas com convite pendente; o convite anterior deixa de valer.
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "204":
+          description: Convite reenviado.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: A conta não está com convite pendente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
 components:
   securitySchemes:
     bearerAuth:

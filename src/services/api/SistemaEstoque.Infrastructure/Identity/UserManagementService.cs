@@ -277,6 +277,32 @@ public sealed class UserManagementService(
         await transaction.CommitAsync(cancellationToken);
     }
 
+    public async Task ResendInvitationAsync(Guid id, CancellationToken cancellationToken)
+    {
+        ContaDeUsuario account = await dbContext.ContasDeUsuario.AsNoTracking()
+            .SingleOrDefaultAsync(item => item.Id == id, cancellationToken)
+            ?? throw new KeyNotFoundException("A conta solicitada não foi encontrada.");
+        if (account.Situacao != SituacaoConta.ConvitePendente)
+        {
+            throw new AccountConflictException("Somente contas com convite pendente podem receber um novo convite.");
+        }
+
+        try
+        {
+            // Para identidades ainda não confirmadas, o provedor invalida o convite anterior e reenvia o e-mail.
+            await identityAdministration.InviteAsync(account.Email, account.NomeExibicao, cancellationToken);
+        }
+        catch (HttpRequestException exception)
+        {
+            logger.LogError(
+                "Invitation resend failed; AccountId {AccountId}; ErrorType {ErrorType}; StatusCode {StatusCode}",
+                account.Id,
+                exception.GetType().Name,
+                exception.StatusCode);
+            throw new InvalidOperationException("Não foi possível reenviar o convite agora.", exception);
+        }
+    }
+
     public async Task ConfirmEmailAsync(
         Guid identity,
         string confirmedEmail,
