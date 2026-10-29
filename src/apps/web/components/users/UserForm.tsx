@@ -1,9 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import type { UserAccount, UserInput } from "@/lib/users";
+import Button from "@/components/ui/Button";
+import { InputField, SelectField } from "@/components/ui/Field";
 
 const userSchema = z.object({
   email: z.string().trim().email("Informe um e-mail válido."),
@@ -20,14 +22,9 @@ interface UserFormProps {
   onSubmit: (input: UserInput) => Promise<void>;
 }
 
-export default function UserForm({
-  account,
-  submitting,
-  errorMessage,
-  onSubmit,
-}: UserFormProps): JSX.Element {
+export default function UserForm({ account, submitting, errorMessage, onSubmit }: UserFormProps): JSX.Element {
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<UserFormValues>({
@@ -44,34 +41,20 @@ export default function UserForm({
   }
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(submit)} noValidate>
-      <div>
-        <label className="mb-1 block font-medium" htmlFor="user-email">E-mail</label>
-        <input id="user-email" autoComplete="email" type="email" {...register("email")}
-          aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "user-email-error" : undefined}
-          className="w-full rounded border p-2" />
-        {errors.email && <p id="user-email-error" role="alert" className="text-sm text-red-700">{errors.email.message}</p>}
-        {account?.pendingEmail && <p className="mt-1 text-sm">Novo e-mail aguardando confirmação: {account.pendingEmail}</p>}
-      </div>
-      <div>
-        <label className="mb-1 block font-medium" htmlFor="user-name">Nome</label>
-        <input id="user-name" autoComplete="name" {...register("displayName")}
-          aria-invalid={Boolean(errors.displayName)} aria-describedby={errors.displayName ? "user-name-error" : undefined}
-          className="w-full rounded border p-2" />
-        {errors.displayName && <p id="user-name-error" role="alert" className="text-sm text-red-700">{errors.displayName.message}</p>}
-      </div>
-      <div>
-        <label className="mb-1 block font-medium" htmlFor="user-role">Perfil</label>
-        <select id="user-role" {...register("role")} className="w-full rounded border p-2">
+    <form className="space-y-space-md" onSubmit={handleSubmit(submit)} noValidate>
+      <Controller name="email" control={control} render={({ field }) => <InputField label="E-mail" autoComplete="email" type="email" name={field.name} value={field.value} onChange={field.onChange} onBlur={field.onBlur} error={errors.email?.message} />} />
+      {account?.pendingEmail && <p className="-mt-space-xs text-body-sm text-on-surface-variant">Novo e-mail aguardando confirmação: {account.pendingEmail}</p>}
+      <Controller name="displayName" control={control} render={({ field }) => <InputField label="Nome" autoComplete="name" name={field.name} value={field.value} onChange={field.onChange} onBlur={field.onBlur} error={errors.displayName?.message} />} />
+      <Controller name="role" control={control} render={({ field }) => (
+        <SelectField label="Perfil" name={field.name} value={field.value} onChange={field.onChange} onBlur={field.onBlur}>
           <option value="Operador">Operador</option>
           <option value="Administrador">Administrador</option>
-        </select>
-      </div>
-      {errorMessage && <p role="alert" className="text-sm text-red-700">{errorMessage}</p>}
-      <button type="submit" disabled={submitting}
-        className="rounded bg-blue-700 px-4 py-2 font-medium text-white disabled:opacity-60">
+        </SelectField>
+      )} />
+      {errorMessage && <p role="alert" className="rounded-lg bg-error-container p-space-md text-body-sm text-on-error-container">{errorMessage}</p>}
+      <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
         {submitting ? "Salvando..." : account ? "Salvar alterações" : "Enviar convite"}
-      </button>
+      </Button>
     </form>
   );
 }

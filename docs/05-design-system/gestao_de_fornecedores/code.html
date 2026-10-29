@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary-container": "#a8b8ff", "on-secondary": "#ffffff", "on-background": "#0b1c30", "inverse-surface": "#213145", "on-primary-fixed": "#001453", "primary-fixed": "#dde1ff", "on-secondary-fixed": "#131b2e", "error": "#ba1a1a", "inverse-primary": "#b8c4ff", "on-secondary-fixed-variant": "#3f465c", "surface-variant": "#d3e4fe", "on-tertiary-fixed-variant": "#005137", "secondary-container": "#dae2fd", "on-tertiary-container": "#5bcf9e", "tertiary-fixed-dim": "#68dba9", "surface-dim": "#cbdbf5", "on-secondary-container": "#5c647a", "outline-variant": "#c4c5d5", "on-error": "#ffffff", "primary": "#00288e", "primary-fixed-dim": "#b8c4ff", "outline": "#757684", "error-container": "#ffdad6", "on-surface": "#0b1c30", "tertiary-fixed": "#85f8c4", "primary-container": "#1e40af", "surface-container-highest": "#d3e4fe", "surface-bright": "#f8f9ff", "on-error-container": "#93000a", "surface-container-lowest": "#ffffff", "tertiary": "#003d28", "surface": "#f8f9ff", "background": "#f8f9ff", "inverse-on-surface": "#eaf1ff", "on-primary": "#ffffff", "on-primary-fixed-variant": "#173bab", "tertiary-container": "#00563a", "surface-tint": "#3755c3", "surface-container-high": "#dce9ff", "on-tertiary-fixed": "#002114", "on-tertiary": "#ffffff", "secondary-fixed": "#dae2fd", "secondary": "#565e74", "surface-container": "#e5eeff", "secondary-fixed-dim": "#bec6e0", "surface-container-low": "#eff4ff", "on-surface-variant": "#444653" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-sm": "1rem", "space-sm": "0.5rem", "gutter": "1.5rem", "space-md": "1rem", "space-lg": "1.5rem", "margin": "2rem", "space-xl": "2rem", "margin-sm": "1rem", "space-xs": "0.25rem" }, "fontFamily": { "body-lg": ["Manrope"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "display": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "label-sm": ["Manrope"], "body-md": ["Manrope"], "title-md": ["Plus Jakarta Sans"], "body-sm": ["Manrope"], "caption": ["Manrope"], "label-md": ["Manrope"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }], "caption": ["11px", { "lineHeight": "14px", "letterSpacing": "0.025em", "fontWeight": "500" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm bg-surface-container-lowest"><img alt="StockSystem Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VZsqJ4ByoTnb4PQmWBPiaBcfQ_g7LjehxV655WpwXUEfo4ruVugOOUDLBZ6y0oFR9Gz8DlvuqUki9Xzx_CNpBEgNAgRW3QUuwhZmwtV0fk6hcZY7BBJIdMsPppQMpOB1fMhgfXif4qecDZ5lSMjbOzzZAOLmxEUVO5StuyVj6s0ZleHCCsfomKHE0YItnWM3B0jL0_yQP7wdgLsSekN6_H5VHVhqy8Y3lDOraBoH60"/><div class="flex flex-col"><span class="font-title-md text-title-md text-primary tracking-tight">StockSystem</span><span class="font-caption text-caption text-secondary">Enterprise OS</span></div></div><div class="px-space-md py-space-sm"><div class="font-caption text-caption uppercase text-on-surface-variant font-label-sm tracking-wider px-space-sm mb-space-xs">Operações</div><nav class="flex flex-col gap-space-xs" data-active-classes="bg-secondary-container text-on-secondary-fixed font-title-md rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-md text-body-md" data-path="produtos" href="#"><span class="material-symbols-outlined text-lg">inventory_2</span><span>Produtos</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-md text-body-md" data-path="localizacoes-estantes" href="#"><span class="material-symbols-outlined text-lg">grid_view</span><span>Localizações / Estantes</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-2.5 transition-all bg-secondary-container text-on-secondary-fixed font-title-md rounded-lg" data-path="fornecedores" href="#"><span class="material-symbols-outlined text-lg">local_shipping</span><span>Fornecedores</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-md text-body-md" data-path="gerenciar-usuarios" href="#"><span class="material-symbols-outlined text-lg">manage_accounts</span><span>Gerenciar Usuários</span></a></nav></div></div><div class="p-space-md flex flex-col gap-space-sm bg-surface-container-lowest"><div class="flex items-center justify-between px-space-sm py-1.5 rounded-full bg-surface-container-low"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span><span class="font-caption text-caption text-on-tertiary-fixed-variant">API: Online</span></div><span class="font-caption text-caption text-secondary">v2.4</span></div><button class="flex items-center justify-between w-full px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md" type="button"><span class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-base">first_page</span><span>Recolher Menu</span></span><span class="font-caption text-caption text-secondary">[</span></button></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-sm"><nav class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm"><span class="hover:text-on-surface cursor-pointer">Estoque</span><span class="material-symbols-outlined text-xs">chevron_right</span><span class="text-on-surface font-label-md">Visão Geral</span></nav></div><div class="flex items-center gap-space-md"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-secondary text-base pointer-events-none">search</span><input class="w-64 h-9 pl-9 pr-12 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm placeholder-secondary focus:outline-none focus:bg-surface-container-lowest shadow-[0_1px_4px_rgba(0,0,0,0.02)] transition-all" placeholder="Pesquisar inventário..." type="text"/><kbd class="absolute right-2 px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-caption text-caption">⌘K</kbd></div><button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-lg">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span></button><div class="flex items-center gap-space-sm pl-space-sm"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbZxoXuLYF2ht7Gri3KqzPFf5rD0Z5YtYtKazjqm2R0FoV7EBHuNEalAVMSCyYJoAj34ep0HrEmo1_iEkIYB-uM0OAcSgYVQnAds-GwTD5JoWda3-O1suYgc4af2PQWrJ_XAhPgjCoFcGG48xyOJxDz3fzgChtuCy1FuxumwaHKdhIonFktzGWD8HuqSZp5FuskYMXgszcQOaeP2gbtxgA3LejMplmnN5HmBkqKl8"/><div class="hidden xl:flex flex-col text-left"><span class="font-label-md text-label-md text-on-surface leading-tight">Administrador</span><span class="font-caption text-caption text-secondary leading-tight">marx.ts@hotmail.com</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="w-full max-w-[1600px] mx-auto px-space-lg py-space-lg"><div class="flex flex-col w-full gap-space-lg">
+<!-- Top Banner / Page Header -->
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-caption text-caption uppercase text-primary font-label-sm tracking-wider bg-secondary-container/60 px-2 py-0.5 rounded-full">Gestão de Parceiros</span>
+<span class="font-caption text-caption text-secondary">• Cadeia de Suprimentos</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-1">Fornecedores</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+        Consulte e mantenha os fornecedores parceiros dos produtos cadastrados, histórico de entregas e termos de contrato.
+      </p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<button class="flex items-center gap-space-xs px-space-md py-2.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-all font-label-md text-label-md shadow-sm active:scale-95" onclick="openDrawer()" type="button">
+<span class="material-symbols-outlined text-base">person_add</span>
+<span>Cadastrar fornecedor</span>
+</button>
+</div>
+</div>
+<!-- KPI Summary Bento Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- KPI 1 -->
+<div class="flex flex-col justify-between p-space-md rounded-xl bg-surface-container-lowest shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Total Fornecedores</span>
+<div class="p-2 rounded-lg bg-surface-container-low text-primary">
+<span class="material-symbols-outlined text-lg">local_shipping</span>
+</div>
+</div>
+<div class="mt-space-md flex items-baseline justify-between">
+<span class="font-headline-lg text-headline-lg text-on-surface font-display">1</span>
+<span class="inline-flex items-center gap-1 font-caption text-caption text-tertiary-container bg-surface-container-high px-2 py-0.5 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span>
+          100% ativos
+        </span>
+</div>
+<p class="font-caption text-caption text-secondary mt-1">Homologados no ecossistema</p>
+</div>
+<!-- KPI 2 -->
+<div class="flex flex-col justify-between p-space-md rounded-xl bg-surface-container-lowest shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Contratos Ativos</span>
+<div class="p-2 rounded-lg bg-surface-container-low text-tertiary-container">
+<span class="material-symbols-outlined text-lg">verified_user</span>
+</div>
+</div>
+<div class="mt-space-md flex items-baseline justify-between">
+<span class="font-headline-lg text-headline-lg text-on-surface font-display">1</span>
+<span class="font-caption text-caption text-on-tertiary-fixed-variant bg-tertiary-fixed/30 px-2 py-0.5 rounded-full font-label-sm">Regular</span>
+</div>
+<p class="font-caption text-caption text-secondary mt-1">Nenhum termo expirado</p>
+</div>
+<!-- KPI 3 -->
+<div class="flex flex-col justify-between p-space-md rounded-xl bg-surface-container-lowest shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Produtos Vinculados</span>
+<div class="p-2 rounded-lg bg-surface-container-low text-primary-container">
+<span class="material-symbols-outlined text-lg">inventory_2</span>
+</div>
+</div>
+<div class="mt-space-md flex items-baseline justify-between">
+<span class="font-headline-lg text-headline-lg text-on-surface font-display">24</span>
+<span class="font-caption text-caption text-secondary">SKUs cadastrados</span>
+</div>
+<p class="font-caption text-caption text-secondary mt-1">Distribuídos em estoque central</p>
+</div>
+<!-- KPI 4 -->
+<div class="flex flex-col justify-between p-space-md rounded-xl bg-surface-container-lowest shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Última Sincronização</span>
+<div class="p-2 rounded-lg bg-surface-container-low text-secondary">
+<span class="material-symbols-outlined text-lg">sync</span>
+</div>
+</div>
+<div class="mt-space-md flex items-baseline justify-between">
+<span class="font-title-md text-title-md text-on-surface font-display">Hoje, 14:32</span>
+<span class="font-caption text-caption text-tertiary-container font-label-sm">Auditoria OK</span>
+</div>
+<p class="font-caption text-caption text-secondary mt-1">Conexão SEFAZ/Receita online</p>
+</div>
+</div>
+<!-- Operational Container: Filters & Table -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest shadow-[0_1px_3px_rgba(15,23,42,0.04)] overflow-hidden">
+<!-- Filter bar -->
+<div class="p-space-md bg-surface-container-lowest flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+<!-- Search Input -->
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-lg pointer-events-none">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md placeholder-secondary focus:outline-none focus:bg-surface-container-lowest focus:shadow-md transition-all" id="searchInput" placeholder="Buscar fornecedor por nome ou documento (CNPJ/CPF)..." type="text"/>
+</div>
+<!-- Quick Controls -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Status filter -->
+<div class="flex items-center gap-space-xs bg-surface-container-low px-3 py-1.5 rounded-lg">
+<span class="font-caption text-caption text-secondary uppercase font-label-sm">Situação:</span>
+<select class="bg-transparent font-label-md text-label-md text-on-surface focus:outline-none cursor-pointer" id="statusFilter">
+<option value="all">Todas</option>
+<option selected="" value="active">Ativo</option>
+<option value="inactive">Inativo</option>
+</select>
+</div>
+<!-- Order filter -->
+<div class="flex items-center gap-space-xs bg-surface-container-low px-3 py-1.5 rounded-lg">
+<span class="font-caption text-caption text-secondary uppercase font-label-sm">Ordenar:</span>
+<select class="bg-transparent font-label-md text-label-md text-on-surface focus:outline-none cursor-pointer" id="sortFilter">
+<option value="recent">Mais Recentes</option>
+<option value="az">Nome (A - Z)</option>
+<option value="products">Qtd. Produtos</option>
+</select>
+</div>
+<!-- Export Action -->
+<button class="p-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant transition-colors" title="Exportar CSV" type="button">
+<span class="material-symbols-outlined text-lg">download</span>
+</button>
+</div>
+</div>
+<!-- Data Table -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/70">
+<th class="py-3 px-space-md font-caption text-caption uppercase text-secondary font-label-sm tracking-wider">Fornecedor / Razão Social</th>
+<th class="py-3 px-space-md font-caption text-caption uppercase text-secondary font-label-sm tracking-wider">Documento</th>
+<th class="py-3 px-space-md font-caption text-caption uppercase text-secondary font-label-sm tracking-wider">Contato &amp; Canal</th>
+<th class="py-3 px-space-md font-caption text-caption uppercase text-secondary font-label-sm tracking-wider text-center">Itens Associados</th>
+<th class="py-3 px-space-md font-caption text-caption uppercase text-secondary font-label-sm tracking-wider text-center">Situação</th>
+<th class="py-3 px-space-md font-caption text-caption uppercase text-secondary font-label-sm tracking-wider text-right">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low" id="supplierTableBody">
+<!-- Row 1 (Target dataset matching user prompt) -->
+<tr class="hover:bg-surface-container-low/40 transition-colors group">
+<td class="py-4 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary font-title-md text-title-md shrink-0">
+                  F1
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-headline-sm hover:text-primary-container cursor-pointer transition-colors">Fornec1</span>
+<span class="font-caption text-caption text-secondary truncate">Fornec1 Distribuição e Logística Ltda.</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="font-body-md text-body-md text-on-surface font-mono">10.902.174/0001-63</span>
+<button class="text-secondary hover:text-on-surface p-1 rounded hover:bg-surface-container" onclick="copyDocument('10.902.174/0001-63')" title="Copiar CNPJ" type="button">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+<span class="font-caption text-caption text-on-surface-variant">Inscrição Estadual: Isento</span>
+</td>
+<td class="py-4 px-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-1 font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-xs text-secondary">mail</span>
+<a class="hover:underline hover:text-primary" href="mailto:contato@fornec1.com.br">contato@fornec1.com.br</a>
+</div>
+<div class="flex items-center gap-1 font-caption text-caption text-secondary mt-0.5">
+<span class="material-symbols-outlined text-xs">call</span>
+<span>(11) 4002-8922</span>
+<span class="mx-1">•</span>
+<span>Roberto Silva</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-md text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-secondary-container">
+<span class="material-symbols-outlined text-xs">package_2</span>
+                24 itens
+              </span>
+</td>
+<td class="py-4 px-space-md text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-tertiary-fixed/30 text-on-tertiary-fixed-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container animate-pulse"></span>
+                Ativo
+              </span>
+</td>
+<td class="py-4 px-space-md text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-2 rounded-lg text-secondary hover:text-primary hover:bg-surface-container transition-colors" onclick="openDrawer('edit')" title="Editar Fornecedor" type="button">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 rounded-lg text-secondary hover:text-primary-container hover:bg-surface-container transition-colors" title="Ver Produtos Vinculados" type="button">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-2 rounded-lg text-secondary hover:text-error hover:bg-surface-container transition-colors" onclick="toggleStatusModal()" title="Inativar Fornecedor" type="button">
+<span class="material-symbols-outlined text-lg">block</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination & Count Footer -->
+<div class="p-space-md bg-surface-container-lowest flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-2">
+<span class="font-body-sm text-body-sm text-secondary">Mostrando</span>
+<span class="font-label-md text-label-md text-on-surface">1 fornecedor(es)</span>
+<span class="font-body-sm text-body-sm text-secondary">de 1 total</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-low text-secondary font-label-md text-label-md cursor-not-allowed opacity-60" disabled="" type="button">
+<span class="material-symbols-outlined text-base">chevron_left</span>
+<span>Anterior</span>
+</button>
+<span class="font-caption text-caption text-on-surface px-2">
+          Página <strong>1</strong> de <strong>1</strong>
+</span>
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-low text-secondary font-label-md text-label-md cursor-not-allowed opacity-60" disabled="" type="button">
+<span>Próxima</span>
+<span class="material-symbols-outlined text-base">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Modern Interactive Slide-Over Drawer for "Cadastrar / Editar Fornecedor" -->
+<div aria-labelledby="slide-over-title" aria-modal="true" class="fixed inset-0 z-50 overflow-hidden pointer-events-none transition-opacity duration-300 opacity-0" id="supplierDrawer" role="dialog">
+<!-- Backdrop curtain -->
+<div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm transition-opacity opacity-0" id="drawerBackdrop" onclick="closeDrawer()"></div>
+<div class="fixed inset-y-0 right-0 max-w-full flex pl-10 pointer-events-none">
+<div class="pointer-events-auto w-screen max-w-md transform translate-x-full transition-transform duration-300 ease-in-out bg-surface-container-lowest shadow-2xl flex flex-col justify-between" id="drawerPanel">
+<!-- Drawer Header -->
+<div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">storefront</span>
+<div class="flex flex-col">
+<h2 class="font-headline-sm text-headline-sm text-on-surface" id="drawerTitle">Cadastrar fornecedor</h2>
+<span class="font-caption text-caption text-secondary">Preencha os dados cadastrais do parceiro</span>
+</div>
+</div>
+<button class="p-1.5 rounded-lg text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" onclick="closeDrawer()" type="button">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<!-- Drawer Form Body -->
+<form class="flex-1 overflow-y-auto p-space-lg flex flex-col gap-space-md" id="supplierForm" onsubmit="handleFormSubmit(event)">
+<!-- Nome / Razão Social -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="supplierName">
+<span>Nome ou razão social <span class="text-error">*</span></span>
+<span class="font-caption text-caption text-secondary">Obrigatório</span>
+</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md placeholder-secondary focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all" id="supplierName" placeholder="Ex: Alfa Suprimentos Industriais Ltda." required="" type="text"/>
+</div>
+<!-- CPF ou CNPJ -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="supplierDoc">
+<span>CPF ou CNPJ <span class="text-error">*</span></span>
+<span class="font-caption text-caption text-secondary">Números apenas</span>
+</label>
+<div class="relative">
+<input class="w-full h-10 pl-3 pr-10 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md placeholder-secondary focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all" id="supplierDoc" placeholder="Ex: 00.000.000/0001-00" required="" type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-secondary text-base">badge</span>
+</div>
+</div>
+<!-- Telefone (opcional) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="supplierPhone">
+<span>Telefone</span>
+<span class="font-caption text-caption text-secondary">Opcional</span>
+</label>
+<div class="relative">
+<input class="w-full h-10 pl-3 pr-10 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md placeholder-secondary focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all" id="supplierPhone" placeholder="(00) 00000-0000" type="tel"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-secondary text-base">phone</span>
+</div>
+</div>
+<!-- E-mail (opcional) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="supplierEmail">
+<span>E-mail</span>
+<span class="font-caption text-caption text-secondary">Opcional</span>
+</label>
+<div class="relative">
+<input class="w-full h-10 pl-3 pr-10 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md placeholder-secondary focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all" id="supplierEmail" placeholder="fornecedor@empresa.com.br" type="email"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-secondary text-base">alternate_email</span>
+</div>
+</div>
+<!-- Pessoa de contato (opcional) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="supplierContactPerson">
+<span>Pessoa de contato</span>
+<span class="font-caption text-caption text-secondary">Opcional</span>
+</label>
+<div class="relative">
+<input class="w-full h-10 pl-3 pr-10 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md placeholder-secondary focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all" id="supplierContactPerson" placeholder="Ex: Carlos Mendes (Gerente Comercial)" type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-secondary text-base">person</span>
+</div>
+</div>
+<!-- Observações (opcional) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="supplierNotes">
+<span>Observações</span>
+<span class="font-caption text-caption text-secondary">Opcional</span>
+</label>
+<textarea class="w-full p-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md placeholder-secondary focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all resize-none" id="supplierNotes" placeholder="Condições de pagamento, prazos de entrega, chave PIX ou observações fiscais..." rows="3"></textarea>
+</div>
+<!-- Additional Metadata Toggle Pill -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-container text-base">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface">Ativar fornecedor imediatamente</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</form>
+<!-- Drawer Footer Actions -->
+<div class="p-space-lg bg-surface-container-low/70 flex items-center justify-end gap-space-sm">
+<button class="px-space-md py-2.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-all font-label-md text-label-md shadow-sm" onclick="closeDrawer()" type="button">
+            Cancelar
+          </button>
+<button class="px-space-md py-2.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-all font-label-md text-label-md shadow-sm" form="supplierForm" type="submit">
+            Cadastrar fornecedor
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Modal for Inactivate / Action confirmation -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-inverse-surface/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200" id="confirmModal">
+<div class="w-full max-w-sm rounded-xl bg-surface-container-lowest p-space-lg shadow-xl flex flex-col gap-space-md">
+<div class="flex items-center gap-space-sm text-error">
+<span class="material-symbols-outlined text-2xl">warning</span>
+<h3 class="font-title-md text-title-md text-on-surface">Alterar Situação</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        Deseja realmente inativar o fornecedor <strong>Fornec1</strong>? Novos pedidos e vínculos de estoque serão pausados até reativação.
+      </p>
+<div class="flex items-center justify-end gap-space-sm mt-2">
+<button class="px-space-md py-2 rounded-lg bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors" onclick="toggleStatusModal()" type="button">
+          Cancelar
+        </button>
+<button class="px-space-md py-2 rounded-lg bg-error text-on-error font-label-md text-label-md hover:bg-error-container transition-colors" onclick="confirmInactivate()" type="button">
+          Confirmar Inativação
+        </button>
+</div>
+</div>
+</div>
+<!-- Toast Notification Pill -->
+<div class="fixed bottom-6 right-6 z-50 flex items-center gap-space-xs px-4 py-3 rounded-lg bg-inverse-surface text-inverse-on-surface shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none" id="toastNotification">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-lg">check_circle</span>
+<span class="font-body-sm text-body-sm font-label-md" id="toastMessage">Operação realizada com sucesso!</span>
+</div>
+</div>
+<script>
+  function openDrawer(mode = 'create') {
+    const drawer = document.getElementById('supplierDrawer');
+    const backdrop = document.getElementById('drawerBackdrop');
+    const panel = document.getElementById('drawerPanel');
+    const title = document.getElementById('drawerTitle');
+
+    if (mode === 'edit') {
+      title.innerText = 'Editar fornecedor';
+      document.getElementById('supplierName').value = 'Fornec1';
+      document.getElementById('supplierDoc').value = '10.902.174/0001-63';
+      document.getElementById('supplierPhone').value = '(11) 4002-8922';
+      document.getElementById('supplierEmail').value = 'contato@fornec1.com.br';
+      document.getElementById('supplierContactPerson').value = 'Roberto Silva';
+      document.getElementById('supplierNotes').value = 'Pagamento faturado em 28 dias úteis.';
+    } else {
+      title.innerText = 'Cadastrar fornecedor';
+      document.getElementById('supplierForm').reset();
+    }
+
+    drawer.classList.remove('pointer-events-none', 'opacity-0');
+    drawer.classList.add('opacity-100');
+    backdrop.classList.remove('opacity-0');
+    backdrop.classList.add('opacity-100');
+    panel.classList.remove('translate-x-full');
+    panel.classList.add('translate-x-0');
+  }
+
+  function closeDrawer() {
+    const drawer = document.getElementById('supplierDrawer');
+    const backdrop = document.getElementById('drawerBackdrop');
+    const panel = document.getElementById('drawerPanel');
+
+    panel.classList.remove('translate-x-0');
+    panel.classList.add('translate-x-full');
+    backdrop.classList.remove('opacity-100');
+    backdrop.classList.add('opacity-0');
+
+    setTimeout(() => {
+      drawer.classList.remove('opacity-100');
+      drawer.classList.add('pointer-events-none', 'opacity-0');
+    }, 300);
+  }
+
+  function toggleStatusModal() {
+    const modal = document.getElementById('confirmModal');
+    const isHidden = modal.classList.contains('pointer-events-none');
+    if (isHidden) {
+      modal.classList.remove('pointer-events-none', 'opacity-0');
+      modal.classList.add('opacity-100');
+    } else {
+      modal.classList.add('pointer-events-none', 'opacity-0');
+      modal.classList.remove('opacity-100');
+    }
+  }
+
+  function confirmInactivate() {
+    toggleStatusModal();
+    showToast('Fornecedor inativado no catálogo.');
+  }
+
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    closeDrawer();
+    showToast('Fornecedor salvo com sucesso!');
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById('toastNotification');
+    const msgEl = document.getElementById('toastMessage');
+    msgEl.innerText = message;
+
+    toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+    toast.classList.add('translate-y-0', 'opacity-100');
+
+    setTimeout(() => {
+      toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+    }, 3200);
+  }
+
+  function copyDocument(val) {
+    navigator.clipboard.writeText(val);
+    showToast('Documento copiado para a área de transferência!');
+  }
+</script></div></main></div></body></html>

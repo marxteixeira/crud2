@@ -58,6 +58,16 @@ alteração de preço apenas por Administrador.
 - Consultas de listagem MUST ser paginadas e as de leitura MUST usar `.AsNoTracking()`.
 - Segredos MUST NOT ser versionados.
 
+### VIII. Design System e Protótipos de Interface
+Toda tela e componente visual do frontend MUST seguir o design system documentado em
+`docs/05-design-system/design-systen.md` (cores, tipografia, espaçamento e componentes).
+Cada pasta em `docs/05-design-system/<tela>/` contém `screen.png` (print) e `code.html` (protótipo) e é a
+referência visual da tela correspondente.
+- Antes de criar ou alterar uma tela, o protótipo respectivo MUST ser consultado e a implementação comparada ao print.
+- Tela sem protótipo próprio MUST seguir o design system e o protótipo mais próximo.
+- Elementos do protótipo sem respaldo nos requisitos de negócio MUST NOT ser implementados sem decisão registrada.
+- Valores de cor, fonte e espaçamento MUST vir dos tokens do Tailwind; exceções MUST ser registradas na spec da feature.
+
 ## Technology Constraints
 
 - Backend: .NET 8, EF Core 8 + Npgsql, FluentValidation, OpenAPI/Swagger, AutoMapper ou Mapster.
@@ -86,4 +96,4 @@ ou ampliação material, PATCH para esclarecimentos. Revisões de PR e o passo `
 conformidade; conflitos com a constituição são tratados como CRITICAL.
 Fontes de referência: `docs/02-arquitetura/especificacao-de-arquitetura.md` e ADRs em `docs/04-decisoes-adr/`.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-22 | **Last Amended**: 2026-10-22
+**Version**: 1.1.0 | **Ratified**: 2026-10-22 | **Last Amended**: 2026-10-28

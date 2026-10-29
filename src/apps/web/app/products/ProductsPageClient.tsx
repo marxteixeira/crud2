@@ -62,54 +62,54 @@ export default function ProductsPageClient(): JSX.Element {
   return (
     <>
       <AuthenticatedNavigation />
-      <main className="mx-auto max-w-6xl space-y-6 p-6">
-        <header className="flex flex-wrap items-center justify-between gap-3">
+      <main className="mx-auto max-w-7xl space-y-space-xl p-space-md text-on-surface md:p-space-xl">
+        <header className="flex flex-wrap items-center justify-between gap-space-md">
           <div>
-            <h1 className="text-2xl font-bold">Catálogo de produtos</h1>
-            <p className="text-sm text-slate-600">Pesquise e consulte o estoque por localização.</p>
+            <h1 className="font-headline text-headline-lg-mobile md:text-headline-lg">Catálogo de produtos</h1>
+            <p className="mt-1 text-body-md text-on-surface-variant">Pesquise e consulte o estoque por localização.</p>
           </div>
-          <Link href="/products/new" className="rounded bg-blue-700 px-4 py-2 text-white">Cadastrar produto</Link>
+          <Link href="/products/new" className="rounded-lg bg-primary-container px-space-md py-2.5 text-label-md text-on-primary hover:bg-primary">Cadastrar novo produto</Link>
         </header>
-        <section aria-label="Filtros de produtos" className="flex flex-wrap items-end gap-3">
-          <form onSubmit={submitSearch} className="flex flex-wrap items-end gap-2">
+        <section aria-label="Filtros de produtos" className="flex flex-wrap items-end gap-space-md rounded-xl bg-surface-container-lowest p-space-md shadow-sm ring-1 ring-outline-variant/50">
+          <form onSubmit={submitSearch} className="flex flex-wrap items-end gap-space-sm">
             <div>
-              <label htmlFor="product-search" className="mb-1 block text-sm font-medium">Buscar produto</label>
+              <label htmlFor="product-search" className="mb-space-xs block text-label-sm text-on-surface-variant">Buscar produto</label>
               <input id="product-search" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)}
-                className="rounded border p-2" />
+                className="rounded-lg border border-outline-variant bg-surface-container-low px-space-md py-2.5 text-body-md" />
             </div>
-            <button type="submit" className="rounded border px-4 py-2">Pesquisar</button>
+            <button type="submit" className="rounded-lg bg-primary-container px-space-md py-2.5 text-label-md text-on-primary">Pesquisar</button>
           </form>
           <div>
-            <label htmlFor="product-rack-filter" className="mb-1 block text-sm font-medium">Estante</label>
+            <label htmlFor="product-rack-filter" className="mb-space-xs block text-label-sm text-on-surface-variant">Estante</label>
             <select id="product-rack-filter" value={rackId}
               onChange={(event) => updateQuery({ rackId: event.target.value, shelfId: "" })}
-              className="rounded border p-2">
+              className="rounded-lg border border-outline-variant bg-surface-container-low px-space-md py-2.5 text-body-md">
               <option value="">Todas</option>
               {racksQuery.data?.map((rack) => <option key={rack.id} value={rack.id}>{rack.code}</option>)}
             </select>
           </div>
           <div>
-            <label htmlFor="product-shelf-filter" className="mb-1 block text-sm font-medium">Prateleira</label>
+            <label htmlFor="product-shelf-filter" className="mb-space-xs block text-label-sm text-on-surface-variant">Prateleira</label>
             <select id="product-shelf-filter" value={shelfId}
               onChange={(event) => updateQuery({ shelfId: event.target.value })}
-              disabled={!selectedRack} className="rounded border p-2 disabled:opacity-50">
+              disabled={!selectedRack} className="rounded-lg border border-outline-variant bg-surface-container-low px-space-md py-2.5 text-body-md disabled:opacity-50">
               <option value="">Todas</option>
               {selectedRack?.shelves.map((shelf) => <option key={shelf.id} value={shelf.id}>{shelf.code}</option>)}
             </select>
           </div>
           <div>
-            <label htmlFor="product-status-filter" className="mb-1 block text-sm font-medium">Situação</label>
+            <label htmlFor="product-status-filter" className="mb-space-xs block text-label-sm text-on-surface-variant">Situação</label>
             <select id="product-status-filter" value={status}
-              onChange={(event) => updateQuery({ status: event.target.value })} className="rounded border p-2">
+              onChange={(event) => updateQuery({ status: event.target.value })} className="rounded-lg border border-outline-variant bg-surface-container-low px-space-md py-2.5 text-body-md">
               <option value="">Todas</option>
               <option value="Active">Ativos</option>
               <option value="Inactive">Inativos</option>
             </select>
           </div>
           <div>
-            <label htmlFor="product-supplier-filter" className="mb-1 block text-sm font-medium">Fornecedor</label>
+            <label htmlFor="product-supplier-filter" className="mb-space-xs block text-label-sm text-on-surface-variant">Fornecedor</label>
             <select id="product-supplier-filter" value={supplierId}
-              onChange={(event) => updateQuery({ supplierId: event.target.value })} className="rounded border p-2">
+              onChange={(event) => updateQuery({ supplierId: event.target.value })} className="rounded-lg border border-outline-variant bg-surface-container-low px-space-md py-2.5 text-body-md">
               <option value="">Todos</option>
               {suppliersQuery.data?.items.map((supplier) => (
                 <option key={supplier.id} value={supplier.id}>
@@ -118,6 +118,7 @@ export default function ProductsPageClient(): JSX.Element {
               ))}
             </select>
           </div>
+        <button type="button" onClick={() => { setSearchDraft(""); updateQuery({ search: "", rackId: "", shelfId: "", status: "", supplierId: "", page: "" }); }} className="rounded-lg bg-secondary-container px-space-md py-2.5 text-label-md text-on-secondary-fixed">Limpar</button>
         </section>
         {racksQuery.isError && <p role="alert">Não foi possível carregar as localizações.</p>}
         {suppliersQuery.isError && <p role="alert">Não foi possível carregar os fornecedores para o filtro.</p>}
@@ -127,13 +128,13 @@ export default function ProductsPageClient(): JSX.Element {
           <>
             <ProductList products={productsQuery.data.items} />
             <div className="flex items-center justify-between">
-              <p className="text-sm">{productsQuery.data.total} produto(s)</p>
+              <p className="text-body-sm text-on-surface-variant">{productsQuery.data.total} produto(s)</p>
               <div className="flex items-center gap-3">
                 <button type="button" disabled={page <= 1} onClick={() => updateQuery({ page: String(page - 1) })}
-                  className="rounded border px-3 py-1 disabled:opacity-50">Anterior</button>
+                  className="rounded-lg px-space-md py-1.5 text-label-md ring-1 ring-outline-variant hover:bg-surface-container-low disabled:opacity-50">Anterior</button>
                 <span aria-live="polite">Página {page} de {totalPages}</span>
                 <button type="button" disabled={page >= totalPages} onClick={() => updateQuery({ page: String(page + 1) })}
-                  className="rounded border px-3 py-1 disabled:opacity-50">Próxima</button>
+                  className="rounded-lg px-space-md py-1.5 text-label-md ring-1 ring-outline-variant hover:bg-surface-container-low disabled:opacity-50">Próxima</button>
               </div>
             </div>
           </>

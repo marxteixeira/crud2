@@ -17,6 +17,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ replace: mocks.replace, refresh: mocks.refresh }),
+  usePathname: () => "/",
 }));
 vi.mock("@/lib/api", () => ({ requestWithSession: mocks.requestWithSession }));
 vi.mock("@/lib/supabase/client", () => ({

@@ -4,6 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { classifyInvitationError, invitationMessages } from "@/lib/auth/invitation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import AuthLayout from "@/components/AuthLayout";
+import Button from "@/components/ui/Button";
 
 export default function ConfirmInvitationPage(): JSX.Element {
   return (
@@ -43,18 +45,18 @@ function ConfirmInvitation(): JSX.Element {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-6">
-      <section aria-labelledby="confirm-heading" className="w-full rounded-lg border p-6 shadow-sm">
-        <h1 id="confirm-heading" className="mb-4 text-2xl font-bold">Confirmar convite</h1>
-        {validLink && <p className="mb-4 text-sm">Clique em continuar para definir a senha da sua conta.</p>}
-        {errorMessage && <p role="alert" className="mb-4 text-sm text-red-700">{errorMessage}</p>}
+    <AuthLayout>
+      <section aria-labelledby="confirm-heading">
+        <p className="mb-space-sm text-label-md text-primary">Convite de acesso</p>
+        <h1 id="confirm-heading" className="font-headline text-headline-lg-mobile text-on-surface md:text-headline-lg">Confirmar convite</h1>
+        {validLink && <p className="mt-2 text-body-md text-on-surface-variant">Confirme seu convite para continuar e definir a senha da sua conta.</p>}
+        {errorMessage && <p role="alert" className="mt-space-md rounded-lg bg-error-container p-space-md text-body-sm text-on-error-container">{errorMessage}</p>}
         {validLink && (
-          <button type="button" onClick={() => void confirm()} disabled={pending}
-            className="w-full rounded bg-blue-700 p-2 font-medium text-white disabled:opacity-60">
+          <Button type="button" onClick={() => void confirm()} disabled={pending} className="mt-space-xl w-full py-3">
             {pending ? "Verificando..." : "Continuar"}
-          </button>
+          </Button>
         )}
       </section>
-    </main>
+    </AuthLayout>
   );
 }

@@ -31,12 +31,12 @@ export default function NewProductPage(): JSX.Element {
   return (
     <>
       <AuthenticatedNavigation />
-      <main className="mx-auto max-w-2xl space-y-5 p-6">
-        <h1 className="text-2xl font-bold">Cadastrar produto</h1>
+      <main className="mx-auto max-w-3xl space-y-space-lg p-space-md text-on-surface md:p-space-xl">
+        <header><p className="text-label-sm uppercase tracking-wider text-on-surface-variant">Catálogo de produtos</p><h1 className="font-headline text-headline-lg-mobile md:text-headline-lg">Cadastrar produto</h1><p className="mt-1 text-body-md text-on-surface-variant">Preencha os dados cadastrais, alocação física e parâmetros de precificação.</p></header>
         {(accountQuery.isLoading || racksQuery.isLoading) && <p role="status">Carregando formulário...</p>}
         {(accountQuery.isError || racksQuery.isError) && <p role="alert">Não foi possível carregar os dados do formulário.</p>}
         {accountQuery.data && racksQuery.data && (
-          <section className="rounded border p-5">
+          <section className="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm ring-1 ring-outline-variant/50">
             <ProductForm
               racks={racksQuery.data}
               isAdministrator={accountQuery.data.role === "Administrador"}

@@ -3,11 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { classifyInvitationError, invitationMessages } from "@/lib/auth/invitation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { requestWithSession } from "@/lib/api";
+import AuthLayout from "@/components/AuthLayout";
+import { InputField } from "@/components/ui/Field";
+import Button from "@/components/ui/Button";
 
 const activationSchema = z.object({
   password: z.string().min(8, "A senha deve ter pelo menos 8 caracteres."),
@@ -25,10 +28,13 @@ export default function ActivatePage(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [sessionState, setSessionState] = useState<SessionState>("checking");
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ActivationValues>({ resolver: zodResolver(activationSchema) });
+  } = useForm<ActivationValues>({
+    resolver: zodResolver(activationSchema),
+    defaultValues: { password: "", confirmation: "" },
+  });
 
   useEffect(() => {
     let active = true;
@@ -66,49 +72,36 @@ export default function ActivatePage(): JSX.Element {
   }
 
   if (sessionState === "checking") {
-    return (
-      <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-6">
-        <p role="status">Verificando convite...</p>
-      </main>
-    );
+    return <AuthLayout><p role="status" className="rounded-lg bg-surface-container-low p-space-lg text-body-md text-on-surface-variant">Verificando convite...</p></AuthLayout>;
   }
 
   if (sessionState === "invalid") {
     return (
-      <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-6">
-        <section aria-labelledby="activation-heading" className="w-full rounded-lg border p-6 shadow-sm">
-          <h1 id="activation-heading" className="mb-4 text-2xl font-bold">Ative sua conta</h1>
-          <p role="alert" className="text-sm text-red-700">{errorMessage ?? invitationMessages.expired}</p>
+      <AuthLayout>
+        <section aria-labelledby="activation-heading">
+          <p className="mb-space-sm text-label-md text-primary">Convite de acesso</p>
+          <h1 id="activation-heading" className="font-headline text-headline-lg-mobile text-on-surface md:text-headline-lg">Ative sua conta</h1>
+          <p role="alert" className="mt-space-md rounded-lg bg-error-container p-space-md text-body-sm text-on-error-container">{errorMessage ?? invitationMessages.expired}</p>
         </section>
-      </main>
+      </AuthLayout>
     );
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-6">
-      <section aria-labelledby="activation-heading" className="w-full rounded-lg border p-6 shadow-sm">
-        <h1 id="activation-heading" className="mb-6 text-2xl font-bold">Ative sua conta</h1>
-        <form className="space-y-4" onSubmit={handleSubmit(submit)} noValidate>
-          <div>
-            <label className="mb-1 block font-medium" htmlFor="password">Crie uma senha</label>
-            <input id="password" autoComplete="new-password" type="password" {...register("password")}
-              aria-invalid={Boolean(errors.password)} aria-describedby={errors.password ? "password-error" : undefined}
-              className="w-full rounded border p-2" />
-            {errors.password && <p id="password-error" role="alert" className="text-sm text-red-700">{errors.password.message}</p>}
-          </div>
-          <div>
-            <label className="mb-1 block font-medium" htmlFor="confirmation">Confirme sua senha</label>
-            <input id="confirmation" autoComplete="new-password" type="password" {...register("confirmation")}
-              aria-invalid={Boolean(errors.confirmation)} aria-describedby={errors.confirmation ? "confirmation-error" : undefined}
-              className="w-full rounded border p-2" />
-            {errors.confirmation && <p id="confirmation-error" role="alert" className="text-sm text-red-700">{errors.confirmation.message}</p>}
-          </div>
-          {errorMessage && <p role="alert" className="text-sm text-red-700">{errorMessage}</p>}
-          <button type="submit" disabled={isSubmitting} className="w-full rounded bg-blue-700 p-2 font-medium text-white disabled:opacity-60">
+    <AuthLayout>
+      <section aria-labelledby="activation-heading">
+        <p className="mb-space-sm text-label-md text-primary">Convite de acesso</p>
+        <h1 id="activation-heading" className="font-headline text-headline-lg-mobile text-on-surface md:text-headline-lg">Ative sua conta</h1>
+        <p className="mt-2 text-body-md text-on-surface-variant">Crie uma senha para concluir a ativação do seu acesso.</p>
+        <form className="mt-space-xl space-y-space-md" onSubmit={handleSubmit(submit)} noValidate>
+          <Controller name="password" control={control} render={({ field }) => <InputField label="Crie uma senha" autoComplete="new-password" type="password" name={field.name} value={field.value} onChange={field.onChange} onBlur={field.onBlur} error={errors.password?.message} />} />
+          <Controller name="confirmation" control={control} render={({ field }) => <InputField label="Confirme sua senha" autoComplete="new-password" type="password" name={field.name} value={field.value} onChange={field.onChange} onBlur={field.onBlur} error={errors.confirmation?.message} />} />
+          {errorMessage && <p role="alert" className="rounded-lg bg-error-container p-space-md text-body-sm text-on-error-container">{errorMessage}</p>}
+          <Button type="submit" disabled={isSubmitting} className="w-full py-3">
             {isSubmitting ? "Ativando..." : "Definir senha e ativar"}
-          </button>
+          </Button>
         </form>
       </section>
-    </main>
+    </AuthLayout>
   );
 }

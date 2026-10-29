@@ -53,17 +53,17 @@ export default function ProductDetails(): JSX.Element {
   return (
     <>
       <AuthenticatedNavigation />
-      <main className="mx-auto max-w-2xl space-y-5 p-6">
-        <Link href="/products" className="underline">Voltar ao catálogo</Link>
-        <h1 className="text-2xl font-bold">Detalhes do produto</h1>
+      <main className="mx-auto max-w-3xl space-y-space-lg p-space-md text-on-surface md:p-space-xl">
+        <Link href="/products" className="text-label-md text-primary underline">Voltar ao catálogo</Link>
+        <h1 className="font-headline text-headline-lg-mobile md:text-headline-lg">Detalhes do produto</h1>
         {(productQuery.isLoading || accountQuery.isLoading || racksQuery.isLoading)
-          && <p role="status">Carregando produto...</p>}
+          && <p role="status" className="rounded-xl bg-surface-container-low p-space-lg text-body-md text-on-surface-variant">Carregando produto...</p>}
         {(productQuery.isError || accountQuery.isError || racksQuery.isError)
-          && <p role="alert">Não foi possível carregar os dados do produto.</p>}
+          && <p role="alert" className="rounded-lg bg-error-container p-space-md text-body-sm text-on-error-container">Não foi possível carregar os dados do produto.</p>}
         {product && accountQuery.data && racksQuery.data && (
-          <section className="space-y-5 rounded border p-5">
-            <p>Situação: {product.status === "Active" ? "Ativo" : "Inativo"}</p>
-            <p>Localização: {product.rackCode && product.shelfCode
+          <section className="space-y-space-lg rounded-xl bg-surface-container-lowest p-space-lg shadow-sm ring-1 ring-outline-variant/50">
+            <p className="rounded-lg bg-surface-container-low p-space-md text-body-md">Situação: <span className="font-title text-title-md">{product.status === "Active" ? "Ativo" : "Inativo"}</span></p>
+            <p className="rounded-lg bg-surface-container-low p-space-md text-body-md">Localização: {product.rackCode && product.shelfCode
               ? `Estante ${product.rackCode} / Prateleira ${product.shelfCode}` : "Sem localização"}</p>
             <ProductForm
               key={`${product.id}-${product.updatedAt}`}
@@ -81,7 +81,7 @@ export default function ProductDetails(): JSX.Element {
             {isAdministrator && (
               <button type="button" disabled={statusMutation.isPending}
                 onClick={() => statusMutation.mutate(product.status === "Active" ? "Inactive" : "Active")}
-                className="rounded border px-4 py-2 disabled:opacity-50">
+                className="rounded-lg bg-secondary-container px-space-md py-2.5 text-label-md text-on-secondary-fixed disabled:opacity-50">
                 {product.status === "Active" ? "Inativar produto" : "Ativar produto"}
               </button>
             )}

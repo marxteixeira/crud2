@@ -3,9 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Button from "@/components/ui/Button";
 import type { Supplier, SupplierInput } from "@/lib/suppliers";
 
 const optionalText = (maxLength: number) => z.string().trim().max(maxLength).nullable();
+const fieldClass = "w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-space-md py-2 text-body-md text-on-surface placeholder:text-secondary focus:border-primary-container focus:outline-none focus:ring-2 focus:ring-primary-container/30";
 
 const supplierSchema = z.object({
   name: z.string().trim().min(1, "Informe o nome ou razão social.").max(200),
@@ -66,51 +68,57 @@ export default function SupplierForm({
   }
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(submit)} noValidate>
-      <div>
-        <label htmlFor="supplier-name" className="mb-1 block font-medium">Nome ou razão social</label>
-        <input id="supplier-name" autoComplete="organization" {...register("name")}
-          aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "supplier-name-error" : undefined}
-          className="w-full rounded border p-2" />
-        {errors.name && <p id="supplier-name-error" role="alert">{errors.name.message}</p>}
+    <form className="space-y-space-lg" onSubmit={handleSubmit(submit)} noValidate>
+      <div className="grid gap-space-lg md:grid-cols-2">
+        <div className="flex flex-col gap-space-xs">
+          <label htmlFor="supplier-name" className="text-label-md text-on-surface">Nome ou razão social</label>
+          <input id="supplier-name" autoComplete="organization" {...register("name")}
+            aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "supplier-name-error" : undefined}
+            className={fieldClass} />
+          {errors.name && <p id="supplier-name-error" role="alert" className="text-body-sm text-error">{errors.name.message}</p>}
+        </div>
+        <div className="flex flex-col gap-space-xs">
+          <label htmlFor="supplier-tax-id" className="text-label-md text-on-surface">CPF ou CNPJ</label>
+          <input id="supplier-tax-id" inputMode="numeric" {...register("taxIdentifier")}
+            aria-invalid={Boolean(errors.taxIdentifier)} aria-describedby={errors.taxIdentifier ? "supplier-tax-id-error" : undefined}
+            className={fieldClass} />
+          {errors.taxIdentifier && <p id="supplier-tax-id-error" role="alert" className="text-body-sm text-error">{errors.taxIdentifier.message}</p>}
+        </div>
+        <div className="flex flex-col gap-space-xs">
+          <label htmlFor="supplier-phone" className="text-label-md text-on-surface">Telefone (opcional)</label>
+          <input id="supplier-phone" autoComplete="tel" {...register("phone")}
+            aria-invalid={Boolean(errors.phone)} aria-describedby={errors.phone ? "supplier-phone-error" : undefined}
+            className={fieldClass} />
+          {errors.phone && <p id="supplier-phone-error" role="alert" className="text-body-sm text-error">{errors.phone.message}</p>}
+        </div>
+        <div className="flex flex-col gap-space-xs">
+          <label htmlFor="supplier-email" className="text-label-md text-on-surface">E-mail (opcional)</label>
+          <input id="supplier-email" type="email" autoComplete="email" {...register("email")}
+            aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "supplier-email-error" : undefined}
+            className={fieldClass} />
+          {errors.email && <p id="supplier-email-error" role="alert" className="text-body-sm text-error">{errors.email.message}</p>}
+        </div>
+        <div className="flex flex-col gap-space-xs">
+          <label htmlFor="supplier-contact" className="text-label-md text-on-surface">Pessoa de contato (opcional)</label>
+          <input id="supplier-contact" {...register("contactName")}
+            aria-invalid={Boolean(errors.contactName)} aria-describedby={errors.contactName ? "supplier-contact-error" : undefined}
+            className={fieldClass} />
+          {errors.contactName && <p id="supplier-contact-error" role="alert" className="text-body-sm text-error">{errors.contactName.message}</p>}
+        </div>
+        <div className="flex flex-col gap-space-xs md:col-span-2">
+          <label htmlFor="supplier-notes" className="text-label-md text-on-surface">Observações (opcional)</label>
+          <textarea id="supplier-notes" {...register("notes")}
+            aria-invalid={Boolean(errors.notes)} aria-describedby={errors.notes ? "supplier-notes-error" : undefined}
+            className={`${fieldClass} min-h-28`} />
+          {errors.notes && <p id="supplier-notes-error" role="alert" className="text-body-sm text-error">{errors.notes.message}</p>}
+        </div>
       </div>
-      <div>
-        <label htmlFor="supplier-tax-id" className="mb-1 block font-medium">CPF ou CNPJ</label>
-        <input id="supplier-tax-id" inputMode="numeric" {...register("taxIdentifier")}
-          aria-invalid={Boolean(errors.taxIdentifier)}
-          aria-describedby={errors.taxIdentifier ? "supplier-tax-id-error" : undefined}
-          className="w-full rounded border p-2" />
-        {errors.taxIdentifier && <p id="supplier-tax-id-error" role="alert">{errors.taxIdentifier.message}</p>}
+      {errorMessage && <p role="alert" className="rounded-lg bg-error-container p-space-md text-body-sm text-on-error-container">{errorMessage}</p>}
+      <div className="flex justify-end border-t border-outline-variant/50 pt-space-md">
+        <Button type="submit" disabled={submitting}>
+          {submitting ? "Salvando..." : supplier ? "Salvar alterações" : "Cadastrar fornecedor"}
+        </Button>
       </div>
-      <div>
-        <label htmlFor="supplier-phone" className="mb-1 block font-medium">Telefone (opcional)</label>
-        <input id="supplier-phone" autoComplete="tel" {...register("phone")}
-          aria-invalid={Boolean(errors.phone)} className="w-full rounded border p-2" />
-        {errors.phone && <p role="alert">{errors.phone.message}</p>}
-      </div>
-      <div>
-        <label htmlFor="supplier-email" className="mb-1 block font-medium">E-mail (opcional)</label>
-        <input id="supplier-email" type="email" autoComplete="email" {...register("email")}
-          aria-invalid={Boolean(errors.email)} className="w-full rounded border p-2" />
-        {errors.email && <p role="alert">{errors.email.message}</p>}
-      </div>
-      <div>
-        <label htmlFor="supplier-contact" className="mb-1 block font-medium">Pessoa de contato (opcional)</label>
-        <input id="supplier-contact" {...register("contactName")}
-          aria-invalid={Boolean(errors.contactName)} className="w-full rounded border p-2" />
-        {errors.contactName && <p role="alert">{errors.contactName.message}</p>}
-      </div>
-      <div>
-        <label htmlFor="supplier-notes" className="mb-1 block font-medium">Observações (opcional)</label>
-        <textarea id="supplier-notes" {...register("notes")}
-          aria-invalid={Boolean(errors.notes)} className="w-full rounded border p-2" />
-        {errors.notes && <p role="alert">{errors.notes.message}</p>}
-      </div>
-      {errorMessage && <p role="alert" className="text-sm text-red-700">{errorMessage}</p>}
-      <button type="submit" disabled={submitting}
-        className="rounded bg-blue-700 px-4 py-2 font-medium text-white disabled:opacity-60">
-        {submitting ? "Salvando..." : supplier ? "Salvar alterações" : "Cadastrar fornecedor"}
-      </button>
     </form>
   );
 }

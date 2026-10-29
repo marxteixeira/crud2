@@ -3,6 +3,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { listProducts } from "@/lib/products";
+import Button from "@/components/ui/Button";
+import DataTable, { DataCell, DataRow } from "@/components/ui/DataTable";
+import { SelectField } from "@/components/ui/Field";
+import { EmptyState, ErrorState, LoadingState } from "@/components/ui/StateMessages";
+import StatusBadge from "@/components/ui/StatusBadge";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import {
   associateSupplier,
@@ -52,57 +57,55 @@ export default function SupplierProducts({
   });
 
   return (
-    <section aria-labelledby="supplier-products-heading" className="space-y-3 border-t pt-4">
-      <h2 id="supplier-products-heading" className="text-lg font-semibold">Produtos fornecidos</h2>
+    <section aria-labelledby="supplier-products-heading" className="space-y-space-md border-t border-outline-variant/50 pt-space-lg">
+      <h2 id="supplier-products-heading" className="font-headline text-headline-sm">Produtos fornecidos</h2>
       {active && (
-        <div className="flex flex-wrap items-end gap-2">
-          <div>
-            <label htmlFor="product-select" className="mb-1 block text-sm font-medium">Adicionar produto</label>
-            <select id="product-select" value={productId}
-              onChange={(event) => setProductId(event.target.value)} className="rounded border p-2">
-              <option value="">Selecione</option>
-              {productsQuery.data?.items.map((product) => (
-                <option key={product.id} value={product.id}>{product.name}</option>
-              ))}
-            </select>
-          </div>
-          <button type="button" disabled={!productId || associateMutation.isPending}
+        <div className="flex flex-wrap items-end gap-space-sm">
+          <SelectField label="Adicionar produto" value={productId}
+            onChange={(event) => setProductId(event.target.value)} className="min-w-60">
+            <option value="">Selecione</option>
+            {productsQuery.data?.items.map((product) => (
+              <option key={product.id} value={product.id}>{product.name}</option>
+            ))}
+          </SelectField>
+          <Button type="button" variant="secondary" disabled={!productId || associateMutation.isPending}
             onClick={() => {
               if (!productId) return;
               associateMutation.mutate(productId);
-            }} className="rounded border px-3 py-2 disabled:opacity-50">
+            }}>
             Associar
-          </button>
+          </Button>
         </div>
       )}
-      <div>
-        <label htmlFor="supplier-link-status" className="mr-2 text-sm font-medium">Relações</label>
-        <select id="supplier-link-status" value={linkStatus}
-          onChange={(event) => setLinkStatus(event.target.value as SupplierStatus)} className="rounded border p-2">
+      <div className="max-w-xs">
+        <SelectField label="Relações" value={linkStatus}
+          onChange={(event) => setLinkStatus(event.target.value as SupplierStatus)}>
           <option value="Active">Ativas</option>
           <option value="Inactive">Históricas</option>
-        </select>
+        </SelectField>
       </div>
-      {errorMessage && <p role="alert" className="text-sm text-red-700">{errorMessage}</p>}
+      {errorMessage && <ErrorState message={errorMessage} />}
       {(productsQuery.isError || linksQuery.isError)
-        && <p role="alert">Não foi possível carregar os produtos associados.</p>}
-      {linksQuery.isLoading && <p role="status">Carregando produtos...</p>}
-      {linksQuery.data && linksQuery.data.items.length === 0 && <p>Nenhum produto nesta relação.</p>}
+        && <ErrorState message="Não foi possível carregar os produtos associados." />}
+      {linksQuery.isLoading && <LoadingState message="Carregando produtos..." />}
+      {linksQuery.data && linksQuery.data.items.length === 0 && <EmptyState message="Nenhum produto nesta relação." />}
       {linksQuery.data && linksQuery.data.items.length > 0 && (
-        <ul className="divide-y rounded border">
+        <DataTable caption="Produtos relacionados ao fornecedor" headers={["Produto", "Relação", "Ações"]}>
           {linksQuery.data.items.map((link) => (
-            <li key={link.productId} className="flex flex-wrap items-center justify-between gap-2 p-3">
-              <span>{link.productName} — {link.productStatus === "Active" ? "Ativo" : "Inativo"}</span>
-              {link.linkStatus === "Active" && (
-                <button type="button" disabled={disassociateMutation.isPending}
-                  onClick={() => disassociateMutation.mutate(link.productId)}
-                  className="rounded border px-3 py-1 disabled:opacity-50">
-                  Desassociar
-                </button>
-              )}
-            </li>
+            <DataRow key={link.productId}>
+              <DataCell className="font-title text-title-md">{link.productName} — {link.productStatus === "Active" ? "Ativo" : "Inativo"}</DataCell>
+              <DataCell><StatusBadge active={link.linkStatus === "Active"} activeLabel="Ativa" inactiveLabel="Histórica" /></DataCell>
+              <DataCell>
+                {link.linkStatus === "Active" && (
+                  <Button type="button" variant="secondary" disabled={disassociateMutation.isPending}
+                    onClick={() => disassociateMutation.mutate(link.productId)}>
+                    Desassociar
+                  </Button>
+                )}
+              </DataCell>
+            </DataRow>
           ))}
-        </ul>
+        </DataTable>
       )}
     </section>
   );

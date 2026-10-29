@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background font-body text-body-md text-on-surface antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary-container;
+  }
+}
+
+@media (min-width: 768px) {
+  body:has([data-app-sidebar]) {
+    padding-left: 16rem;
+  }
+}

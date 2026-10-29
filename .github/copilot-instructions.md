@@ -7,6 +7,7 @@ Mantenha este arquivo curto: ele aponta para os documentos, não os duplica.
 - Arquitetura e stack (como): `docs/02-arquitetura/especificacao-de-arquitetura.md`
 - Decisões tomadas: `docs/04-decisoes-adr/`
 - Specs de funcionalidades: `specs/`
+- Design System: `docs/05-design-system/design-systen.md`
 
 ## Regras de trabalho
 - Antes de codar, leia o documento de negócio e a arquitetura relevantes.

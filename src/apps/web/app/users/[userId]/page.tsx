@@ -1,13 +1,15 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import AuthenticatedNavigation from "@/components/AuthenticatedNavigation";
 import UserForm from "@/components/users/UserForm";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { getUser, updateUser } from "@/lib/users";
+import PageHeader from "@/components/ui/PageHeader";
+import { ErrorState, LoadingState } from "@/components/ui/StateMessages";
 
 export default function UserDetailsPage(): JSX.Element {
   const { userId } = useParams<{ userId: string }>();
@@ -40,24 +42,30 @@ export default function UserDetailsPage(): JSX.Element {
   return (
     <>
       <AuthenticatedNavigation />
-      <main className="mx-auto max-w-2xl space-y-5 p-6">
-        <Link href="/users" className="underline">Voltar para usuários</Link>
-        <h1 className="text-2xl font-bold">Editar usuário</h1>
-        {accountQuery.isLoading && <p role="status">Carregando conta...</p>}
-        {accountQuery.isError && <p role="alert" className="text-sm text-red-700">Não foi possível carregar a conta.</p>}
-        {accountQuery.data && (
-          <section className="rounded border p-5">
-            <p className="mb-4 text-sm">Situação: {accountQuery.data.status}</p>
-            <UserForm
-              account={accountQuery.data}
-              submitting={updateMutation.isPending}
-              errorMessage={errorMessage}
-              onSubmit={async (input) => {
-                await updateMutation.mutateAsync(input);
-              }}
-            />
-          </section>
-        )}
+      <main className="min-h-screen bg-surface px-space-md py-space-xl text-on-surface md:ml-64 md:px-space-xl lg:px-12">
+        <div className="mx-auto max-w-3xl">
+          <Link href="/users" className="mb-space-md inline-flex text-label-md text-on-surface-variant underline-offset-4 hover:text-primary hover:underline">Voltar para usuários</Link>
+          <PageHeader title="Editar usuário" description="Atualize os dados e o perfil de acesso da conta." />
+          {accountQuery.isLoading && <LoadingState message="Carregando conta..." />}
+          {accountQuery.isError && <ErrorState message="Não foi possível carregar a conta." />}
+          {accountQuery.data && (
+            <section className="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm ring-1 ring-outline-variant/40 sm:p-space-xl" aria-label="Dados do usuário">
+              <p className="mb-space-lg flex items-center gap-space-sm text-body-sm text-on-surface-variant">
+                Situação:
+                <span className="rounded-full bg-secondary-container px-space-md py-1 text-label-sm text-on-secondary-fixed">{accountQuery.data.status === "ConvitePendente" ? "Convite pendente" : accountQuery.data.status}</span>
+              </p>
+              {errorMessage && <div className="mb-space-md"><ErrorState message={errorMessage} /></div>}
+              <UserForm
+                account={accountQuery.data}
+                submitting={updateMutation.isPending}
+                onSubmit={async (input) => {
+                  setErrorMessage(null);
+                  await updateMutation.mutateAsync(input);
+                }}
+              />
+            </section>
+          )}
+        </div>
       </main>
     </>
   );

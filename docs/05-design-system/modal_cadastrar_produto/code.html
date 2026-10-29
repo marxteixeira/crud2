@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary-container": "#a8b8ff", "on-secondary": "#ffffff", "on-background": "#0b1c30", "inverse-surface": "#213145", "on-primary-fixed": "#001453", "primary-fixed": "#dde1ff", "on-secondary-fixed": "#131b2e", "error": "#ba1a1a", "inverse-primary": "#b8c4ff", "on-secondary-fixed-variant": "#3f465c", "surface-variant": "#d3e4fe", "on-tertiary-fixed-variant": "#005137", "secondary-container": "#dae2fd", "on-tertiary-container": "#5bcf9e", "tertiary-fixed-dim": "#68dba9", "surface-dim": "#cbdbf5", "on-secondary-container": "#5c647a", "outline-variant": "#c4c5d5", "on-error": "#ffffff", "primary": "#00288e", "primary-fixed-dim": "#b8c4ff", "outline": "#757684", "error-container": "#ffdad6", "on-surface": "#0b1c30", "tertiary-fixed": "#85f8c4", "primary-container": "#1e40af", "surface-container-highest": "#d3e4fe", "surface-bright": "#f8f9ff", "on-error-container": "#93000a", "surface-container-lowest": "#ffffff", "tertiary": "#003d28", "surface": "#f8f9ff", "background": "#f8f9ff", "inverse-on-surface": "#eaf1ff", "on-primary": "#ffffff", "on-primary-fixed-variant": "#173bab", "tertiary-container": "#00563a", "surface-tint": "#3755c3", "surface-container-high": "#dce9ff", "on-tertiary-fixed": "#002114", "on-tertiary": "#ffffff", "secondary-fixed": "#dae2fd", "secondary": "#565e74", "surface-container": "#e5eeff", "secondary-fixed-dim": "#bec6e0", "surface-container-low": "#eff4ff", "on-surface-variant": "#444653" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-sm": "1rem", "space-sm": "0.5rem", "gutter": "1.5rem", "space-md": "1rem", "space-lg": "1.5rem", "margin": "2rem", "space-xl": "2rem", "margin-sm": "1rem", "space-xs": "0.25rem" }, "fontFamily": { "body-lg": ["Manrope"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "display": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "label-sm": ["Manrope"], "body-md": ["Manrope"], "title-md": ["Plus Jakarta Sans"], "body-sm": ["Manrope"], "caption": ["Manrope"], "label-md": ["Manrope"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }], "caption": ["11px", { "lineHeight": "14px", "letterSpacing": "0.025em", "fontWeight": "500" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm bg-surface-container-lowest"><img alt="StockSystem Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VZsqJ4ByoTnb4PQmWBPiaBcfQ_g7LjehxV655WpwXUEfo4ruVugOOUDLBZ6y0oFR9Gz8DlvuqUki9Xzx_CNpBEgNAgRW3QUuwhZmwtV0fk6hcZY7BBJIdMsPppQMpOB1fMhgfXif4qecDZ5lSMjbOzzZAOLmxEUVO5StuyVj6s0ZleHCCsfomKHE0YItnWM3B0jL0_yQP7wdgLsSekN6_H5VHVhqy8Y3lDOraBoH60"/><div class="flex flex-col"><span class="font-title-md text-title-md text-primary tracking-tight">StockSystem</span><span class="font-caption text-caption text-secondary">Enterprise OS</span></div></div><div class="px-space-md py-space-sm"><div class="font-caption text-caption uppercase text-on-surface-variant font-label-sm tracking-wider px-space-sm mb-space-xs">Operações</div><nav class="flex flex-col gap-space-xs" data-active-classes="bg-secondary-container text-on-secondary-fixed font-title-md rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-md text-body-md" data-path="produtos" href="#"><span class="material-symbols-outlined text-lg">inventory_2</span><span>Produtos</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-md text-body-md" data-path="localizacoes-estantes" href="#"><span class="material-symbols-outlined text-lg">grid_view</span><span>Localizações / Estantes</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-md text-body-md" data-path="fornecedores" href="#"><span class="material-symbols-outlined text-lg">local_shipping</span><span>Fornecedores</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-md text-body-md" data-path="gerenciar-usuarios" href="#"><span class="material-symbols-outlined text-lg">manage_accounts</span><span>Gerenciar Usuários</span></a></nav></div></div><div class="p-space-md flex flex-col gap-space-sm bg-surface-container-lowest"><div class="flex items-center justify-between px-space-sm py-1.5 rounded-full bg-surface-container-low"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span><span class="font-caption text-caption text-on-tertiary-fixed-variant">API: Online</span></div><span class="font-caption text-caption text-secondary">v2.4</span></div><button class="flex items-center justify-between w-full px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md" type="button"><span class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-base">first_page</span><span>Recolher Menu</span></span><span class="font-caption text-caption text-secondary">[</span></button></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-sm"><nav class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm"><span class="hover:text-on-surface cursor-pointer">Estoque</span><span class="material-symbols-outlined text-xs">chevron_right</span><span class="text-on-surface font-label-md">Visão Geral</span></nav></div><div class="flex items-center gap-space-md"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-secondary text-base pointer-events-none">search</span><input class="w-64 h-9 pl-9 pr-12 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm placeholder-secondary focus:outline-none focus:bg-surface-container-lowest shadow-[0_1px_4px_rgba(0,0,0,0.02)] transition-all" placeholder="Pesquisar inventário..." type="text"/><kbd class="absolute right-2 px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-caption text-caption">⌘K</kbd></div><button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-lg">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span></button><div class="flex items-center gap-space-sm pl-space-sm"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbZxoXuLYF2ht7Gri3KqzPFf5rD0Z5YtYtKazjqm2R0FoV7EBHuNEalAVMSCyYJoAj34ep0HrEmo1_iEkIYB-uM0OAcSgYVQnAds-GwTD5JoWda3-O1suYgc4af2PQWrJ_XAhPgjCoFcGG48xyOJxDz3fzgChtuCy1FuxumwaHKdhIonFktzGWD8HuqSZp5FuskYMXgszcQOaeP2gbtxgA3LejMplmnN5HmBkqKl8"/><div class="hidden xl:flex flex-col text-left"><span class="font-label-md text-label-md text-on-surface leading-tight">Administrador</span><span class="font-caption text-caption text-secondary leading-tight">marx.ts@hotmail.com</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full relative">
+<!-- BACKGROUND DASHBOARD (Catálogo de Produtos em Backdrop Desfocado) -->
+<div aria-hidden="true" class="w-full p-gutter flex flex-col gap-space-lg filter blur-[2px] opacity-40 pointer-events-none select-none">
+<!-- Top Action Toolbar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs text-primary font-caption text-caption tracking-wider uppercase">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+          Gestão de Inventário
+        </div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Catálogo de Produtos</h1>
+<p class="font-body-md text-body-md text-secondary">3.482 itens cadastrados distribuídos em 14 corredores logísticos.</p>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-md py-2 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-space-xs shadow-sm">
+<span class="material-symbols-outlined text-lg">tune</span> Filtros
+        </button>
+<button class="px-space-md py-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md flex items-center gap-space-xs shadow-md">
+<span class="material-symbols-outlined text-lg">add_box</span> Novo Produto
+        </button>
+</div>
+</div>
+<!-- Quick Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md">
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-xs">
+<span class="font-caption text-caption text-secondary">VALOR TOTAL EM ESTOQUE</span>
+<span class="font-headline-md text-headline-md text-on-surface">R$ 1.284.950,00</span>
+<div class="flex items-center gap-space-xs text-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-sm">trending_up</span> +4.2% este mês
+        </div>
+</div>
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-xs">
+<span class="font-caption text-caption text-secondary">SKUS EM RUPTURA CRÍTICA</span>
+<span class="font-headline-md text-headline-md text-error">18 Itens</span>
+<div class="flex items-center gap-space-xs text-error font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-sm">warning</span> Ação requerida
+        </div>
+</div>
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-xs">
+<span class="font-caption text-caption text-secondary">ITENS SEM PRECIFICAÇÃO</span>
+<span class="font-headline-md text-headline-md text-on-secondary-container">23 Aguardando</span>
+<div class="flex items-center gap-space-xs text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-sm">pending_actions</span> Pendente Admin
+        </div>
+</div>
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-xs">
+<span class="font-caption text-caption text-secondary">OCUPAÇÃO DAS ESTANTES</span>
+<span class="font-headline-md text-headline-md text-on-surface">88.4%</span>
+<div class="w-full bg-surface-container rounded-full h-1.5 mt-1 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full w-[88.4%]"></div>
+</div>
+</div>
+</div>
+<!-- Background Table Mock -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<span class="font-title-md text-title-md text-on-surface">Todos os SKUs Ativos</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed font-label-sm text-label-sm">3.482 registros</span>
+</div>
+</div>
+<div class="p-space-lg flex flex-col gap-space-sm">
+<div class="h-10 bg-surface-container-low rounded-lg w-full"></div>
+<div class="h-12 bg-surface-container-lowest rounded-lg w-full"></div>
+<div class="h-12 bg-surface-container-lowest rounded-lg w-full"></div>
+<div class="h-12 bg-surface-container-lowest rounded-lg w-full"></div>
+<div class="h-12 bg-surface-container-lowest rounded-lg w-full"></div>
+</div>
+</div>
+</div>
+<!-- MODAL OVERLAY CURTAIN -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-space-sm sm:p-space-md md:p-space-xl bg-on-surface/40 backdrop-blur-md transition-all duration-300" id="modal-container">
+<!-- MODAL WINDOW -->
+<div class="relative w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-2xl flex flex-col max-h-[942px] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+<!-- HEADER -->
+<div class="px-space-lg py-space-md bg-surface-container-lowest flex items-start justify-between">
+<div class="flex items-start gap-space-md">
+<div class="w-11 h-11 rounded-lg bg-surface-container-low text-primary-container flex items-center justify-center shadow-sm shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-2xl">inventory_2</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Cadastrar Produto</h2>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed font-caption text-caption uppercase font-semibold">Novo SKU</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Preencha os dados cadastrais, alocação física e parâmetros de precificação.</p>
+</div>
+</div>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" id="btn-close-modal" title="Fechar modal" type="button">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+<!-- FORM BODY (Scrollable Area) -->
+<form class="flex-1 overflow-y-auto px-space-lg py-space-md flex flex-col gap-space-lg bg-surface-container-lowest" id="product-form">
+<!-- SECTION 1: Identificação Básica -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface flex items-center gap-1" for="prod-nome">
+              Nome do Produto <span class="text-error">*</span>
+</label>
+<span class="font-caption text-caption text-secondary">Obrigatório</span>
+</div>
+<div class="relative flex items-center">
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface placeholder:text-secondary font-body-md text-body-md shadow-inner focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/20 transition-all" id="prod-nome" placeholder="Ex: Cerveja IPA 500ml" required="" type="text"/>
+<span class="material-symbols-outlined absolute right-3 text-secondary text-lg pointer-events-none">edit</span>
+</div>
+</div>
+<!-- SECTION 2: Quantidade & Precificação (Grid de 2 Colunas) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Quantidade em Estoque com Stepper +/- -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="prod-qtd">
+<span>Quantidade Inicial <span class="text-error">*</span></span>
+<span class="font-caption text-caption text-secondary">Unidades físicas</span>
+</label>
+<div class="flex items-center h-10 rounded-lg bg-surface-container-low p-1 shadow-inner">
+<button aria-label="Diminuir" class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition shadow-sm active:scale-95" id="btn-qty-minus" type="button">
+<span class="material-symbols-outlined text-base">remove</span>
+</button>
+<input class="w-full h-full text-center bg-transparent text-on-surface font-title-md text-title-md focus:outline-none [appearance:textfield] [&amp;::-webkit-outer-spin-button]:appearance-none [&amp;::-webkit-inner-spin-button]:appearance-none" id="prod-qtd" min="0" type="number" value="0"/>
+<button aria-label="Aumentar" class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition shadow-sm active:scale-95" id="btn-qty-plus" type="button">
+<span class="material-symbols-outlined text-base">add</span>
+</button>
+</div>
+<span class="font-caption text-caption text-secondary">Estoque mínimo de segurança padrão: 5 un.</span>
+</div>
+<!-- Preço (R$) com Máscara Monetária -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="prod-preco">
+<span>Preço Unitário (R$)</span>
+<span class="font-caption text-caption text-secondary">Opcional</span>
+</label>
+<div class="relative flex items-center">
+<span class="absolute left-3 font-title-md text-title-md text-secondary select-none">R$</span>
+<input class="w-full h-10 pl-10 pr-3 rounded-lg bg-surface-container-low text-on-surface placeholder:text-secondary font-title-md text-title-md shadow-inner focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/20 transition-all" id="prod-preco" placeholder="0,00" type="text"/>
+<button class="absolute right-2 text-secondary hover:text-on-surface p-1 text-xs" id="btn-clear-price" title="Limpar preço" type="button">
+<span class="material-symbols-outlined text-sm">backspace</span>
+</button>
+</div>
+<!-- Badge explicativo fiel ao print oficial -->
+<div class="flex items-start gap-1.5 p-2 rounded-lg bg-surface-container text-on-secondary-container mt-0.5">
+<span class="material-symbols-outlined text-sm text-primary-container shrink-0 mt-0.5">info</span>
+<p class="font-caption text-caption leading-tight">
+<strong>Sem preço:</strong> o produto permanecerá inativo no catálogo até um Administrador informar o preço comercial.
+              </p>
+</div>
+</div>
+</div>
+<!-- SECTION 3: Alocação Física (Estante & Prateleira) -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary-container text-lg">warehouse</span>
+<span class="font-label-md text-label-md text-on-surface">Endereçamento Logístico</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Estante Dropdown -->
+<div class="flex flex-col gap-1">
+<label class="font-caption text-caption text-on-surface-variant font-semibold" for="select-estante">
+                Estante Física
+              </label>
+<div class="relative">
+<select class="w-full h-10 pl-3 pr-8 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm text-body-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container/20 appearance-none cursor-pointer" id="select-estante">
+<option value="">Selecione uma estante</option>
+<option value="est-123">Estante 123 (Corredor A - Bebidas)</option>
+<option value="est-456">Estante 456 (Corredor B - Alimentos)</option>
+<option value="est-789">Estante 789 (Corredor C - Congelados)</option>
+<option value="est-999">Estante 999 (Mezanino Geral)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-secondary pointer-events-none text-base">expand_more</span>
+</div>
+</div>
+<!-- Prateleira Dropdown Dinâmico -->
+<div class="flex flex-col gap-1">
+<label class="font-caption text-caption text-on-surface-variant font-semibold" for="select-prateleira">
+                Nível / Prateleira
+              </label>
+<div class="relative">
+<select class="w-full h-10 pl-3 pr-8 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm text-body-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container/20 appearance-none cursor-pointer" id="select-prateleira">
+<option value="sem-localizacao">Sem localização definida</option>
+<option value="prat-123-a">Prateleira 123-A (Nível Térreo)</option>
+<option value="prat-123-b">Prateleira 123-B (Nível Médio)</option>
+<option value="prat-456-a">Prateleira 456-A (Nível Térreo)</option>
+<option value="prat-456-c">Prateleira 456-C (Nível Superior)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-secondary pointer-events-none text-base">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 4: Atributos Enterprise Complementares -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Categoria / Segmento -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface" for="select-categoria">Categoria</label>
+<div class="relative">
+<select class="w-full h-10 pl-3 pr-8 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm shadow-inner focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/20 appearance-none cursor-pointer" id="select-categoria">
+<option value="">Selecione uma categoria</option>
+<option selected="" value="bebidas">Bebidas &amp; Artesanais</option>
+<option value="mercearia">Mercearia Seca</option>
+<option value="pereciveis">Perecíveis Refrigerados</option>
+<option value="embalagens">Insumos &amp; Embalagens</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-secondary pointer-events-none text-base">expand_more</span>
+</div>
+</div>
+<!-- Fornecedor Homologado -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface" for="select-fornecedor">Fornecedor Associado</label>
+<div class="relative">
+<select class="w-full h-10 pl-3 pr-8 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm shadow-inner focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/20 appearance-none cursor-pointer" id="select-fornecedor">
+<option value="">Selecione o Fornecedor</option>
+<option value="forn-1">Ambev Brasil Distribuição S/A</option>
+<option value="forn-2">Cervejaria Colorado Indústria</option>
+<option value="forn-3">Global Beverage Logistics Ltda</option>
+<option value="forn-4">Atacado Central de Alimentos</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-secondary pointer-events-none text-base">expand_more</span>
+</div>
+</div>
+<!-- Código de Barras / EAN-13 -->
+<div class="flex flex-col gap-1 md:col-span-2">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="prod-barcode">
+<span>Código de Barras (EAN / GTIN-13)</span>
+<span class="font-caption text-caption text-secondary">Opcional para leitor óptico</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-secondary text-lg pointer-events-none">barcode_scanner</span>
+<input class="w-full h-10 pl-10 pr-24 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md shadow-inner placeholder:text-secondary focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/20 transition-all tracking-wider font-mono" id="prod-barcode" maxlength="13" placeholder="7891234567890" type="text"/>
+<button class="absolute right-1.5 px-2.5 py-1 rounded bg-surface-container-highest text-on-surface font-caption text-caption hover:bg-secondary-container transition-colors" id="btn-gen-ean" type="button">
+                Gerar Auto
+              </button>
+</div>
+</div>
+</div>
+</form>
+<!-- FOOTER / ACTIONS -->
+<div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between gap-space-md shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
+<div class="flex items-center gap-space-xs text-secondary font-caption text-caption">
+<span class="material-symbols-outlined text-base text-tertiary-container">verified_user</span>
+<span>Sincronização imediata no cluster</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-md py-2.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md transition-colors shadow-sm" id="btn-cancel" type="button">
+            Cancelar
+          </button>
+<button class="px-space-lg py-2.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md flex items-center gap-space-xs shadow-md transition-all active:scale-95" id="btn-save-product" type="button">
+<span class="material-symbols-outlined text-lg">save</span>
+<span>Salvar Produto</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Stepper Logic
+  const qtyInput = document.getElementById('prod-qtd');
+  const btnPlus = document.getElementById('btn-qty-plus');
+  const btnMinus = document.getElementById('btn-qty-minus');
+
+  if (btnPlus && qtyInput) {
+    btnPlus.addEventListener('click', () => {
+      const val = parseInt(qtyInput.value, 10) || 0;
+      qtyInput.value = val + 1;
+    });
+  }
+
+  if (btnMinus && qtyInput) {
+    btnMinus.addEventListener('click', () => {
+      const val = parseInt(qtyInput.value, 10) || 0;
+      if (val > 0) qtyInput.value = val - 1;
+    });
+  }
+
+  // Preço Currency Input Masking Simulation
+  const priceInput = document.getElementById('prod-preco');
+  const clearPriceBtn = document.getElementById('btn-clear-price');
+
+  if (priceInput) {
+    priceInput.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value === '') {
+        e.target.value = '';
+        return;
+      }
+      const floatVal = (parseInt(value, 10) / 100).toFixed(2);
+      e.target.value = floatVal.replace('.', ',');
+    });
+  }
+
+  if (clearPriceBtn && priceInput) {
+    clearPriceBtn.addEventListener('click', () => {
+      priceInput.value = '';
+      priceInput.focus();
+    });
+  }
+
+  // EAN-13 Auto Generation Simulation
+  const btnGenEan = document.getElementById('btn-gen-ean');
+  const barcodeInput = document.getElementById('prod-barcode');
+  if (btnGenEan && barcodeInput) {
+    btnGenEan.addEventListener('click', () => {
+      const randomEan = '789' + Math.floor(1000000000 + Math.random() * 9000000000);
+      barcodeInput.value = randomEan.substring(0, 13);
+    });
+  }
+
+  // Dinamismo entre Estante e Prateleira
+  const selectEstante = document.getElementById('select-estante');
+  const selectPrateleira = document.getElementById('select-prateleira');
+
+  if (selectEstante && selectPrateleira) {
+    selectEstante.addEventListener('change', (e) => {
+      const estante = e.target.value;
+      if (estante === 'est-123') {
+        selectPrateleira.innerHTML = `
+          <option value="prat-123-a">Prateleira 123-A (Nível Térreo)</option>
+          <option value="prat-123-b">Prateleira 123-B (Nível Médio)</option>
+          <option value="prat-123-c">Prateleira 123-C (Nível Alto)</option>
+        `;
+      } else if (estante === 'est-456') {
+        selectPrateleira.innerHTML = `
+          <option value="prat-456-a">Prateleira 456-A (Nível Térreo)</option>
+          <option value="prat-456-b">Prateleira 456-B (Nível Médio)</option>
+        `;
+      } else {
+        selectPrateleira.innerHTML = `
+          <option value="sem-localizacao">Sem localização definida</option>
+          <option value="prat-geral">Nível Padrão 01</option>
+        `;
+      }
+    });
+  }
+
+  // Close Modal Micro-interactions
+  const modalContainer = document.getElementById('modal-container');
+  const btnClose = document.getElementById('btn-close-modal');
+  const btnCancel = document.getElementById('btn-cancel');
+  const btnSave = document.getElementById('btn-save-product');
+
+  function triggerClose() {
+    if (modalContainer) {
+      modalContainer.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        modalContainer.classList.remove('opacity-0', 'pointer-events-none');
+      }, 1500);
+    }
+  }
+
+  if (btnClose) btnClose.addEventListener('click', triggerClose);
+  if (btnCancel) btnCancel.addEventListener('click', triggerClose);
+
+  if (btnSave) {
+    btnSave.addEventListener('click', () => {
+      const nomeInput = document.getElementById('prod-nome');
+      if (nomeInput && !nomeInput.value.trim()) {
+        nomeInput.focus();
+        nomeInput.classList.add('ring-2', 'ring-error');
+        setTimeout(() => nomeInput.classList.remove('ring-2', 'ring-error'), 1800);
+        return;
+      }
+      btnSave.disabled = true;
+      btnSave.innerHTML = `<span class="material-symbols-outlined text-lg animate-spin">progress_activity</span><span>Salvando...</span>`;
+      setTimeout(() => {
+        btnSave.innerHTML = `<span class="material-symbols-outlined text-lg">check_circle</span><span>Cadastrado!</span>`;
+        btnSave.classList.replace('bg-primary-container', 'bg-tertiary-container');
+        setTimeout(() => triggerClose(), 600);
+      }, 800);
+    });
+  }
+</script></main></div></body></html>

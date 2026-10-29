@@ -8,6 +8,11 @@ import UserForm from "@/components/users/UserForm";
 import UserTable from "@/components/users/UserTable";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { inviteUser, listUsers, resendInvitation, setUserStatus, type UserAccount, type UserStatus } from "@/lib/users";
+import Button from "@/components/ui/Button";
+import Dialog from "@/components/ui/Dialog";
+import { InputField, SelectField } from "@/components/ui/Field";
+import PageHeader from "@/components/ui/PageHeader";
+import { ErrorState, LoadingState, SuccessState } from "@/components/ui/StateMessages";
 
 const pageSize = 25;
 
@@ -18,6 +23,7 @@ export default function UsersPageClient(): JSX.Element {
   const queryClient = useQueryClient();
   const [searchDraft, setSearchDraft] = useState(searchParams.get("search") ?? "");
   const [mutationError, setMutationError] = useState<string | null>(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
   const search = searchParams.get("search") ?? "";
   const status = searchParams.get("status") ?? "";
   const page = Math.max(1, Number(searchParams.get("page") ?? "1") || 1);
@@ -65,9 +71,7 @@ export default function UsersPageClient(): JSX.Element {
       if (value) params.set(key, value);
       else params.delete(key);
     }
-    if (!("page" in values)) {
-      params.set("page", "1");
-    }
+    if (!("page" in values)) params.set("page", "1");
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }
 
@@ -81,82 +85,74 @@ export default function UsersPageClient(): JSX.Element {
   return (
     <>
       <AuthenticatedNavigation />
-      <main className="mx-auto max-w-6xl space-y-6 p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold">Gerenciar usuários</h1>
-            <p className="text-sm text-slate-600">Convide pessoas e gerencie seus perfis de acesso.</p>
-          </div>
-          <details className="rounded border p-4">
-            <summary className="cursor-pointer font-medium">Convidar usuário</summary>
-            <div className="mt-4 w-80 max-w-full">
-              <UserForm
-                submitting={inviteMutation.isPending}
-                errorMessage={mutationError}
-                onSubmit={async (input) => {
-                  await inviteMutation.mutateAsync(input);
+      <main className="min-h-screen bg-surface px-space-md py-space-xl text-on-surface md:ml-64 md:px-space-xl lg:px-12">
+        <div className="mx-auto max-w-7xl">
+          <PageHeader
+            title="Gerenciar usuários"
+            description="Convide pessoas e gerencie seus perfis de acesso."
+            action={<Button onClick={() => { setMutationError(null); setInviteOpen(true); }}>Convidar usuário</Button>}
+          />
+          <section aria-label="Filtros de usuários" className="mb-space-lg flex flex-wrap items-end gap-space-md rounded-xl bg-surface-container-lowest p-space-md shadow-sm ring-1 ring-outline-variant/40 sm:p-space-lg">
+            <form onSubmit={submitSearch} className="flex min-w-[min(100%,18rem)] flex-1 items-end gap-space-sm">
+              <InputField label="Buscar" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)} />
+              <Button type="submit" variant="secondary">Pesquisar</Button>
+            </form>
+            <div className="w-full sm:w-56">
+              <SelectField label="Situação" value={status} onChange={(event) => updateQuery({ status: event.target.value })}>
+                <option value="">Todas</option>
+                <option value="ConvitePendente">Convite pendente</option>
+                <option value="Ativa">Ativa</option>
+                <option value="Inativa">Inativa</option>
+              </SelectField>
+            </div>
+          </section>
+
+          {mutationError && <div className="mb-space-md"><ErrorState message={mutationError} /></div>}
+          {notice && <div className="mb-space-md"><SuccessState message={notice} /></div>}
+          {usersQuery.isLoading && <LoadingState message="Carregando contas..." />}
+          {usersQuery.isError && <ErrorState message="Não foi possível carregar as contas." />}
+          {usersQuery.data && (
+            <>
+              <UserTable
+                accounts={usersQuery.data.items}
+                changingId={statusMutation.isPending ? statusMutation.variables?.account.id : undefined}
+                resendingId={resendMutation.isPending ? resendMutation.variables?.id : undefined}
+                onResendInvitation={(account) => {
+                  setMutationError(null);
+                  setNotice(null);
+                  resendMutation.mutate(account);
+                }}
+                onStatusChange={(account, nextStatus) => {
+                  setMutationError(null);
+                  statusMutation.mutate({ account, nextStatus });
                 }}
               />
-            </div>
-          </details>
-        </div>
-
-        <section aria-label="Filtros de usuários" className="flex flex-wrap items-end gap-3">
-          <form onSubmit={submitSearch} className="flex flex-wrap items-end gap-2">
-            <div>
-              <label htmlFor="user-search" className="mb-1 block text-sm font-medium">Buscar</label>
-              <input id="user-search" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)}
-                className="rounded border p-2" />
-            </div>
-            <button type="submit" className="rounded border px-4 py-2">Pesquisar</button>
-          </form>
-          <div>
-            <label htmlFor="user-status" className="mb-1 block text-sm font-medium">Situação</label>
-            <select id="user-status" value={status} onChange={(event) => updateQuery({ status: event.target.value })}
-              className="rounded border p-2">
-              <option value="">Todas</option>
-              <option value="ConvitePendente">Convite pendente</option>
-              <option value="Ativa">Ativa</option>
-              <option value="Inativa">Inativa</option>
-            </select>
-          </div>
-        </section>
-
-        {mutationError && <p role="alert" className="text-sm text-red-700">{mutationError}</p>}
-        {notice && <p role="status" className="text-sm text-green-800">{notice}</p>}
-        {usersQuery.isLoading && <p role="status">Carregando contas...</p>}
-        {usersQuery.isError && <p role="alert" className="text-sm text-red-700">Não foi possível carregar as contas.</p>}
-        {usersQuery.data && (
-          <>
-            <UserTable
-              accounts={usersQuery.data.items}
-              changingId={statusMutation.isPending ? statusMutation.variables?.account.id : undefined}
-              resendingId={resendMutation.isPending ? resendMutation.variables?.id : undefined}
-              onResendInvitation={(account) => {
-                setMutationError(null);
-                setNotice(null);
-                resendMutation.mutate(account);
-              }}
-              onStatusChange={(account, nextStatus) => {
-                setMutationError(null);
-                statusMutation.mutate({ account, nextStatus });
-              }}
-            />
-            <div className="flex items-center justify-between">
-              <p className="text-sm">{usersQuery.data.total} conta(s)</p>
-              <div className="flex items-center gap-3">
-                <button type="button" disabled={page <= 1}
-                  onClick={() => updateQuery({ page: String(page - 1) })}
-                  className="rounded border px-3 py-1 disabled:opacity-50">Anterior</button>
-                <span aria-live="polite">Página {page} de {totalPages}</span>
-                <button type="button" disabled={page >= totalPages}
-                  onClick={() => updateQuery({ page: String(page + 1) })}
-                  className="rounded border px-3 py-1 disabled:opacity-50">Próxima</button>
+              <div className="mt-space-md flex flex-wrap items-center justify-between gap-space-md rounded-xl bg-surface-container-lowest px-space-lg py-space-md text-body-sm text-on-surface-variant shadow-sm ring-1 ring-outline-variant/40">
+                <p><span className="font-title text-on-surface">{usersQuery.data.total}</span> conta(s)</p>
+                <div className="flex items-center gap-space-md">
+                  <Button variant="secondary" disabled={page <= 1} onClick={() => updateQuery({ page: String(page - 1) })}>Anterior</Button>
+                  <span aria-live="polite">Página {page} de {totalPages}</span>
+                  <Button variant="secondary" disabled={page >= totalPages} onClick={() => updateQuery({ page: String(page + 1) })}>Próxima</Button>
+                </div>
               </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </main>
+      <Dialog open={inviteOpen} title="Convidar novo usuário" onClose={() => setInviteOpen(false)}>
+        <p className="mb-space-lg text-body-md text-on-surface-variant">Informe os dados da pessoa e selecione o perfil de acesso.</p>
+        <UserForm
+          submitting={inviteMutation.isPending}
+          errorMessage={mutationError}
+          onSubmit={async (input) => {
+            await inviteMutation.mutateAsync(input);
+            setInviteOpen(false);
+          }}
+        />
+        <div className="mt-space-md flex justify-end">
+          <Button variant="secondary" onClick={() => setInviteOpen(false)}>Cancelar</Button>
+        </div>
+      </Dialog>
     </>
   );
 }
