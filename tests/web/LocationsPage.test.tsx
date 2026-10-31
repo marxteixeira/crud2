@@ -1,13 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { AxiosError, AxiosHeaders } from "axios";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import LocationsPageClient from "@/app/locations/LocationsPageClient";
-import { createShelf, listRacks } from "@/lib/locations";
+import { listRacks } from "@/lib/locations";
 
 const mocks = vi.hoisted(() => ({
   createRack: vi.fn(),
-  createShelf: vi.fn(),
   listRacks: vi.fn(),
   setRackStatus: vi.fn(),
   setShelfStatus: vi.fn(),
@@ -17,7 +16,6 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/locations", () => ({
   createRack: mocks.createRack,
-  createShelf: mocks.createShelf,
   listRacks: mocks.listRacks,
   setRackStatus: mocks.setRackStatus,
   setShelfStatus: mocks.setShelfStatus,
@@ -60,7 +58,6 @@ describe("LocationsPage", () => {
     vi.clearAllMocks();
     mocks.listRacks.mockResolvedValue(racks);
     mocks.createRack.mockResolvedValue(racks[0]);
-    mocks.createShelf.mockResolvedValue(racks[0].shelves[0]);
     mocks.setRackStatus.mockResolvedValue(undefined);
     mocks.setShelfStatus.mockResolvedValue(undefined);
     mocks.updateRack.mockResolvedValue(racks[0]);
@@ -76,20 +73,75 @@ describe("LocationsPage", () => {
     expect(await screen.findByRole("region", { name: "Prateleiras da estante B" })).toBeInTheDocument();
   });
 
-  it("creates a shelf under the selected rack", async () => {
+  it("opens and cancels rack creation from the page action", async () => {
     renderPage();
     await screen.findByRole("region", { name: "Prateleiras da estante A" });
 
-    fireEvent.change(screen.getByLabelText("Estante selecionada"), { target: { value: "rack-b" } });
-    await screen.findByRole("region", { name: "Prateleiras da estante B" });
-    fireEvent.change(screen.getByLabelText("Código da prateleira"), { target: { value: "2" } });
-    fireEvent.click(screen.getByRole("button", { name: "Cadastrar prateleira" }));
+    expect(screen.queryByRole("form", { name: "Cadastrar estante" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "+ Cadastrar Nova Estante" }));
+    expect(screen.getByRole("dialog", { name: "Cadastrar Nova Estante" })).toBeInTheDocument();
 
-    expect(await vi.mocked(createShelf)).toHaveBeenCalledWith(
+    fireEvent.click(screen.getByRole("button", { name: "Cancelar" }));
+
+    expect(screen.queryByRole("dialog", { name: "Cadastrar Nova Estante" })).not.toBeInTheDocument();
+    expect(mocks.createRack).not.toHaveBeenCalled();
+  });
+
+  it("creates a rack in the dialog and selects it after refreshing the list", async () => {
+    const newRack = {
+      id: "rack-c",
+      code: "C",
+      description: "Nova localização",
+      status: "Active" as const,
+      shelves: [],
+    };
+    mocks.createRack.mockResolvedValue(newRack);
+    mocks.listRacks.mockResolvedValueOnce(racks).mockResolvedValueOnce([...racks, newRack]);
+    renderPage();
+    await screen.findByRole("region", { name: "Prateleiras da estante A" });
+
+    fireEvent.click(screen.getByRole("button", { name: "+ Cadastrar Nova Estante" }));
+    const dialog = screen.getByRole("dialog", { name: "Cadastrar Nova Estante" });
+    fireEvent.change(within(dialog).getByLabelText("Código da estante"), { target: { value: "C" } });
+    fireEvent.change(within(dialog).getByLabelText("Descrição"), { target: { value: "Nova localização" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cadastrar estante" }));
+
+    expect(await screen.findByRole("region", { name: "Prateleiras da estante C" })).toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Cadastrar Nova Estante" })).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Estante selecionada")).toHaveValue("rack-c");
+    expect(mocks.createRack).toHaveBeenCalledWith(
       expect.anything(),
-      "rack-b",
-      { code: "2" },
+      { code: "C", description: "Nova localização" },
     );
+  });
+
+  it("keeps existing shelf management and removes shelf creation controls", async () => {
+    renderPage();
+    const shelfRegion = await screen.findByRole("region", { name: "Prateleiras da estante A" });
+
+    expect(screen.queryByLabelText("Código da prateleira")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Cadastrar prateleira" })).not.toBeInTheDocument();
+    expect(within(shelfRegion).getByLabelText("Prateleira")).toHaveValue("1");
+    expect(within(shelfRegion).getByRole("button", { name: "Salvar" })).toBeInTheDocument();
+    expect(within(shelfRegion).getByRole("link", { name: "Ver produtos" })).toHaveAttribute(
+      "href",
+      "/locations/rack-a/shelves/shelf-a1",
+    );
+    expect(within(shelfRegion).getByRole("button", { name: "Inativar" })).toBeInTheDocument();
+  });
+
+  it("starts rack fields empty without examples", async () => {
+    renderPage();
+    await screen.findByRole("region", { name: "Prateleiras da estante A" });
+    fireEvent.click(screen.getByRole("button", { name: "+ Cadastrar Nova Estante" }));
+
+    const dialog = screen.getByRole("dialog", { name: "Cadastrar Nova Estante" });
+    const code = within(dialog).getByLabelText("Código da estante");
+    const description = within(dialog).getByLabelText("Descrição");
+    expect(code).toHaveValue("");
+    expect(code).not.toHaveAttribute("placeholder");
+    expect(description).toHaveValue("");
+    expect(description).not.toHaveAttribute("placeholder");
   });
 
   it("shows accessible loading and error states", async () => {
@@ -120,9 +172,16 @@ describe("LocationsPage", () => {
     renderPage();
     await screen.findByRole("region", { name: "Prateleiras da estante A" });
 
-    fireEvent.change(screen.getByLabelText("Código da estante"), { target: { value: "C" } });
-    fireEvent.click(screen.getByRole("button", { name: "Cadastrar estante" }));
+    fireEvent.click(screen.getByRole("button", { name: "+ Cadastrar Nova Estante" }));
+    const dialog = screen.getByRole("dialog", { name: "Cadastrar Nova Estante" });
+    fireEvent.change(within(dialog).getByLabelText("Código da estante"), { target: { value: "C" } });
+    fireEvent.change(within(dialog).getByLabelText("Descrição"), { target: { value: "Nova localização" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cadastrar estante" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("trace-123");
+    expect(screen.getByRole("dialog", { name: "Cadastrar Nova Estante" })).toBeInTheDocument();
+    const openDialog = within(screen.getByRole("dialog"));
+    expect(openDialog.getByLabelText("Código da estante")).toHaveValue("C");
+    expect(openDialog.getByLabelText("Descrição")).toHaveValue("Nova localização");
   });
 });

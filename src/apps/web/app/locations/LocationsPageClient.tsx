@@ -4,11 +4,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import AuthenticatedNavigation from "@/components/AuthenticatedNavigation";
+import Dialog from "@/components/ui/Dialog";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { describeApiError } from "@/lib/api";
 import {
   createRack,
-  createShelf,
   listRacks,
   setRackStatus,
   setShelfStatus,
@@ -21,6 +21,8 @@ export default function LocationsPageClient(): JSX.Element {
   const queryClient = useQueryClient();
   const [selectedRackId, setSelectedRackId] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [rackDialogOpen, setRackDialogOpen] = useState(false);
+  const [rackCreateError, setRackCreateError] = useState<string | null>(null);
   const racksQuery = useQuery({
     queryKey: ["locations", "racks"],
     queryFn: () => listRacks(getSupabaseBrowserClient()),
@@ -45,7 +47,7 @@ export default function LocationsPageClient(): JSX.Element {
       setSelectedRackId(rack.id);
       await refresh();
     },
-    onError: (error) => setErrorMessage(describeApiError(error, "Não foi possível cadastrar a estante. Verifique o código e tente novamente.")),
+    onError: (error) => setRackCreateError(describeApiError(error, "Não foi possível cadastrar a estante. Verifique o código e tente novamente.")),
   });
   const updateRackMutation = useMutation({
     mutationFn: ({ rackId, code, description }: { rackId: string; code: string; description: string | null }) =>
@@ -58,12 +60,6 @@ export default function LocationsPageClient(): JSX.Element {
       setRackStatus(getSupabaseBrowserClient(), rackId, status),
     onSuccess: refresh,
     onError: (error) => setErrorMessage(describeApiError(error, "Não foi possível alterar a situação da estante.")),
-  });
-  const createShelfMutation = useMutation({
-    mutationFn: ({ rackId, code }: { rackId: string; code: string }) =>
-      createShelf(getSupabaseBrowserClient(), rackId, { code }),
-    onSuccess: refresh,
-    onError: (error) => setErrorMessage(describeApiError(error, "Não foi possível cadastrar a prateleira.")),
   });
   const updateShelfMutation = useMutation({
     mutationFn: ({ rackId, shelfId, code }: { rackId: string; shelfId: string; code: string }) =>
@@ -88,23 +84,10 @@ export default function LocationsPageClient(): JSX.Element {
         description: String(form.get("description") ?? "").trim() || null,
       });
       formElement.reset();
+      setRackCreateError(null);
+      setRackDialogOpen(false);
     } catch {
-      // O erro já é exibido pelo onError da mutação.
-    }
-  }
-
-  async function submitShelf(event: FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault();
-    const formElement = event.currentTarget;
-    const form = new FormData(formElement);
-    const code = String(form.get("shelf-code") ?? "").trim();
-    if (selectedRackId && code) {
-      try {
-        await createShelfMutation.mutateAsync({ rackId: selectedRackId, code });
-        formElement.reset();
-      } catch {
-        // O erro já é exibido pelo onError da mutação.
-      }
+      // O erro da mutação é exibido dentro do modal.
     }
   }
 
@@ -118,23 +101,17 @@ export default function LocationsPageClient(): JSX.Element {
           <div><p className="mb-space-xs text-label-sm uppercase tracking-wider text-on-surface-variant">Localizações de estoque</p><h1 className="font-headline text-headline-lg-mobile md:text-headline-lg">Estantes e prateleiras</h1>
           <p className="mt-1 text-body-md text-on-surface-variant">Organize as localizações usadas no cadastro de produtos.</p>
           </div>
-          <a href="#rack-code" className="rounded-lg bg-primary-container px-space-md py-2.5 text-label-md text-on-primary hover:bg-primary">+ Cadastrar Nova Estante</a>
-        </header>
-
-        <form onSubmit={submitRack} className="grid gap-space-md rounded-xl bg-surface-container-lowest p-space-lg shadow-sm ring-1 ring-outline-variant/50 sm:grid-cols-3" aria-label="Cadastrar estante">
-          <div className="sm:col-span-3"><h2 className="font-headline text-headline-sm">Cadastrar Nova Estante</h2><p className="text-body-sm text-on-surface-variant">Crie uma nova localização para organizar o estoque.</p></div>
-          <div>
-            <label htmlFor="rack-code" className="mb-space-xs block text-label-sm text-on-surface-variant">Código da estante</label>
-            <input id="rack-code" name="code" required className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-space-md py-2.5 text-body-md" />
-          </div>
-          <div>
-            <label htmlFor="rack-description" className="mb-space-xs block text-label-sm text-on-surface-variant">Descrição</label>
-            <input id="rack-description" name="description" className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-space-md py-2.5 text-body-md" />
-          </div>
-          <button type="submit" disabled={createRackMutation.isPending} className="self-end rounded-lg bg-primary-container px-space-md py-2.5 text-label-md text-on-primary disabled:opacity-50">
-            Cadastrar estante
+          <button
+            type="button"
+            onClick={() => {
+              setRackCreateError(null);
+              setRackDialogOpen(true);
+            }}
+            className="rounded-lg bg-primary-container px-space-md py-2.5 text-label-md text-on-primary hover:bg-primary"
+          >
+            + Cadastrar Nova Estante
           </button>
-        </form>
+        </header>
 
         {errorMessage && <p role="alert" className="rounded-lg bg-error-container p-space-md text-body-sm text-on-error-container">{errorMessage}</p>}
         {racksQuery.isLoading && <p role="status" className="rounded-xl bg-surface-container-low p-space-lg text-body-md text-on-surface-variant">Carregando estantes...</p>}
@@ -198,16 +175,6 @@ export default function LocationsPageClient(): JSX.Element {
                   </div>
                 </form>
 
-                <form onSubmit={submitShelf} className="flex flex-wrap items-end gap-space-md" aria-label="Cadastrar prateleira">
-                  <div>
-                    <label htmlFor="shelf-code" className="mb-space-xs block text-label-sm text-on-surface-variant">Código da prateleira</label>
-                    <input id="shelf-code" name="shelf-code" required className="rounded-lg border border-outline-variant bg-surface-container-low px-space-md py-2.5 text-body-md" />
-                  </div>
-                  <button type="submit" disabled={selectedRack.status !== "Active"} className="rounded-lg bg-primary-container px-space-md py-2.5 text-label-md text-on-primary disabled:opacity-50">
-                    Cadastrar prateleira
-                  </button>
-                </form>
-
                 {selectedRack.shelves.length === 0 && <p>Esta estante ainda não tem prateleiras.</p>}
                 <ul className="space-y-3">
                   {selectedRack.shelves.map((shelf) => (
@@ -257,6 +224,38 @@ export default function LocationsPageClient(): JSX.Element {
           </>
         )}
       </main>
+      <Dialog
+        open={rackDialogOpen}
+        title="Cadastrar Nova Estante"
+        onClose={() => {
+          setRackDialogOpen(false);
+          setRackCreateError(null);
+        }}
+      >
+        <p className="mb-space-lg text-body-sm text-on-surface-variant">Crie uma nova localização para organizar o estoque.</p>
+        {rackCreateError && <p role="alert" className="mb-space-md rounded-lg bg-error-container p-space-md text-body-sm text-on-error-container">{rackCreateError}</p>}
+        <form onSubmit={submitRack} className="grid gap-space-md sm:grid-cols-2" aria-label="Cadastrar estante">
+          <div>
+            <label htmlFor="rack-code" className="mb-space-xs block text-label-sm text-on-surface-variant">Código da estante</label>
+            <input id="rack-code" name="code" required className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-space-md py-2.5 text-body-md" />
+          </div>
+          <div>
+            <label htmlFor="rack-description" className="mb-space-xs block text-label-sm text-on-surface-variant">Descrição</label>
+            <input id="rack-description" name="description" className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-space-md py-2.5 text-body-md" />
+          </div>
+          <div className="flex justify-end gap-space-sm sm:col-span-2">
+            <button type="button" onClick={() => {
+              setRackDialogOpen(false);
+              setRackCreateError(null);
+            }} className="rounded-lg bg-secondary-container px-space-md py-2.5 text-label-md text-on-secondary-fixed">
+              Cancelar
+            </button>
+            <button type="submit" disabled={createRackMutation.isPending} className="rounded-lg bg-primary-container px-space-md py-2.5 text-label-md text-on-primary disabled:opacity-50">
+              Cadastrar estante
+            </button>
+          </div>
+        </form>
+      </Dialog>
     </>
   );
 }
