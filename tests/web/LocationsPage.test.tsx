@@ -73,6 +73,37 @@ describe("LocationsPage", () => {
     expect(await screen.findByRole("region", { name: "Prateleiras da estante B" })).toBeInTheDocument();
   });
 
+  it("loads code and description of the selected rack into the edit fields", async () => {
+    renderPage();
+
+    const code = await screen.findByLabelText("Código", { selector: "#edit-rack-code" });
+    const description = screen.getByLabelText("Descrição", { selector: "#edit-rack-description" });
+    expect(code).toHaveValue("A");
+    expect(description).toHaveValue("Parede");
+
+    fireEvent.change(screen.getByLabelText("Estante selecionada"), { target: { value: "rack-b" } });
+    expect(await screen.findByRole("region", { name: "Prateleiras da estante B" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Código", { selector: "#edit-rack-code" })).toHaveValue("B");
+    expect(screen.getByLabelText("Descrição", { selector: "#edit-rack-description" })).toHaveValue("");
+
+    fireEvent.change(screen.getByLabelText("Estante selecionada"), { target: { value: "rack-a" } });
+    expect(await screen.findByRole("region", { name: "Prateleiras da estante A" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Código", { selector: "#edit-rack-code" })).toHaveValue("A");
+    expect(screen.getByLabelText("Descrição", { selector: "#edit-rack-description" })).toHaveValue("Parede");
+  });
+
+  it("discards unsaved edit-field changes when another rack is selected", async () => {
+    renderPage();
+
+    const code = await screen.findByLabelText("Código", { selector: "#edit-rack-code" });
+    fireEvent.change(code, { target: { value: "ZZ" } });
+    expect(code).toHaveValue("ZZ");
+
+    fireEvent.change(screen.getByLabelText("Estante selecionada"), { target: { value: "rack-b" } });
+    expect(await screen.findByRole("region", { name: "Prateleiras da estante B" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Código", { selector: "#edit-rack-code" })).toHaveValue("B");
+  });
+
   it("opens and cancels rack creation from the page action", async () => {
     renderPage();
     await screen.findByRole("region", { name: "Prateleiras da estante A" });

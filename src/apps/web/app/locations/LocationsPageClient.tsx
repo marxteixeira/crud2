@@ -144,6 +144,7 @@ export default function LocationsPageClient(): JSX.Element {
               <section aria-label={`Prateleiras da estante ${selectedRack.code}`} className="space-y-space-md rounded-xl bg-surface-container-lowest p-space-lg shadow-sm ring-1 ring-outline-variant/50">
                 <header className="flex flex-wrap items-center justify-between gap-space-sm"><div><h2 className="font-headline text-headline-sm">Prateleiras da Estante {selectedRack.code}</h2><p className="text-body-sm text-on-surface-variant">Níveis de armazenamento vinculados a esta estante.</p></div><span className="rounded-full bg-secondary-container px-space-sm py-1 text-label-sm">{selectedRack.shelves.length} cadastrada(s)</span></header>
                 <form
+                  key={selectedRack.id}
                   aria-label={`Editar estante ${selectedRack.code}`}
                   className="grid gap-space-md rounded-xl bg-surface-container-low p-space-md sm:grid-cols-3"
                   onSubmit={async (event) => {
