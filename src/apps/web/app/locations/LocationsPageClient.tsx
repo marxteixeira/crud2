@@ -9,6 +9,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { describeApiError } from "@/lib/api";
 import {
   createRack,
+  createShelf,
   listRacks,
   setRackStatus,
   setShelfStatus,
@@ -24,6 +25,7 @@ export default function LocationsPageClient(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [rackDialogOpen, setRackDialogOpen] = useState(false);
   const [rackCreateError, setRackCreateError] = useState<string | null>(null);
+  const [shelfCreateError, setShelfCreateError] = useState<string | null>(null);
   const racksQuery = useQuery({
     queryKey: ["locations", "racks"],
     queryFn: () => listRacks(getSupabaseBrowserClient()),
@@ -65,6 +67,26 @@ export default function LocationsPageClient(): JSX.Element {
     onSuccess: refresh,
     onError: (error) => setErrorMessage(describeApiError(error, "Não foi possível alterar a situação da estante.")),
   });
+  const createShelfMutation = useMutation({
+    mutationFn: ({ rackId, code }: { rackId: string; code: string }) =>
+      createShelf(getSupabaseBrowserClient(), rackId, { code }),
+    onSuccess: (shelf) => {
+      queryClient.setQueryData<Rack[]>(["locations", "racks"], (current) =>
+        current?.map((rack) => rack.id === shelf.rackId
+          ? {
+              ...rack,
+              shelves: rack.shelves.some((item) => item.id === shelf.id)
+                ? rack.shelves
+                : [...rack.shelves, shelf],
+            }
+          : rack),
+      );
+      void queryClient.invalidateQueries({ queryKey: ["locations"] });
+    },
+    onError: (error) => setShelfCreateError(
+      describeApiError(error, "Não foi possível cadastrar a prateleira. O código pode já existir nesta estante; confira e tente novamente."),
+    ),
+  });
   const updateShelfMutation = useMutation({
     mutationFn: ({ rackId, shelfId, code }: { rackId: string; shelfId: string; code: string }) =>
       updateShelf(getSupabaseBrowserClient(), rackId, shelfId, { code }),
@@ -92,6 +114,25 @@ export default function LocationsPageClient(): JSX.Element {
       setRackDialogOpen(false);
     } catch {
       // O erro da mutação é exibido dentro do modal.
+    }
+  }
+
+  async function submitShelf(event: FormEvent<HTMLFormElement>, rackId: string): Promise<void> {
+    event.preventDefault();
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
+    const code = String(form.get("shelf-code") ?? "").trim();
+    if (!code) {
+      setShelfCreateError("Informe o código da prateleira.");
+      return;
+    }
+
+    setShelfCreateError(null);
+    try {
+      await createShelfMutation.mutateAsync({ rackId, code });
+      formElement.reset();
+    } catch {
+      // O erro da mutação é exibido junto ao formulário.
     }
   }
 
@@ -129,7 +170,10 @@ export default function LocationsPageClient(): JSX.Element {
               <select
                 id="rack-selector"
                 value={selectedRackId}
-                onChange={(event) => setSelectedRackId(event.target.value)}
+                onChange={(event) => {
+                  setShelfCreateError(null);
+                  setSelectedRackId(event.target.value);
+                }}
                 className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-space-md py-2.5 text-body-md sm:max-w-sm"
               >
                 {racksQuery.data.map((rack) => (
@@ -181,6 +225,34 @@ export default function LocationsPageClient(): JSX.Element {
                 </form>
 
                 {selectedRack.shelves.length === 0 && <p>Esta estante ainda não tem prateleiras.</p>}
+                {selectedRack.status === "Active" && (
+                  <form
+                    key={`create-shelf-${selectedRack.id}`}
+                    aria-label="Cadastrar prateleira"
+                    className="flex flex-wrap items-end gap-space-sm rounded-xl bg-surface-container-low p-space-md"
+                    onSubmit={(event) => submitShelf(event, selectedRack.id)}
+                  >
+                    <div>
+                      <label htmlFor="create-shelf-code" className="mb-space-xs block text-label-sm text-on-surface-variant">Código da prateleira</label>
+                      <input
+                        id="create-shelf-code"
+                        name="shelf-code"
+                        required
+                        disabled={createShelfMutation.isPending}
+                        onChange={() => setShelfCreateError(null)}
+                        className="rounded-lg border border-outline-variant bg-surface-container-lowest px-space-md py-2.5 text-body-md"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={createShelfMutation.isPending}
+                      className="rounded-lg bg-primary-container px-space-md py-2.5 text-label-md text-on-primary hover:bg-primary disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {createShelfMutation.isPending ? "Cadastrando..." : "Cadastrar prateleira"}
+                    </button>
+                    {shelfCreateError && <p role="alert" className="w-full rounded-lg bg-error-container p-space-md text-body-sm text-on-error-container">{shelfCreateError}</p>}
+                  </form>
+                )}
                 <ul className="space-y-3">
                   {selectedRack.shelves.map((shelf) => (
                     <li key={shelf.id} className="flex flex-wrap items-end gap-space-md rounded-xl bg-surface-container-low p-space-md">

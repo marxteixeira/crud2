@@ -7,6 +7,7 @@ import { listRacks } from "@/lib/locations";
 
 const mocks = vi.hoisted(() => ({
   createRack: vi.fn(),
+  createShelf: vi.fn(),
   listRacks: vi.fn(),
   setRackStatus: vi.fn(),
   setShelfStatus: vi.fn(),
@@ -16,6 +17,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/locations", () => ({
   createRack: mocks.createRack,
+  createShelf: mocks.createShelf,
   listRacks: mocks.listRacks,
   setRackStatus: mocks.setRackStatus,
   setShelfStatus: mocks.setShelfStatus,
@@ -58,6 +60,12 @@ describe("LocationsPage", () => {
     vi.clearAllMocks();
     mocks.listRacks.mockResolvedValue(racks);
     mocks.createRack.mockResolvedValue(racks[0]);
+    mocks.createShelf.mockResolvedValue({
+      id: "shelf-new",
+      rackId: "rack-a",
+      code: "2",
+      status: "Active",
+    });
     mocks.setRackStatus.mockResolvedValue(undefined);
     mocks.setShelfStatus.mockResolvedValue(undefined);
     mocks.updateRack.mockResolvedValue(racks[0]);
@@ -187,12 +195,32 @@ describe("LocationsPage", () => {
     expect(screen.getByLabelText("Estante selecionada")).toHaveValue("rack-b");
   });
 
-  it("keeps existing shelf management and removes shelf creation controls", async () => {
+  it("creates a shelf for the selected rack and refreshes the shelf list", async () => {
+    const newShelf = { id: "shelf-a2", rackId: "rack-a", code: "2", status: "Active" as const };
+    const racksWithShelf = [
+      { ...racks[0], shelves: [...racks[0].shelves, newShelf] },
+      racks[1],
+    ];
+    mocks.listRacks.mockResolvedValueOnce(racks).mockResolvedValueOnce(racksWithShelf);
+    mocks.createShelf.mockResolvedValue(newShelf);
     renderPage();
     const shelfRegion = await screen.findByRole("region", { name: "Prateleiras da estante A" });
 
-    expect(screen.queryByLabelText("Código da prateleira")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Cadastrar prateleira" })).not.toBeInTheDocument();
+    fireEvent.change(within(shelfRegion).getByLabelText("Código da prateleira"), { target: { value: " 2 " } });
+    fireEvent.click(within(shelfRegion).getByRole("button", { name: "Cadastrar prateleira" }));
+
+    expect(await screen.findByLabelText("Editar prateleira 2")).toBeInTheDocument();
+    expect(mocks.createShelf).toHaveBeenCalledWith(expect.anything(), "rack-a", { code: "2" });
+    expect(within(screen.getByRole("region", { name: "Prateleiras da estante A" }))
+      .getByLabelText("Código da prateleira")).toHaveValue("");
+  });
+
+  it("keeps existing shelf management controls available", async () => {
+    renderPage();
+    const shelfRegion = await screen.findByRole("region", { name: "Prateleiras da estante A" });
+
+    expect(within(shelfRegion).getByLabelText("Código da prateleira")).toBeInTheDocument();
+    expect(within(shelfRegion).getByRole("button", { name: "Cadastrar prateleira" })).toBeInTheDocument();
     expect(within(shelfRegion).getByLabelText("Prateleira")).toHaveValue("1");
     expect(within(shelfRegion).getByRole("button", { name: "Salvar" })).toBeInTheDocument();
     expect(within(shelfRegion).getByRole("link", { name: "Ver produtos" })).toHaveAttribute(
@@ -200,6 +228,67 @@ describe("LocationsPage", () => {
       "/locations/rack-a/shelves/shelf-a1",
     );
     expect(within(shelfRegion).getByRole("button", { name: "Inativar" })).toBeInTheDocument();
+  });
+
+  it("requires a non-whitespace shelf code before calling the API", async () => {
+    renderPage();
+    const shelfRegion = await screen.findByRole("region", { name: "Prateleiras da estante A" });
+    const form = within(shelfRegion).getByRole("form", { name: "Cadastrar prateleira" });
+
+    fireEvent.change(within(form).getByLabelText("Código da prateleira"), { target: { value: "   " } });
+    fireEvent.submit(form);
+
+    expect(await within(form).findByRole("alert")).toHaveTextContent("Informe o código da prateleira.");
+    expect(mocks.createShelf).not.toHaveBeenCalled();
+  });
+
+  it("reports duplicate shelf codes and preserves the entered value", async () => {
+    mocks.createShelf.mockRejectedValue(new Error("duplicate"));
+    renderPage();
+    const shelfRegion = await screen.findByRole("region", { name: "Prateleiras da estante A" });
+    const form = within(shelfRegion).getByRole("form", { name: "Cadastrar prateleira" });
+    const code = within(form).getByLabelText("Código da prateleira");
+
+    fireEvent.change(code, { target: { value: "1" } });
+    fireEvent.click(within(form).getByRole("button", { name: "Cadastrar prateleira" }));
+
+    expect(await within(form).findByRole("alert")).toHaveTextContent("O código pode já existir nesta estante");
+    expect(code).toHaveValue("1");
+    expect(within(shelfRegion).getByLabelText("Editar prateleira 1")).toBeInTheDocument();
+  });
+
+  it("allows the same shelf code to be created under a different rack", async () => {
+    const rackWithoutShelves = { ...racks[1], shelves: [] };
+    const newShelf = { id: "shelf-b2", rackId: "rack-b", code: "1", status: "Active" as const };
+    const refreshedRacks = [racks[0], { ...rackWithoutShelves, shelves: [newShelf] }];
+    mocks.listRacks.mockResolvedValueOnce([racks[0], rackWithoutShelves]).mockResolvedValueOnce(refreshedRacks);
+    mocks.createShelf.mockResolvedValue(newShelf);
+    renderPage();
+    await screen.findByRole("region", { name: "Prateleiras da estante A" });
+    fireEvent.change(screen.getByLabelText("Estante selecionada"), { target: { value: "rack-b" } });
+    const shelfRegion = await screen.findByRole("region", { name: "Prateleiras da estante B" });
+    const form = within(shelfRegion).getByRole("form", { name: "Cadastrar prateleira" });
+
+    fireEvent.change(within(form).getByLabelText("Código da prateleira"), { target: { value: "1" } });
+    fireEvent.click(within(form).getByRole("button", { name: "Cadastrar prateleira" }));
+
+    expect(await within(shelfRegion).findByLabelText("Editar prateleira 1")).toBeInTheDocument();
+    expect(mocks.createShelf).toHaveBeenCalledWith(expect.anything(), "rack-b", { code: "1" });
+  });
+
+  it("preserves the shelf code and reports an unexpected creation failure", async () => {
+    mocks.createShelf.mockRejectedValue(new Error("offline"));
+    renderPage();
+    const shelfRegion = await screen.findByRole("region", { name: "Prateleiras da estante A" });
+    const form = within(shelfRegion).getByRole("form", { name: "Cadastrar prateleira" });
+    const code = within(form).getByLabelText("Código da prateleira");
+
+    fireEvent.change(code, { target: { value: "2" } });
+    fireEvent.click(within(form).getByRole("button", { name: "Cadastrar prateleira" }));
+
+    expect(await within(form).findByRole("alert")).toHaveTextContent("Não foi possível cadastrar a prateleira.");
+    expect(code).toHaveValue("2");
+    expect(within(shelfRegion).getByLabelText("Editar prateleira 1")).toBeInTheDocument();
   });
 
   it("starts rack fields empty without examples", async () => {
