@@ -115,6 +115,47 @@ describe("LocationsPage", () => {
     );
   });
 
+  it("keeps the new rack selected while the refreshed list is still loading", async () => {
+    const newRack = { id: "rack-c", code: "C", description: null, status: "Active" as const, shelves: [] };
+    let resolveRefresh: (value: typeof racks) => void = () => undefined;
+    const delayedRefresh = new Promise<typeof racks>((resolve) => {
+      resolveRefresh = resolve;
+    });
+    mocks.createRack.mockResolvedValue(newRack);
+    mocks.listRacks.mockResolvedValueOnce(racks).mockReturnValueOnce(delayedRefresh);
+    renderPage();
+    await screen.findByRole("region", { name: "Prateleiras da estante A" });
+
+    fireEvent.click(screen.getByRole("button", { name: "+ Cadastrar Nova Estante" }));
+    const dialog = screen.getByRole("dialog", { name: "Cadastrar Nova Estante" });
+    fireEvent.change(within(dialog).getByLabelText("Código da estante"), { target: { value: "C" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cadastrar estante" }));
+
+    expect(await screen.findByRole("region", { name: "Prateleiras da estante C" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Estante selecionada")).toHaveValue("rack-c");
+
+    resolveRefresh([...racks, newRack] as typeof racks);
+    await screen.findByRole("option", { name: /C/ });
+    expect(screen.getByLabelText("Estante selecionada")).toHaveValue("rack-c");
+    expect(screen.getByRole("region", { name: "Prateleiras da estante C" })).toBeInTheDocument();
+  });
+
+  it("keeps the current rack selected when rack creation fails", async () => {
+    mocks.createRack.mockRejectedValue(new Error("falha"));
+    renderPage();
+    await screen.findByRole("region", { name: "Prateleiras da estante A" });
+    fireEvent.change(screen.getByLabelText("Estante selecionada"), { target: { value: "rack-b" } });
+
+    fireEvent.click(screen.getByRole("button", { name: "+ Cadastrar Nova Estante" }));
+    const dialog = screen.getByRole("dialog", { name: "Cadastrar Nova Estante" });
+    fireEvent.change(within(dialog).getByLabelText("Código da estante"), { target: { value: "C" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cadastrar estante" }));
+
+    expect(await within(dialog).findByRole("alert")).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Cadastrar Nova Estante" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Estante selecionada")).toHaveValue("rack-b");
+  });
+
   it("keeps existing shelf management and removes shelf creation controls", async () => {
     renderPage();
     const shelfRegion = await screen.findByRole("region", { name: "Prateleiras da estante A" });

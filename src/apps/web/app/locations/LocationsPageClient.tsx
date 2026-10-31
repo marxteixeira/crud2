@@ -15,6 +15,7 @@ import {
   updateRack,
   updateShelf,
   type LocationStatus,
+  type Rack,
 } from "@/lib/locations";
 
 export default function LocationsPageClient(): JSX.Element {
@@ -44,6 +45,9 @@ export default function LocationsPageClient(): JSX.Element {
     mutationFn: (input: { code: string; description: string | null }) =>
       createRack(getSupabaseBrowserClient(), input),
     onSuccess: async (rack) => {
+      queryClient.setQueryData<Rack[]>(["locations", "racks"], (current) =>
+        current?.some((item) => item.id === rack.id) ? current : [...(current ?? []), rack],
+      );
       setSelectedRackId(rack.id);
       await refresh();
     },
